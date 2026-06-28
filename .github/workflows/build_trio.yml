@@ -194,6 +194,11 @@ jobs:
           git apply ./patches/* --allow-empty -v --whitespace=fix
           fi
 
+          # Upload Dexcom/Omnipod device errors to Nightscout
+          # -fetches and applies the patch from the bjorkert/patches repository
+          curl -sSL https://raw.githubusercontent.com/bjorkert/patches/master/trio_ns_device_errors.patch \
+            | git apply -v --whitespace=fix
+
           # Download and apply Trio patches from GitHub:
           # Template for customizing Trio code (as opposed to submodule code)
           # Remove the "#" sign from the beginning of the line below to activate
