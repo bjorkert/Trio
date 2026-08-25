@@ -355,6 +355,34 @@ extension Treatments {
                                 .buttonStyle(.bordered).padding(.trailing, -10)
                             }
 
+                            // Recommendation with aged bolus IOB partially ignored, shown when it exceeds the standard one
+                            if state.insulinCalculatedFresh > state.insulinCalculated {
+                                HStack {
+                                    Text("Fresh Recommendation")
+                                    Spacer()
+                                    Button {
+                                        state.amount = state.insulinCalculatedFresh
+                                    } label: {
+                                        HStack {
+                                            Text(
+                                                formatter
+                                                    .string(from: Double(state.insulinCalculatedFresh) as NSNumber) ?? ""
+                                            )
+
+                                            Text(
+                                                String(
+                                                    localized:
+                                                    " U",
+                                                    comment: "Unit in number of units delivered (keep the space character!)"
+                                                )
+                                            ).foregroundColor(.secondary)
+                                        }
+                                    }
+                                    .disabled(state.amount == state.insulinCalculatedFresh)
+                                    .buttonStyle(.bordered).padding(.trailing, -10)
+                                }
+                            }
+
                             HStack {
                                 Text("Bolus")
                                 Spacer()

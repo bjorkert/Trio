@@ -13,6 +13,15 @@ protocol BolusCalculationManager {
         simulatedCOB: Int16?,
         isBackdated: Bool
     ) async -> CalculationResult
+    func handleAgeWeightedBolusCalculation(
+        carbs: Decimal,
+        useFattyMealCorrection: Bool,
+        useSuperBolus: Bool,
+        lastLoopDate: Date,
+        minPredBG: Decimal?,
+        simulatedCOB: Int16?,
+        isBackdated: Bool
+    ) async -> CalculationResult
 }
 
 final class BaseBolusCalculationManager: BolusCalculationManager, Injectable {
@@ -536,6 +545,111 @@ final class BaseBolusCalculationManager: BolusCalculationManager, Injectable {
             )
         }
     }
+
+    /// Parallel recommendation where IOB from aged boluses is partially ignored, for carb entries only.
+    /// Runs the same formula as `handleBolusCalculation` with iob and maxIOB reduced by the same
+    /// discount, so the maxIOB headroom and the glucose/stale-loop guards stay on real values.
+    func handleAgeWeightedBolusCalculation(
+        carbs: Decimal,
+        useFattyMealCorrection: Bool,
+        useSuperBolus: Bool,
+        lastLoopDate: Date,
+        minPredBG: Decimal? = nil,
+        simulatedCOB: Int16? = nil,
+        isBackdated: Bool = false
+    ) async -> CalculationResult {
+        do {
+            var input = try await prepareCalculationInput(
+                carbs: carbs,
+                useFattyMealCorrection: useFattyMealCorrection,
+                useSuperBolus: useSuperBolus,
+                lastLoopDate: lastLoopDate,
+                minPredBG: minPredBG,
+                simulatedCOB: simulatedCOB,
+                isBackdated: isBackdated
+            )
+            if Decimal(input.cob) + input.carbs > 0 {
+                let discount = await agedInsulinIobDiscount(cappedTo: input.iob)
+                input.iob -= discount
+                input.maxIOB -= discount
+            }
+            return await calculateInsulin(input: input)
+        } catch {
+            return await handleBolusCalculation(
+                carbs: carbs,
+                useFattyMealCorrection: useFattyMealCorrection,
+                useSuperBolus: useSuperBolus,
+                lastLoopDate: lastLoopDate,
+                minPredBG: minPredBG,
+                simulatedCOB: simulatedCOB,
+                isBackdated: isBackdated
+            )
+        }
+    }
+
+    /// IOB still on board from boluses older than the fresh window, faded by a half-life per age.
+    /// Uses the same exponential insulin model as the algorithm. Basal insulin is never discounted,
+    /// and the discount never exceeds the positive part of the given IOB.
+    private func agedInsulinIobDiscount(cappedTo iob: Decimal) async -> Decimal {
+        let freshMinutes = 60.0
+        let halfLifeMinutes = 90.0
+
+        var dia = await getPumpSettings().insulinActionCurve
+        if dia < 5 {
+            dia = 5
+        }
+        let preferences = await getPreferences()
+        var profile = Profile()
+        profile.curve = preferences.curve
+        profile.useCustomPeakTime = preferences.useCustomPeakTime
+        profile.insulinPeakTime = preferences.insulinPeakTime
+        guard let constants = try? IobCalculation.curveConstants(dia: dia, profile: profile),
+              let boluses = try? await fetchRecentBoluses(diaHours: dia)
+        else { return 0 }
+
+        let now = Date()
+        var discount = 0.0
+        for bolus in boluses where bolus.amount > 0 {
+            let minsAgo = (now.timeIntervalSince(bolus.timestamp) / 60.0).rounded()
+            guard minsAgo > freshMinutes, minsAgo < constants.end else { continue }
+            let decay = exp(-minsAgo / constants.tau)
+            let iobContrib = Double(bolus.amount) *
+                (1 - constants.c1 * ((pow(minsAgo, 2) / constants.c2 - minsAgo / constants.tau - 1) * decay + 1))
+            let weight = pow(0.5, (minsAgo - freshMinutes) / halfLifeMinutes)
+            discount += (1 - weight) * max(0, iobContrib)
+        }
+
+        guard discount.isFinite, discount > 0 else { return 0 }
+        return min(Decimal(discount), max(iob, 0))
+    }
+
+    /// All boluses (manual, SMB, external) delivered within the insulin action duration
+    private func fetchRecentBoluses(diaHours: Decimal) async throws -> [(timestamp: Date, amount: Decimal)] {
+        let context = CoreDataStack.shared.newTaskContext()
+        context.name = "fetchRecentBolusesForAgedInsulinDiscount"
+        let since = Date().addingTimeInterval(-Double(truncating: diaHours as NSNumber) * 3600)
+        let results = try await CoreDataStack.shared.fetchEntitiesAsync(
+            ofType: PumpEventStored.self,
+            onContext: context,
+            predicate: NSPredicate(
+                format: "timestamp >= %@ AND bolus != nil AND bolus.amount > 0",
+                since as NSDate
+            ),
+            key: "timestamp",
+            ascending: false,
+            relationshipKeyPathsForPrefetching: ["bolus"]
+        )
+
+        return try await context.perform {
+            guard let events = results as? [PumpEventStored] else {
+                throw CoreDataError.fetchError(function: #function, file: #file)
+            }
+            return events.compactMap { event in
+                guard let timestamp = event.timestamp, let amount = event.bolus?.amount else { return nil }
+                return (timestamp: timestamp, amount: amount as Decimal)
+            }
+        }
+    }
 }
 
 /// Input parameters required for bolus calculation
@@ -546,7 +660,7 @@ struct CalculationInput: Sendable {
     let target: Decimal // Target blood glucose level
     let isf: Decimal // Insulin Sensitivity Factor
     let carbRatio: Decimal // Carb to insulin ratio
-    let iob: Decimal // Insulin on Board
+    var iob: Decimal // Insulin on Board
     let cob: Int16 // Carbs on Board
     let useFattyMealCorrectionFactor: Bool // Whether to apply reduced bolus correction
     let fattyMealFactor: Decimal // Factor for reduced bolus adjustment
@@ -555,7 +669,7 @@ struct CalculationInput: Sendable {
     let basal: Decimal // Current basal rate
     let fraction: Decimal // General correction factor
     let maxBolus: Decimal // Maximum allowed bolus
-    let maxIOB: Decimal // Maximum allowed IOB to be used for rec. bolus calculation
+    var maxIOB: Decimal // Maximum allowed IOB to be used for rec. bolus calculation
     let maxCOB: Decimal // Maximum allowed COB to be used for rec. bolus calculation
     let minPredBG: Decimal // Minimum Predicted Glucose determined by Oref
     let lastLoopDate: Date // Date at which loop last completed successfully

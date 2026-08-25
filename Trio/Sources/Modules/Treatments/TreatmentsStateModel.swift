@@ -64,6 +64,7 @@ extension Treatments {
         var wholeCalc: Decimal = 0
         var factoredInsulin: Decimal = 0
         var insulinCalculated: Decimal = 0
+        var insulinCalculatedFresh: Decimal = 0
         var fraction: Decimal = 0
         var basal: Decimal = 0
         var fattyMeals: Bool = false
@@ -458,6 +459,17 @@ extension Treatments {
                 isBackdated: isBackdated
             )
 
+            // Parallel recommendation with aged bolus IOB partially ignored
+            let freshResult = await bolusCalculationManager.handleAgeWeightedBolusCalculation(
+                carbs: carbs,
+                useFattyMealCorrection: useFattyMealCorrectionFactor,
+                useSuperBolus: useSuperBolus,
+                lastLoopDate: apsManager.lastLoopDate,
+                minPredBG: localMinPredBG,
+                simulatedCOB: simulatedCOB,
+                isBackdated: isBackdated
+            )
+
             // A superseded run must not overwrite the breakdown a newer run published.
             guard !Task.isCancelled else { return apsManager.roundBolus(amount: result.insulinCalculated) }
 
@@ -472,6 +484,7 @@ extension Treatments {
                 wholeCalc = result.wholeCalc
                 factoredInsulin = result.factoredInsulin
                 fifteenMinInsulin = result.fifteenMinutesInsulin
+                insulinCalculatedFresh = apsManager.roundBolus(amount: freshResult.insulinCalculated)
             }
 
             return apsManager.roundBolus(amount: result.insulinCalculated)
