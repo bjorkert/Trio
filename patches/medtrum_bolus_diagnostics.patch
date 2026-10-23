@@ -1,0 +1,170 @@
+diff --git a/MedtrumKit/MedtrumKit/Packets/NotificationPacket.swift b/MedtrumKit/MedtrumKit/Packets/NotificationPacket.swift
+index 1d96fec..1f07326 100644
+--- a/MedtrumKit/MedtrumKit/Packets/NotificationPacket.swift
++++ b/MedtrumKit/MedtrumKit/Packets/NotificationPacket.swift
+@@ -23,7 +23,12 @@ struct SynchronizePacketResponse: Codable {
+         let wrongStoragePatch = storage.map { expectedPatchId != 0 && $0.patchId != Double(expectedPatchId) } ?? false
+ 
+         guard !invalidBolus, !invalidBasal, !invalidReservoir, !wrongBasalPatch, !wrongStoragePatch else {
+-            MedtrumLogger(category: "NotificationPacket").error("Rejecting mismatched notification payload")
++            MedtrumLogger(category: "NotificationPacket").error(
++                "Rejecting mismatched notification payload - expectedPatchId: \(expectedPatchId), " +
++                    "basalPatchId: \(basal.map { "\($0.patchId)" } ?? "nil"), " +
++                    "storagePatchId: \(storage.map { "\($0.patchId)" } ?? "nil"), " +
++                    "invalidBolus: \(invalidBolus), invalidBasal: \(invalidBasal), invalidReservoir: \(invalidReservoir)"
++            )
+             return SynchronizePacketResponse(state: state, activeAlarms: [], invalidPayload: true)
+         }
+         return self
+diff --git a/MedtrumKit/MedtrumKit/PumpManager/MedtrumPumpManager.swift b/MedtrumKit/MedtrumKit/PumpManager/MedtrumPumpManager.swift
+index 0311dcb..9929db3 100644
+--- a/MedtrumKit/MedtrumKit/PumpManager/MedtrumPumpManager.swift
++++ b/MedtrumKit/MedtrumKit/PumpManager/MedtrumPumpManager.swift
+@@ -361,14 +361,16 @@ public extension MedtrumPumpManager {
+         activationType: LoopKit.BolusActivationType,
+         completion: @escaping (LoopKit.PumpManagerError?) -> Void
+     ) {
++        log.info("Enact bolus requested - \(units)U, \(state.diagnosticSummary)")
++
+         guard state.bolusState == .noBolus else {
+-            log.error("Pump is in bolus state...")
++            log.error("Pump is in bolus state... \(state.diagnosticSummary)")
+             completion(.deviceState(MedtrumConnectError.isBolussing))
+             return
+         }
+ 
+         guard state.basalState != .suspended else {
+-            log.error("Pump is suspended...")
++            log.error("Pump is suspended... \(state.diagnosticSummary)")
+             completion(.deviceState(MedtrumConnectError.isSuspended))
+             return
+         }
+@@ -378,7 +380,7 @@ public extension MedtrumPumpManager {
+ 
+         ensureConnectedAndActive { error in
+             if let error = error {
+-                self.log.error("Failed to connect: \(error.localizedDescription)")
++                self.log.error("Failed to connect: \(error.localizedDescription), \(self.state.diagnosticSummary)")
+                 self.resetBolusState()
+ 
+                 completion(.communication(error))
+@@ -387,7 +389,7 @@ public extension MedtrumPumpManager {
+ 
+             let writeResult = self.bluetooth.write(SetBolusPacket(bolusAmount: units))
+             if case let .failure(error) = writeResult {
+-                self.log.error("Failed to write: \(error.localizedDescription)")
++                self.log.error("Failed to write: \(error.localizedDescription), \(self.state.diagnosticSummary)")
+                 self.resetBolusState()
+ 
+                 completion(.communication(error))
+@@ -796,6 +798,13 @@ public extension MedtrumPumpManager {
+                     return
+                 }
+ 
++                self.log.info(
++                    "Activate response - patchId: \(data.patchId.toUInt64()) (\(data.patchId.hexEncodedString())), " +
++                        "basalType: \(data.basalType), basalValue: \(data.basalValue), " +
++                        "basalPatchId: \(data.basalPatchId), basalSequence: \(data.basalSequence), " +
++                        "basalStartTime: \(data.basalStartTime), \(self.state.diagnosticSummary)"
++                )
++
+                 if self.state.expiryMode == .default {
+                     self.emitAlert(alertType: .patchExpiredNotification(after: self.state.notificationAfterActivation))
+                 }
+@@ -819,7 +828,7 @@ public extension MedtrumPumpManager {
+ 
+                 self.emitPumpEvents(events)
+ 
+-                self.log.info("Patch activated!")
++                self.log.info("Patch activated! \(self.state.diagnosticSummary)")
+                 completion(.success)
+                 return
+             }
+@@ -871,7 +880,7 @@ public extension MedtrumPumpManager {
+ 
+             self.emitPumpEvents(events)
+ 
+-            self.log.info("Patch deactivated")
++            self.log.info("Patch deactivated - \(self.state.diagnosticSummary)")
+             completion(.success)
+ 
+             self.bluetooth.disconnect(force: true)
+@@ -908,6 +917,8 @@ public extension MedtrumPumpManager {
+ 
+         emitPumpEvents(events)
+ 
++        log.info("Patch force deactivated - \(state.diagnosticSummary)")
++
+         bluetooth.disconnect(force: true)
+     }
+ 
+@@ -1116,7 +1127,7 @@ public extension MedtrumPumpManager {
+ 
+     private func ensureConnectedAndActive(_ completion: @escaping (MedtrumConnectError?) -> Void) {
+         guard !state.pumpState.isSetup else {
+-            log.warning("No active patch, failing immediately")
++            log.warning("No active patch, failing immediately - \(state.diagnosticSummary)")
+             completion(.failedToFindDevice)
+             return
+         }
+diff --git a/MedtrumKit/MedtrumKit/PumpManager/MedtrumPumpState.swift b/MedtrumKit/MedtrumKit/PumpManager/MedtrumPumpState.swift
+index 6ebc62a..90204bf 100644
+--- a/MedtrumKit/MedtrumKit/PumpManager/MedtrumPumpState.swift
++++ b/MedtrumKit/MedtrumKit/PumpManager/MedtrumPumpState.swift
+@@ -374,6 +374,19 @@ public class MedtrumPumpState: RawRepresentable {
+         }
+     }
+ 
++    var diagnosticSummary: String {
++        [
++            "pumpState: \(pumpState) (\(pumpState.rawValue))",
++            "basalState: \(basalState)",
++            "basalDose: \(basalDose.type) since \(basalDose.startDate)",
++            "bolusState: \(bolusState)",
++            "cancelingBolusSince: \(cancelingBolusSince.map { "\($0)" } ?? "nil")",
++            "patchId: \(patchId.toUInt64())",
++            "isConnected: \(isConnected)",
++            "lastSync: \(lastSync)"
++        ].joined(separator: ", ")
++    }
++
+     func shouldShowTimeWarning() -> Bool {
+         // Allow a 15 sec diff in time
+         abs(pumpTimeSyncedAt.timeIntervalSince1970 - pumpTime.timeIntervalSince1970) > 15
+diff --git a/MedtrumKit/MedtrumKit/PumpManager/StateSyncer.swift b/MedtrumKit/MedtrumKit/PumpManager/StateSyncer.swift
+index 2cecf8e..eaba3b4 100644
+--- a/MedtrumKit/MedtrumKit/PumpManager/StateSyncer.swift
++++ b/MedtrumKit/MedtrumKit/PumpManager/StateSyncer.swift
+@@ -12,6 +12,8 @@ enum StateSyncer {
+     ) {
+         let syncDate = Date.now
+         let syncResponse = syncResponse.validated(expectedPatchId: state.patchId.toUInt64())
++        let previousPumpState = state.pumpState
++        let previousBasalState = state.basalState
+ 
+         StateSyncer.updatePumpState(syncResponse: syncResponse, pumpManager: pumpManager)
+ 
+@@ -109,6 +111,23 @@ enum StateSyncer {
+             }
+         }
+ 
++        let basalDescription = syncResponse.basal.map { "\($0.type) (patchId \($0.patchId))" } ?? "none"
++        if previousPumpState != state.pumpState || previousBasalState != state.basalState {
++            logger.info(
++                "Sync transition - pumpState: \(previousPumpState) -> \(state.pumpState), " +
++                    "basalState: \(previousBasalState) -> \(state.basalState), basal: \(basalDescription), " +
++                    "invalidPayload: \(syncResponse.invalidPayload), truncated: \(syncResponse.truncated), " +
++                    "duringReconnect: \(duringReconnect), fullSync: \(fullSync)"
++            )
++        }
++
++        if state.basalState == .suspended, state.pumpState.isRunning, !state.pumpState.isSuspended {
++            logger.warning(
++                "basalState is suspended while the patch reports \(state.pumpState), basal: \(basalDescription), " +
++                    "invalidPayload: \(syncResponse.invalidPayload), duringReconnect: \(duringReconnect), fullSync: \(fullSync)"
++            )
++        }
++
+         if let prime = syncResponse.primeProgress {
+             state.primeProgress = prime
+         }
