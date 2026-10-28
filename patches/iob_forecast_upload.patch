@@ -1,4 +1,4 @@
-From 88d88b49f4c7c93d6b59c4906d3186f552f0c874 Mon Sep 17 00:00:00 2001
+From c0f2fb13bd6f4d460bd772fe269ef31dd196144a Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jonas=20Bj=C3=B6rkert?= <jonas@bjorkert.se>
 Date: Wed, 28 Oct 2026 15:07:25 +0100
 Subject: [PATCH] Upload the IOB forecast to Nightscout
@@ -36,10 +36,10 @@ index 72f5ecc0a..439e77d96 100644
  
  struct NSPumpStatus: JSON {
 diff --git a/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift b/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
-index 5faff760d..2ef1efbfc 100644
+index 9f8a880e6..7952fc5fa 100644
 --- a/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
 +++ b/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
-@@ -660,7 +660,8 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
+@@ -638,7 +638,8 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
              enacted: settingsManager.settings.dosingMode.automation != .off ? enactedToUpload : nil,
              version: Bundle.main.releaseVersionNumber ?? "Unknown",
              recommendedBolus: recommendedBolus,
@@ -48,7 +48,7 @@ index 5faff760d..2ef1efbfc 100644
 +            iobForecast: iob.flatMap { $0.count > 1 ? NightscoutIOBForecast($0) : nil }
          )
  
-         debug(.nightscout, "To be uploaded openapsStatus: \(openapsStatus)")
+         debug(
 -- 
 2.54.0 (Apple Git-157)
 
