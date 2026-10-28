@@ -1,0 +1,54 @@
+From 88d88b49f4c7c93d6b59c4906d3186f552f0c874 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonas=20Bj=C3=B6rkert?= <jonas@bjorkert.se>
+Date: Wed, 28 Oct 2026 15:07:25 +0100
+Subject: [PATCH] Upload the IOB forecast to Nightscout
+
+Devicestatus carries openaps.iobForecast with the IOB and insulin activity Trio projects every five minutes from openaps.iob.time, so followers can draw where IOB and insulin activity are heading. openaps.iob is unchanged.
+---
+ Trio/Sources/Models/NightscoutStatus.swift        | 15 +++++++++++++++
+ .../Network/Nightscout/NightscoutManager.swift    |  3 ++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/Trio/Sources/Models/NightscoutStatus.swift b/Trio/Sources/Models/NightscoutStatus.swift
+index 72f5ecc0a..439e77d96 100644
+--- a/Trio/Sources/Models/NightscoutStatus.swift
++++ b/Trio/Sources/Models/NightscoutStatus.swift
+@@ -15,6 +15,21 @@ struct OpenAPSStatus: JSON {
+     let recommendedBolus: Decimal?
+     /// Raw value, not the localized name: followers parse this.
+     let dosingMode: String
++    /// The IOB projection whose first value is `iob`.
++    var iobForecast: NightscoutIOBForecast? = nil
++}
++
++/// IOB and insulin activity every five minutes from `iob.time`, for the
++/// insulin already delivered and the running temp basal until it ends.
++struct NightscoutIOBForecast: JSON {
++    let iob: [Decimal]
++    /// U/min, like `IOBEntry.activity`.
++    let activity: [Decimal]
++
++    init(_ entries: [IOBEntry]) {
++        iob = entries.map { $0.iob.rounded(toPlaces: 3) }
++        activity = entries.map { $0.activity.rounded(toPlaces: 5) }
++    }
+ }
+ 
+ struct NSPumpStatus: JSON {
+diff --git a/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift b/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
+index 5faff760d..2ef1efbfc 100644
+--- a/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
++++ b/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
+@@ -660,7 +660,8 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
+             enacted: settingsManager.settings.dosingMode.automation != .off ? enactedToUpload : nil,
+             version: Bundle.main.releaseVersionNumber ?? "Unknown",
+             recommendedBolus: recommendedBolus,
+-            dosingMode: settingsManager.settings.dosingMode.rawValue
++            dosingMode: settingsManager.settings.dosingMode.rawValue,
++            iobForecast: iob.flatMap { $0.count > 1 ? NightscoutIOBForecast($0) : nil }
+         )
+ 
+         debug(.nightscout, "To be uploaded openapsStatus: \(openapsStatus)")
+-- 
+2.54.0 (Apple Git-157)
+
