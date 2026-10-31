@@ -1,0 +1,381 @@
+diff --git a/Trio/Sources/Localizations/Main/Localizable.xcstrings b/Trio/Sources/Localizations/Main/Localizable.xcstrings
+index 4292db903..8d1734a8c 100644
+--- a/Trio/Sources/Localizations/Main/Localizable.xcstrings
++++ b/Trio/Sources/Localizations/Main/Localizable.xcstrings
+@@ -282652,6 +282652,36 @@
+     },
+     "Home Statistics Range" : {
+ 
++    },
++    "Keep this on if you log injections given with a pen or syringe." : {
++
++    },
++    "Show External Insulin" : {
++
++    },
++    "Show Meal Note" : {
++
++    },
++    "Show Meal Time" : {
++
++    },
++    "Show the External Insulin option in the bolus calculator." : {
++
++    },
++    "Show the note field for meal entries in the bolus calculator." : {
++
++    },
++    "Show the time row for meal entries in the bolus calculator." : {
++
++    },
++    "Shows the External Insulin option in the bolus calculator for logging insulin given outside the pump, for example with a pen or syringe." : {
++
++    },
++    "Shows the note field in the bolus calculator so a short note can be added to a meal entry." : {
++
++    },
++    "Shows the time row in the bolus calculator so a meal can be logged at an earlier or later time." : {
++
+     },
+     "Stay in open loop (no automated dosing) for a bit to help Trio catch up to keep you safe" : {
+       "localizations" : {
+@@ -345293,6 +345323,12 @@
+           }
+         }
+       }
++    },
++    "When turned off, every bolus entered in the bolus calculator is delivered by the pump." : {
++
++    },
++    "When turned off, meals are always logged at the time the bolus calculator was opened." : {
++
+     },
+     "When using the Sigmoid Formula, the weighted Total Daily Dose has a much lower impact on the dynamic adjustments to sensitivity." : {
+       "localizations" : {
+diff --git a/Trio/Sources/Models/TrioSettings.swift b/Trio/Sources/Models/TrioSettings.swift
+index 797a6bf0a..d284663d1 100644
+--- a/Trio/Sources/Models/TrioSettings.swift
++++ b/Trio/Sources/Models/TrioSettings.swift
+@@ -63,6 +63,9 @@ struct TrioSettings: JSON, Equatable, Encodable {
+     var sweetMeals: Bool = false
+     var sweetMealFactor: Decimal = 1
+     var displayPresets: Bool = true
++    var showMealTime: Bool = true
++    var showMealNote: Bool = true
++    var showExternalInsulin: Bool = true
+     var confirmBolus: Bool = false
+     var enableQuickPickTreatments: Bool = false
+     var useLiveActivity: Bool = false
+@@ -324,6 +327,18 @@ extension TrioSettings: Decodable {
+             settings.displayPresets = displayPresets
+         }
+ 
++        if let showMealTime = try? container.decode(Bool.self, forKey: .showMealTime) {
++            settings.showMealTime = showMealTime
++        }
++
++        if let showMealNote = try? container.decode(Bool.self, forKey: .showMealNote) {
++            settings.showMealNote = showMealNote
++        }
++
++        if let showExternalInsulin = try? container.decode(Bool.self, forKey: .showExternalInsulin) {
++            settings.showExternalInsulin = showExternalInsulin
++        }
++
+         if let confirmBolus = try? container.decode(Bool.self, forKey: .confirmBolus) {
+             settings.confirmBolus = confirmBolus
+         }
+diff --git a/Trio/Sources/Modules/BolusCalculatorConfig/BolusCalculatorStateModel.swift b/Trio/Sources/Modules/BolusCalculatorConfig/BolusCalculatorStateModel.swift
+index afa135ba0..400f45f30 100644
+--- a/Trio/Sources/Modules/BolusCalculatorConfig/BolusCalculatorStateModel.swift
++++ b/Trio/Sources/Modules/BolusCalculatorConfig/BolusCalculatorStateModel.swift
+@@ -9,6 +9,9 @@ extension BolusCalculatorConfig {
+         @Published var sweetMeals: Bool = false
+         @Published var sweetMealFactor: Decimal = 0
+         @Published var displayPresets: Bool = true
++        @Published var showMealTime: Bool = true
++        @Published var showMealNote: Bool = true
++        @Published var showExternalInsulin: Bool = true
+         @Published var confirmBolusWhenVeryLowGlucose: Bool = false
+ 
+         override func subscribe() {
+@@ -17,6 +20,9 @@ extension BolusCalculatorConfig {
+             subscribeSetting(\.overrideFactor, on: $overrideFactor) { overrideFactor = $0 }
+             subscribeSetting(\.fattyMeals, on: $fattyMeals) { fattyMeals = $0 }
+             subscribeSetting(\.displayPresets, on: $displayPresets) { displayPresets = $0 }
++            subscribeSetting(\.showMealTime, on: $showMealTime) { showMealTime = $0 }
++            subscribeSetting(\.showMealNote, on: $showMealNote) { showMealNote = $0 }
++            subscribeSetting(\.showExternalInsulin, on: $showExternalInsulin) { showExternalInsulin = $0 }
+             subscribeSetting(\.fattyMealFactor, on: $fattyMealFactor) { fattyMealFactor = $0 }
+             subscribeSetting(\.sweetMeals, on: $sweetMeals) { sweetMeals = $0 }
+             subscribeSetting(\.sweetMealFactor, on: $sweetMealFactor) { sweetMealFactor = $0 }
+diff --git a/Trio/Sources/Modules/BolusCalculatorConfig/View/BolusCalculatorConfigRootView.swift b/Trio/Sources/Modules/BolusCalculatorConfig/View/BolusCalculatorConfigRootView.swift
+index 8364eb69d..5523cd034 100644
+--- a/Trio/Sources/Modules/BolusCalculatorConfig/View/BolusCalculatorConfigRootView.swift
++++ b/Trio/Sources/Modules/BolusCalculatorConfig/View/BolusCalculatorConfigRootView.swift
+@@ -54,6 +54,78 @@ extension BolusCalculatorConfig {
+                     }
+                 )
+ 
++                SettingInputSection(
++                    decimalValue: $decimalPlaceholder,
++                    booleanValue: $state.showMealTime,
++                    shouldDisplayHint: $shouldDisplayHint,
++                    selectedVerboseHint: Binding(
++                        get: { selectedVerboseHint },
++                        set: {
++                            selectedVerboseHint = $0.map { AnyView($0) }
++                            hintLabel = String(localized: "Show Meal Time")
++                        }
++                    ),
++                    units: state.units,
++                    type: .boolean,
++                    label: String(localized: "Show Meal Time"),
++                    miniHint: String(localized: "Show the time row for meal entries in the bolus calculator."),
++                    verboseHint: VStack(alignment: .leading, spacing: 10) {
++                        Text("Default: ON").bold()
++                        Text(
++                            "Shows the time row in the bolus calculator so a meal can be logged at an earlier or later time."
++                        )
++                        Text(
++                            "When turned off, meals are always logged at the time the bolus calculator was opened."
++                        )
++                    }
++                )
++
++                SettingInputSection(
++                    decimalValue: $decimalPlaceholder,
++                    booleanValue: $state.showMealNote,
++                    shouldDisplayHint: $shouldDisplayHint,
++                    selectedVerboseHint: Binding(
++                        get: { selectedVerboseHint },
++                        set: {
++                            selectedVerboseHint = $0.map { AnyView($0) }
++                            hintLabel = String(localized: "Show Meal Note")
++                        }
++                    ),
++                    units: state.units,
++                    type: .boolean,
++                    label: String(localized: "Show Meal Note"),
++                    miniHint: String(localized: "Show the note field for meal entries in the bolus calculator."),
++                    verboseHint: VStack(alignment: .leading, spacing: 10) {
++                        Text("Default: ON").bold()
++                        Text("Shows the note field in the bolus calculator so a short note can be added to a meal entry.")
++                    }
++                )
++
++                SettingInputSection(
++                    decimalValue: $decimalPlaceholder,
++                    booleanValue: $state.showExternalInsulin,
++                    shouldDisplayHint: $shouldDisplayHint,
++                    selectedVerboseHint: Binding(
++                        get: { selectedVerboseHint },
++                        set: {
++                            selectedVerboseHint = $0.map { AnyView($0) }
++                            hintLabel = String(localized: "Show External Insulin")
++                        }
++                    ),
++                    units: state.units,
++                    type: .boolean,
++                    label: String(localized: "Show External Insulin"),
++                    miniHint: String(localized: "Show the External Insulin option in the bolus calculator."),
++                    verboseHint: VStack(alignment: .leading, spacing: 10) {
++                        Text("Default: ON").bold()
++                        Text(
++                            "Shows the External Insulin option in the bolus calculator for logging insulin given outside the pump, for example with a pen or syringe."
++                        )
++                        Text("When turned off, every bolus entered in the bolus calculator is delivered by the pump.")
++                        Text("Keep this on if you log injections given with a pen or syringe.")
++                    }
++                )
++
+                 SettingInputSection(
+                     decimalValue: $state.overrideFactor,
+                     booleanValue: $booleanPlaceholder,
+diff --git a/Trio/Sources/Modules/Settings/SettingItems.swift b/Trio/Sources/Modules/Settings/SettingItems.swift
+index 67b787314..1ed84984c 100644
+--- a/Trio/Sources/Modules/Settings/SettingItems.swift
++++ b/Trio/Sources/Modules/Settings/SettingItems.swift
+@@ -210,6 +210,9 @@ enum SettingItems {
+             view: .bolusCalculatorConfig,
+             searchContents: [
+                 "Display Meal Presets",
++                "Show Meal Time",
++                "Show Meal Note",
++                "Show External Insulin",
+                 "Recommended Bolus Percentage",
+                 "Enable Reduced Bolus Factor",
+                 "Reduced Bolus Factor",
+diff --git a/Trio/Sources/Modules/SettingsExport/SettingsExportStateModel.swift b/Trio/Sources/Modules/SettingsExport/SettingsExportStateModel.swift
+index 3562eb045..378e3b50f 100644
+--- a/Trio/Sources/Modules/SettingsExport/SettingsExportStateModel.swift
++++ b/Trio/Sources/Modules/SettingsExport/SettingsExportStateModel.swift
+@@ -635,6 +635,24 @@ extension SettingsExport {
+                     name: String(localized: "Display Meal Presets"),
+                     value: trioSettings.displayPresets ? String(localized: "Enabled") : String(localized: "Disabled")
+                 )
++                addSetting(
++                    category: featuresCategory,
++                    subcategory: treatmentsSubcategory,
++                    name: String(localized: "Show Meal Time"),
++                    value: trioSettings.showMealTime ? String(localized: "Enabled") : String(localized: "Disabled")
++                )
++                addSetting(
++                    category: featuresCategory,
++                    subcategory: treatmentsSubcategory,
++                    name: String(localized: "Show Meal Note"),
++                    value: trioSettings.showMealNote ? String(localized: "Enabled") : String(localized: "Disabled")
++                )
++                addSetting(
++                    category: featuresCategory,
++                    subcategory: treatmentsSubcategory,
++                    name: String(localized: "Show External Insulin"),
++                    value: trioSettings.showExternalInsulin ? String(localized: "Enabled") : String(localized: "Disabled")
++                )
+                 addSetting(
+                     category: featuresCategory,
+                     subcategory: treatmentsSubcategory,
+diff --git a/Trio/Sources/Modules/Treatments/TreatmentsStateModel.swift b/Trio/Sources/Modules/Treatments/TreatmentsStateModel.swift
+index 8091db590..c94774339 100644
+--- a/Trio/Sources/Modules/Treatments/TreatmentsStateModel.swift
++++ b/Trio/Sources/Modules/Treatments/TreatmentsStateModel.swift
+@@ -79,6 +79,9 @@ extension Treatments {
+         var fattyMealFactor: Decimal = 0
+         var useFattyMealCorrectionFactor: Bool = false
+         var displayPresets: Bool = true
++        var showMealTime: Bool = true
++        var showMealNote: Bool = true
++        var showExternalInsulin: Bool = true
+         var confirmBolus: Bool = false
+ 
+         var currentBasal: Decimal = 0
+@@ -352,6 +355,9 @@ extension Treatments {
+             sweetMeals = settings.settings.sweetMeals
+             sweetMealFactor = settings.settings.sweetMealFactor
+             displayPresets = settings.settings.displayPresets
++            showMealTime = settings.settings.showMealTime
++            showMealNote = settings.settings.showMealNote
++            showExternalInsulin = settings.settings.showExternalInsulin
+             confirmBolus = settings.settings.confirmBolus
+             forecastDisplayType = settings.settings.forecastDisplayType
+             lowGlucose = settingsManager.settings.low
+diff --git a/Trio/Sources/Modules/Treatments/View/TreatmentsRootView.swift b/Trio/Sources/Modules/Treatments/View/TreatmentsRootView.swift
+index 1c9730174..2a4970544 100644
+--- a/Trio/Sources/Modules/Treatments/View/TreatmentsRootView.swift
++++ b/Trio/Sources/Modules/Treatments/View/TreatmentsRootView.swift
+@@ -336,10 +336,12 @@ extension Treatments {
+             }
+             .id(FocusedField.bolus)
+ 
+-            HStack {
+-                Text("External Insulin")
+-                Spacer()
+-                Toggle("", isOn: $state.externalInsulin).toggleStyle(CheckboxToggleStyle())
++            if state.showExternalInsulin {
++                HStack {
++                    Text("External Insulin")
++                    Spacer()
++                    Toggle("", isOn: $state.externalInsulin).toggleStyle(CheckboxToggleStyle())
++                }
+             }
+         }
+ 
+@@ -380,55 +382,57 @@ extension Treatments {
+                                     }
+                                 }
+ 
+-                                // Time
+-                                HStack {
+-                                    // Semi-hacky workaround to make sure the List renders the horizontal divider properly between the `Time` and `Note` rows within the Section
++                                if state.showMealTime {
+                                     HStack {
+-                                        Text("")
+-                                        Image(systemName: "clock").padding(.leading, -7)
+-                                    }
++                                        // Semi-hacky workaround to make sure the List renders the horizontal divider properly between the `Time` and `Note` rows within the Section
++                                        HStack {
++                                            Text("")
++                                            Image(systemName: "clock").padding(.leading, -7)
++                                        }
+ 
+-                                    Spacer()
+-                                    if !pushed {
+-                                        Button {
+-                                            pushed = true
+-                                        } label: { Text("Now") }.buttonStyle(.borderless).foregroundColor(.secondary)
+-                                            .padding(.trailing, 5)
+-                                    } else {
+-                                        Button { state.date = state.date.addingTimeInterval(-15.minutes.timeInterval) }
+-                                        label: { Image(systemName: "minus.circle") }.tint(.blue).buttonStyle(.borderless)
+-                                            .accessibilityLabel(Text("15 minutes earlier"))
+-
+-                                        DatePicker(
+-                                            "Time",
+-                                            selection: $state.date,
+-                                            displayedComponents: [.hourAndMinute]
+-                                        ).controlSize(.mini)
+-                                            .labelsHidden()
+-                                            .onChange(of: state.date) { _, _ in
+-                                                // Trigger simulation when date changes to update forecasts for backdated carbs
+-                                                Task {
+-                                                    // `updateForecasts()` does update the `simulatedDetermination` of type `Determination?` var on the main thread, so I can use this to pass its cob value into the bolus calc manager
+-                                                    await state.updateForecasts()
+-                                                    state.insulinCalculated = await state.calculateInsulin()
++                                        Spacer()
++                                        if !pushed {
++                                            Button {
++                                                pushed = true
++                                            } label: { Text("Now") }.buttonStyle(.borderless).foregroundColor(.secondary)
++                                                .padding(.trailing, 5)
++                                        } else {
++                                            Button { state.date = state.date.addingTimeInterval(-15.minutes.timeInterval) }
++                                            label: { Image(systemName: "minus.circle") }.tint(.blue).buttonStyle(.borderless)
++                                                .accessibilityLabel(Text("15 minutes earlier"))
++
++                                            DatePicker(
++                                                "Time",
++                                                selection: $state.date,
++                                                displayedComponents: [.hourAndMinute]
++                                            ).controlSize(.mini)
++                                                .labelsHidden()
++                                                .onChange(of: state.date) { _, _ in
++                                                    // Trigger simulation when date changes to update forecasts for backdated carbs
++                                                    Task {
++                                                        // `updateForecasts()` does update the `simulatedDetermination` of type `Determination?` var on the main thread, so I can use this to pass its cob value into the bolus calc manager
++                                                        await state.updateForecasts()
++                                                        state.insulinCalculated = await state.calculateInsulin()
++                                                    }
+                                                 }
++                                            Button {
++                                                state.date = state.date.addingTimeInterval(15.minutes.timeInterval)
+                                             }
+-                                        Button {
+-                                            state.date = state.date.addingTimeInterval(15.minutes.timeInterval)
++                                            label: { Image(systemName: "plus.circle") }.tint(.blue).buttonStyle(.borderless)
++                                                .accessibilityLabel(Text("15 minutes later"))
+                                         }
+-                                        label: { Image(systemName: "plus.circle") }.tint(.blue).buttonStyle(.borderless)
+-                                            .accessibilityLabel(Text("15 minutes later"))
+                                     }
+                                 }
+ 
+-                                // Notes
+-                                HStack {
+-                                    Image(systemName: "square.and.pencil")
+-                                    TextFieldWithToolBarString(
+-                                        text: $state.note,
+-                                        placeholder: String(localized: "Note..."),
+-                                        maxLength: 25
+-                                    )
++                                if state.showMealNote {
++                                    HStack {
++                                        Image(systemName: "square.and.pencil")
++                                        TextFieldWithToolBarString(
++                                            text: $state.note,
++                                            placeholder: String(localized: "Note..."),
++                                            maxLength: 25
++                                        )
++                                    }
+                                 }
+                             }.listRowBackground(Color.chart)
+ 
