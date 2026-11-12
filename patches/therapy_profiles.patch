@@ -543,37 +543,47 @@ index a279805ec..7122c8bcd 100644
  				3B5CD2C92D4AECD500CE213C /* ProfileCarbsTests.swift in Sources */,
  				3BEDC9932EEB27B600AC6492 /* IobConsecutiveEventsTests.swift in Sources */,
 diff --git a/Trio/Sources/APS/APSManager.swift b/Trio/Sources/APS/APSManager.swift
-index ce45d0c46..766694de3 100644
+index ce45d0c46..a3735d31d 100644
 --- a/Trio/Sources/APS/APSManager.swift
 +++ b/Trio/Sources/APS/APSManager.swift
-@@ -122,6 +122,7 @@ private actor LoopGuard {
+@@ -122,6 +122,8 @@ private actor LoopGuard {
  
  final class BaseAPSManager: APSManager, Injectable {
      private let processQueue = DispatchQueue(label: "BaseAPSManager.processQueue")
-+    private let resolver: Resolver
++    private let therapyProfileManagerLock = NSLock()
++    private var resolvedTherapyProfileManager: TherapyProfileManager?
      @Injected() private var storage: FileStorage!
      @Injected() private var pumpHistoryStorage: PumpHistoryStorage!
      @Injected() private var alertHistoryStorage: AlertHistoryStorage!
-@@ -195,6 +196,7 @@ final class BaseAPSManager: APSManager, Injectable {
+@@ -194,6 +196,17 @@ final class BaseAPSManager: APSManager, Injectable {
+         set { settingsManager.settings = newValue }
      }
  
++    /// The profile manager depends on this manager, so it is resolved on first use, through the app's locked resolver:
++    /// the loop runs on several threads, and Swinject's container is not safe to use from more than one at a time.
++    private var therapyProfileManager: TherapyProfileManager? {
++        therapyProfileManagerLock.lock()
++        defer { therapyProfileManagerLock.unlock() }
++        if resolvedTherapyProfileManager == nil {
++            resolvedTherapyProfileManager = TrioApp.resolver.resolve(TherapyProfileManager.self)
++        }
++        return resolvedTherapyProfileManager
++    }
++
      init(resolver: Resolver) {
-+        self.resolver = resolver
          injectServices(resolver)
          openAPS = OpenAPS(storage: storage, tddStorage: tddStorage, glucoseStorage: glucoseStorage, carbsStorage: carbsStorage)
-         lastDosingMode = settingsManager.settings.dosingMode
-@@ -308,6 +310,10 @@ final class BaseAPSManager: APSManager, Injectable {
+@@ -308,6 +321,9 @@ final class BaseAPSManager: APSManager, Injectable {
                  return
              }
  
-+            // Before the loop starts, so the loop doses with the new profile. Resolved here because the profile manager
-+            // depends on this manager.
-+            await self.resolver.resolve(TherapyProfileManager.self)?.runDueScheduledSwitch()
++            // Before the loop starts, so the loop doses with the new profile.
++            await self.therapyProfileManager?.runDueScheduledSwitch()
 +
              // Atomic check-and-set via actor — eliminates the race between
              // checking isLooping.value and sending isLooping(true).
              guard await loopGuard.tryStart(
-@@ -352,7 +358,7 @@ final class BaseAPSManager: APSManager, Injectable {
+@@ -352,7 +368,7 @@ final class BaseAPSManager: APSManager, Injectable {
              do {
                  let enacted = try await executeLoop(loopStatRecord: &loopStatRecord)
                  requestNightscoutUpload(
@@ -856,7 +866,7 @@ index 0ec8b8f8e..c9d8a8275 100644
          container.register(DeterminationStorage.self) { r in BaseDeterminationStorage(resolver: r) }
          container.register(TDDStorage.self) { r in BaseTDDStorage(resolver: r) }
 diff --git a/Trio/Sources/Localizations/Main/Localizable.xcstrings b/Trio/Sources/Localizations/Main/Localizable.xcstrings
-index e58c15cdd..06ae31951 100644
+index a8e21b989..4b144b97c 100644
 --- a/Trio/Sources/Localizations/Main/Localizable.xcstrings
 +++ b/Trio/Sources/Localizations/Main/Localizable.xcstrings
 @@ -1142,6 +1142,9 @@
@@ -879,7 +889,7 @@ index e58c15cdd..06ae31951 100644
      },
      "This build of Trio can't send reports. Please share your logs on Discord or Facebook instead." : {
  
-@@ -172385,6 +172391,9 @@
+@@ -172391,6 +172397,9 @@
            }
          }
        }
@@ -889,7 +899,7 @@ index e58c15cdd..06ae31951 100644
      },
      "Insulin doses will be decreased by %@." : {
        "comment" : "Adjustment footer; the value is a percentage, e.g. 20%"
-@@ -351662,6 +351671,454 @@
+@@ -351668,6 +351677,454 @@
            }
          }
        }
@@ -2733,10 +2743,10 @@ index 866655a8a..55c74b8b0 100644
                  .navigationBarTitleDisplayMode(.automatic)
                  .onAppear {
 diff --git a/Trio/Sources/Modules/Home/HomeStateModel.swift b/Trio/Sources/Modules/Home/HomeStateModel.swift
-index aeae7646c..1ae8fb15f 100644
+index e14784d9c..9b389d7fa 100644
 --- a/Trio/Sources/Modules/Home/HomeStateModel.swift
 +++ b/Trio/Sources/Modules/Home/HomeStateModel.swift
-@@ -28,6 +28,7 @@ extension Home {
+@@ -29,6 +29,7 @@ extension Home {
          @ObservationIgnored @Injected() var tempTargetStorage: TempTargetsStorage!
          @ObservationIgnored @Injected() var overrideStorage: OverrideStorage!
          @ObservationIgnored @Injected() var bluetoothManager: BluetoothStateManager!
@@ -2744,7 +2754,7 @@ index aeae7646c..1ae8fb15f 100644
          @ObservationIgnored @Injected() var iobService: IOBService!
          @ObservationIgnored @Injected() var fileStorage: FileStorage!
          @ObservationIgnored @Injected() var unlockmanager: UnlockManager!
-@@ -77,6 +78,8 @@ extension Home {
+@@ -78,6 +79,8 @@ extension Home {
          var pumpDisplayState: PumpDisplayState?
          var alarm: GlucoseAlarm?
          var manualTempBasal = false
@@ -2753,7 +2763,7 @@ index aeae7646c..1ae8fb15f 100644
          var isSmoothingEnabled = false
          var maxIOB: Decimal = 0.0
          var currentIOB: Decimal = 0.0
-@@ -545,7 +548,13 @@ extension Home {
+@@ -547,7 +550,13 @@ extension Home {
                  .store(in: &subscriptions)
          }
  
@@ -2767,7 +2777,7 @@ index aeae7646c..1ae8fb15f 100644
              broadcaster.register(DeterminationObserver.self, observer: self)
              broadcaster.register(SettingsObserver.self, observer: self)
              broadcaster.register(PreferencesObserver.self, observer: self)
-@@ -1004,7 +1013,8 @@ extension Home.StateModel:
+@@ -1011,7 +1020,8 @@ extension Home.StateModel:
      BGTargetsObserver,
      PumpReservoirObserver,
      PumpDeactivatedObserver,
@@ -2777,7 +2787,7 @@ index aeae7646c..1ae8fb15f 100644
  {
      @MainActor func snoozeDidChange(_ untilDate: Date) {
          alarmsSnoozeUntil = untilDate
-@@ -1074,6 +1084,10 @@ extension Home.StateModel:
+@@ -1081,6 +1091,10 @@ extension Home.StateModel:
          }
      }
  
@@ -4196,19 +4206,19 @@ index b7d111602..d259fa09f 100644
              Treatments.RootView(resolver: resolver)
          case .history:
 diff --git a/Trio/Sources/Services/Alerts/AlertCatalogRegistry.swift b/Trio/Sources/Services/Alerts/AlertCatalogRegistry.swift
-index 629a01056..e0b004e7e 100644
+index 9cb6bf61b..e3179de06 100644
 --- a/Trio/Sources/Services/Alerts/AlertCatalogRegistry.swift
 +++ b/Trio/Sources/Services/Alerts/AlertCatalogRegistry.swift
 @@ -13,7 +13,7 @@ import LoopKit
  enum AlertCatalogRegistry {
      static let entries: [Alert.CatalogEntry] =
          omniEntries + minimedEntries + danaEntries + medtrumEntries + libreLoopEntries + g7Entries
--            + syaiEntries + trioAlgorithmEntries
-+            + syaiEntries + trioAlgorithmEntries + trioProfileEntries
+-            + syaiEntries + trioAlgorithmEntries + tidepoolEntries
++            + syaiEntries + trioAlgorithmEntries + tidepoolEntries + trioProfileEntries
  
      static func lookup(_ identifier: Alert.Identifier) -> Alert.CatalogEntry? {
          if let exact = entries.first(where: { $0.identifier == identifier }) {
-@@ -350,6 +350,33 @@ private extension AlertCatalogRegistry {
+@@ -365,6 +365,33 @@ private extension AlertCatalogRegistry {
      ]
  }
  
@@ -4243,13 +4253,13 @@ index 629a01056..e0b004e7e 100644
  
  private extension AlertCatalogRegistry {
 diff --git a/Trio/Sources/Services/Alerts/AlertCatalogVendor.swift b/Trio/Sources/Services/Alerts/AlertCatalogVendor.swift
-index d4cd35709..35ace0096 100644
+index 6524377c1..e8beca845 100644
 --- a/Trio/Sources/Services/Alerts/AlertCatalogVendor.swift
 +++ b/Trio/Sources/Services/Alerts/AlertCatalogVendor.swift
-@@ -43,6 +43,10 @@ extension Alert {
-         case notLooping
-         case algorithmError
-         case glucoseDataStale
+@@ -46,6 +46,10 @@ extension Alert {
+         // Service concepts. Surface through `TrioAlertManager` via
+         // `TidepoolManager.issueAlert(_:)`.
+         case tidepoolLoginRequired
 +        // Trio-internal "Profiles" concepts. Emitted by `TherapyProfileManager`
 +        // under the `trio.therapyProfiles` manager identifier.
 +        case profileSwitched
@@ -4257,10 +4267,10 @@ index d4cd35709..35ace0096 100644
          /// Plugin-unique alarm that doesn't merge with anything else.
          case unspecified
  
-@@ -80,6 +84,8 @@ extension Alert {
-             case .notLooping: return String(localized: "Trio Not Looping")
+@@ -84,6 +88,8 @@ extension Alert {
              case .algorithmError: return String(localized: "Algorithm Error")
              case .glucoseDataStale: return String(localized: "Glucose Data Stale")
+             case .tidepoolLoginRequired: return String(localized: "Tidepool Login Required")
 +            case .profileSwitched: return String(localized: "Profile Switched")
 +            case .scheduledProfileSwitchNotDone: return String(localized: "Scheduled Switch Not Done")
              case .unspecified: return ""
@@ -5952,7 +5962,7 @@ index 000000000..cf1b2ce1f
 +    }
 +}
 diff --git a/TrioTests/AlertCatalogRegistryEntriesTests.swift b/TrioTests/AlertCatalogRegistryEntriesTests.swift
-index b91d0a209..037ab2e50 100644
+index cd81a7fef..b53b92275 100644
 --- a/TrioTests/AlertCatalogRegistryEntriesTests.swift
 +++ b/TrioTests/AlertCatalogRegistryEntriesTests.swift
 @@ -69,7 +69,9 @@ import Testing
@@ -5976,9 +5986,9 @@ index b91d0a209..037ab2e50 100644
          ]
      ) func activeEntries(manager: String, alertID: String) {
          #expect(AlertCatalogRegistry.lookup(id(manager, alertID))?.interruptionLevel == .active)
-@@ -242,4 +245,18 @@ import Testing
-             #expect(AlertCatalogRegistry.lookup(id("trio.aps", alertID))?.category == "Algorithm")
-         }
+@@ -249,4 +252,18 @@ import Testing
+         #expect(entry?.category == "Services")
+         #expect(entry?.concept == .tidepoolLoginRequired)
      }
 +
 +    // MARK: - K: Trio-internal Profiles entries
@@ -6013,7 +6023,7 @@ index de5486674..33fc92084 100644
              resolver.resolve(CarbEntryMutationService.self) as AnyObject ===
                  resolver.resolve(CarbEntryMutationService.self) as AnyObject
 diff --git a/TrioTests/CoreDataTests/CarbEntryMutationServiceTests.swift b/TrioTests/CoreDataTests/CarbEntryMutationServiceTests.swift
-index beec5c8fd..c6bf4f775 100644
+index ed2abd815..bf13098e0 100644
 --- a/TrioTests/CoreDataTests/CarbEntryMutationServiceTests.swift
 +++ b/TrioTests/CoreDataTests/CarbEntryMutationServiceTests.swift
 @@ -244,7 +244,8 @@ private final class StubNightscoutManager: NightscoutManager {
