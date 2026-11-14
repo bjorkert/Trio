@@ -1,0 +1,87 @@
+diff --git a/Trio/Sources/APS/CGM/PluginSource.swift b/Trio/Sources/APS/CGM/PluginSource.swift
+index ba0946918..1943fa59a 100644
+--- a/Trio/Sources/APS/CGM/PluginSource.swift
++++ b/Trio/Sources/APS/CGM/PluginSource.swift
+@@ -152,7 +152,7 @@ extension PluginSource: CGMManagerDelegate {
+         await glucoseManager?.deleteGlucoseSource()
+     }
+ 
+-    func cgmManager(_: CGMManager, hasNew readingResult: CGMReadingResult) {
++    func cgmManager(_ manager: CGMManager, hasNew readingResult: CGMReadingResult) {
+         processQueue.async { [weak self] in
+             guard let self = self else { return }
+ 
+@@ -163,6 +163,11 @@ extension PluginSource: CGMManagerDelegate {
+                 self.glucoseManager?.newGlucoseFromCgmManager(newGlucose: glucose)
+             case let .failure(error):
+                 debug(.cgm, "CGM reading not usable: \(error.localizedDescription)")
++                if let settings = self.glucoseManager?.settingsManager?.settings,
++                   settings.isUploadEnabled, settings.uploadGlucose
++                {
++                    UnreliableGlucoseUploader.uploadLatest(from: manager)
++                }
+             }
+ 
+             self.glucoseManager?.reportCGMSensorObservation(self.currentSensorObservation())
+@@ -360,3 +365,61 @@ extension PluginSource {
+         [GlucoseSourceKey.description.rawValue: "Plugin CGM source"]
+     }
+ }
++
++/// Uploads a G7 reading the sensor marks unreliable as an "Unreliable Glucose" treatment, which LoopFollow shows as
++/// a hollow orange dot. Trio itself never stores, shows or uses it.
++enum UnreliableGlucoseUploader {
++    private static let uploadedUntilKey = "trio.unreliableGlucoseUploadedUntil"
++
++    private struct Treatment: Encodable {
++        let eventType = "Unreliable Glucose"
++        let enteredBy = "Trio"
++        let glucoseType = "Sensor"
++        let units = "mg/dl"
++        let glucose: Int
++        let notes: String
++        let created_at: String
++    }
++
++    static func uploadLatest(from manager: CGMManager) {
++        guard let g7 = manager as? G7CGMManager,
++              let message = g7.latestReading, !message.hasReliableGlucose,
++              let glucose = message.glucose, let date = g7.latestReadingTimestamp
++        else { return }
++
++        let uploadedUntil = UserDefaults.standard.object(forKey: uploadedUntilKey) as? Date ?? .distantPast
++        guard date > uploadedUntil else { return }
++        UserDefaults.standard.set(date, forKey: uploadedUntilKey)
++
++        let keychain = BaseKeychain()
++        guard let urlString = keychain.getValue(String.self, forKey: NightscoutConfig.Config.urlKey),
++              let url = URL(string: urlString),
++              let secret = keychain.getValue(String.self, forKey: NightscoutConfig.Config.secretKey)
++        else { return }
++
++        let mgdl = Int(glucose)
++        let treatment = Treatment(
++            glucose: mgdl,
++            notes: "Unreliable reading (sensor issue): \(mgdl) mg/dL",
++            created_at: ISO8601DateFormatter().string(from: date)
++        )
++
++        Task.detached(priority: .utility) {
++            do {
++                var request = URLRequest(url: url.appendingPathComponent("api/v1/treatments.json"))
++                request.httpMethod = "POST"
++                request.timeoutInterval = 30
++                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
++                request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
++                request.httpBody = try JSONEncoder().encode([treatment])
++                let (_, response) = try await URLSession.shared.data(for: request)
++                guard let http = response as? HTTPURLResponse, 200 ..< 300 ~= http.statusCode else {
++                    throw URLError(.badServerResponse)
++                }
++                debug(.nightscout, "Uploaded unreliable G7 reading \(mgdl) mg/dL")
++            } catch {
++                debug(.nightscout, "Unreliable G7 reading upload failed: \(error.localizedDescription)")
++            }
++        }
++    }
++}
