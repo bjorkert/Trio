@@ -269,7 +269,7 @@ index 314fcbd07..0cc2d7da3 100644
  </model>
 \ No newline at end of file
 diff --git a/Trio.xcodeproj/project.pbxproj b/Trio.xcodeproj/project.pbxproj
-index a279805ec..7122c8bcd 100644
+index f9ed85579..2c9aa82b3 100644
 --- a/Trio.xcodeproj/project.pbxproj
 +++ b/Trio.xcodeproj/project.pbxproj
 @@ -7,6 +7,41 @@
@@ -314,7 +314,7 @@ index a279805ec..7122c8bcd 100644
  		477F2885616B2839D22FF0A4 /* PumpStatusStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7EA1FA38A1728182C949F4 /* PumpStatusStorageTests.swift */; };
  		3A627606ABC518974CC60B55 /* PumpStatusStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E3EA2038BADFBCBC8801A4 /* PumpStatusStorage.swift */; };
  		4AB6E54D1659F6137A70BF74 /* PumpStatusStored+helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE4D8D4BA1BD69A89CA1C13 /* PumpStatusStored+helper.swift */; };
-@@ -1252,6 +1287,41 @@
+@@ -1266,6 +1301,41 @@
  /* End PBXCopyFilesBuildPhase section */
  
  /* Begin PBXFileReference section */
@@ -356,7 +356,7 @@ index a279805ec..7122c8bcd 100644
  		5C7EA1FA38A1728182C949F4 /* PumpStatusStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PumpStatusStorageTests.swift; sourceTree = "<group>"; };
  		A0E3EA2038BADFBCBC8801A4 /* PumpStatusStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PumpStatusStorage.swift; sourceTree = "<group>"; };
  		1EE4D8D4BA1BD69A89CA1C13 /* PumpStatusStored+helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PumpStatusStored+helper.swift"; sourceTree = "<group>"; };
-@@ -2459,6 +2529,55 @@
+@@ -2487,6 +2557,55 @@
  /* End PBXFrameworksBuildPhase section */
  
  /* Begin PBXGroup section */
@@ -412,7 +412,7 @@ index a279805ec..7122c8bcd 100644
  		0610F7D6D2EC00E3BA1569F0 /* ConfigEditor */ = {
  			isa = PBXGroup;
  			children = (
-@@ -2705,6 +2824,7 @@
+@@ -2733,6 +2852,7 @@
  		3811DE0325C9D31700A708ED /* Modules */ = {
  			isa = PBXGroup;
  			children = (
@@ -420,7 +420,7 @@ index a279805ec..7122c8bcd 100644
  				DDD163032C4C67B400CD525A /* Adjustments */,
  				DD1745382C55BF8B00211FAC /* AlgorithmAdvancedSettings */,
  				DDF690FE2DA2C9EE008BF16C /* AppDiagnostics */,
-@@ -2872,6 +2992,7 @@
+@@ -2900,6 +3020,7 @@
  		3811DE9125C9D88200A708ED /* Services */ = {
  			isa = PBXGroup;
  			children = (
@@ -428,7 +428,7 @@ index a279805ec..7122c8bcd 100644
  				B015AFF22E600000000D7351 /* Adjustments */,
  				BD1179262F4E22C100F90001 /* Alerts */,
  				3811DE9225C9D88200A708ED /* Appearance */,
-@@ -3293,6 +3414,9 @@
+@@ -3321,6 +3442,9 @@
  		388E5A5925B6F0250019842D /* Models */ = {
  			isa = PBXGroup;
  			children = (
@@ -438,7 +438,7 @@ index a279805ec..7122c8bcd 100644
  				BD11795B2F4E22C100F90001 /* GlucoseAlerts */,
  				49C782A62F73D9870062B0DD /* AlertEntry.swift */,
  				388E5A5F25B6F2310019842D /* Autosens.swift */,
-@@ -3409,6 +3533,7 @@
+@@ -3437,6 +3561,7 @@
  		38A0362725ECF05300FCBB52 /* Storage */ = {
  			isa = PBXGroup;
  			children = (
@@ -446,7 +446,7 @@ index a279805ec..7122c8bcd 100644
  				A0E3EA2038BADFBCBC8801A4 /* PumpStatusStorage.swift */,
  				38AEE75625F0F18E0013F05B /* CarbsStorage.swift */,
  				3A2F107674CF1D9C0A2A9ACF /* CarbEntryMutationService.swift */,
-@@ -3536,6 +3661,7 @@
+@@ -3564,6 +3689,7 @@
  		38FCF3EE25E9028E0078B0D1 /* TrioTests */ = {
  			isa = PBXGroup;
  			children = (
@@ -454,7 +454,7 @@ index a279805ec..7122c8bcd 100644
  				A1A0EDA730974FFF0028A032 /* GlucoseFormattingTests.swift */,
  				A1EF5D9A309CEF01007282CC /* DurationFormattingTests.swift */,
  				A1A0EDF43097CE470028A032 /* PercentFormattingTests.swift */,
-@@ -3815,6 +3941,7 @@
+@@ -3843,6 +3969,7 @@
  		5825D1622BD405AE00F36E9B /* Helper */ = {
  			isa = PBXGroup;
  			children = (
@@ -462,7 +462,7 @@ index a279805ec..7122c8bcd 100644
  				1EE4D8D4BA1BD69A89CA1C13 /* PumpStatusStored+helper.swift */,
  				49B9B57E2D5768D2009C6B59 /* AdjustmentStored+Helper.swift */,
  				581516A82BCEEDF800BF67D7 /* NSPredicates.swift */,
-@@ -4335,6 +4462,7 @@
+@@ -4367,6 +4494,7 @@
  		BD8FC0552D66187700B95AED /* CoreDataTests */ = {
  			isa = PBXGroup;
  			children = (
@@ -470,7 +470,7 @@ index a279805ec..7122c8bcd 100644
  				5C7EA1FA38A1728182C949F4 /* PumpStatusStorageTests.swift */,
  				BD8FC0562D66188700B95AED /* PumpHistoryStorageTests.swift */,
  				7A11AC0DE00000000000000C /* ScheduledBasalInferenceTests.swift */,
-@@ -4926,6 +5054,7 @@
+@@ -4958,6 +5086,7 @@
  		DD9ECB662CA99EFE00AA7C45 /* RemoteControl */ = {
  			isa = PBXGroup;
  			children = (
@@ -478,7 +478,7 @@ index a279805ec..7122c8bcd 100644
  				DD485F172E466F1800CE8CBF /* SecureMessenger.swift */,
  				DD17A0312E3FEA1F008E1BF0 /* RemoteNotificationResponseManager.swift */,
  				DD868FD72E381A54005D3308 /* APNSJWTClaims.swift */,
-@@ -5065,6 +5194,14 @@
+@@ -5123,6 +5252,14 @@
  		DDE179112C9100FA003CDDB7 /* Classes+Properties */ = {
  			isa = PBXGroup;
  			children = (
@@ -493,7 +493,7 @@ index a279805ec..7122c8bcd 100644
  				1D62B1642A5DA5C2ADB0F9AA /* PumpStatusStored+CoreDataProperties.swift */,
  				5CD86951C1C2313AD6D03EAD /* PumpStatusStored+CoreDataClass.swift */,
  				DDD7C8BF2F4DB45400E5CF09 /* GlucoseStored+CoreDataClass.swift */,
-@@ -5741,6 +5878,29 @@
+@@ -5799,6 +5936,29 @@
  			isa = PBXSourcesBuildPhase;
  			buildActionMask = 2147483647;
  			files = (
@@ -523,7 +523,7 @@ index a279805ec..7122c8bcd 100644
  				3A627606ABC518974CC60B55 /* PumpStatusStorage.swift in Sources */,
  				4AB6E54D1659F6137A70BF74 /* PumpStatusStored+helper.swift in Sources */,
  				BDDB1F2A2BEE371D5C0765DE /* PumpStatusStored+CoreDataProperties.swift in Sources */,
-@@ -6512,6 +6672,18 @@
+@@ -6584,6 +6744,18 @@
  			isa = PBXSourcesBuildPhase;
  			buildActionMask = 2147483647;
  			files = (
@@ -594,10 +594,10 @@ index ce45d0c46..a3735d31d 100644
                  await finalizeLoop(enacted: enacted, loopStatRecord: loopStatRecord)
 diff --git a/Trio/Sources/APS/Storage/TherapyProfileStorage.swift b/Trio/Sources/APS/Storage/TherapyProfileStorage.swift
 new file mode 100644
-index 000000000..d1740b012
+index 000000000..f4b446603
 --- /dev/null
 +++ b/Trio/Sources/APS/Storage/TherapyProfileStorage.swift
-@@ -0,0 +1,204 @@
+@@ -0,0 +1,268 @@
 +import CoreData
 +import Foundation
 +
@@ -637,23 +637,31 @@ index 000000000..d1740b012
 +    }
 +}
 +
++enum TherapyProfileStorageError: Error, Equatable {
++    case duplicateName
++    case valueOutOfRange(String)
++    case noActiveProfile
++}
++
 +protocol TherapyProfileStorage {
-+    func fetchProfiles() throws -> StoredTherapyProfiles
++    func fetchProfiles() async throws -> StoredTherapyProfiles
 +    /// Replaces every stored profile and scheduled switch in one save. With `switchDate`, the same save records that
-+    /// `profiles.activeProfileName` became active then.
++    /// `profiles.activeProfileName` became active then. Throws without changing anything when two profiles have the same
++    /// name ignoring case, a value is out of range, or there is no active profile for the active values, the scheduled
++    /// switches or the settled instant.
 +    func storeProfiles(
 +        _ profiles: StoredTherapyProfiles,
 +        switchDate: Date?,
 +        switchTrigger: TherapyProfileSwitch.Trigger?
 +    ) async throws
-+    /// Stores only the settled instant of the scheduled switches.
++    /// Stores only the settled instant of the scheduled switches. Throws `noActiveProfile` before the profiles are stored.
 +    func settleScheduledSwitches(at date: Date) async throws
 +    /// True when the stored profiles or scheduled switches changed after they were last uploaded to Nightscout.
-+    func profilesNotYetUploaded() throws -> Bool
++    func profilesNotYetUploaded() async throws -> Bool
 +    /// Marks the stored profiles and scheduled switches uploaded, unless they changed from `profiles` since.
 +    func markProfilesUploaded(_ profiles: StoredTherapyProfiles) async throws
 +    /// Profile switches not yet uploaded to Nightscout, oldest first.
-+    func profileSwitchesNotYetUploaded() throws -> [TherapyProfileSwitch]
++    func profileSwitchesNotYetUploaded() async throws -> [TherapyProfileSwitch]
 +    func markSwitchUploaded(_ profileSwitch: TherapyProfileSwitch) async throws
 +}
 +
@@ -664,6 +672,7 @@ index 000000000..d1740b012
 +}
 +
 +final class BaseTherapyProfileStorage: TherapyProfileStorage {
++    /// One context for all operations, so each replace of the stored profiles runs in order with every other read and write.
 +    private let context: NSManagedObjectContext
 +
 +    init(contextProvider: (() -> NSManagedObjectContext)? = nil) {
@@ -671,8 +680,8 @@ index 000000000..d1740b012
 +        context.name = "therapyProfileStorage"
 +    }
 +
-+    func fetchProfiles() throws -> StoredTherapyProfiles {
-+        try context.performAndWait {
++    func fetchProfiles() async throws -> StoredTherapyProfiles {
++        try await context.perform { [context] in
 +            Self.profiles(
 +                in: try context.fetch(TherapyProfileStored.fetchRequest()),
 +                switches: try context.fetch(ScheduledProfileSwitchStored.fetchRequest())
@@ -699,6 +708,12 @@ index 000000000..d1740b012
 +        switchDate: Date?,
 +        switchTrigger: TherapyProfileSwitch.Trigger?
 +    ) async throws {
++        do {
++            try Self.validate(profiles)
++        } catch {
++            warning(.storage, "Therapy profiles not saved", error: error)
++            throw error
++        }
 +        try await context.perform { [context] in
 +            do {
 +                for row in try context.fetch(TherapyProfileStored.fetchRequest()) {
@@ -738,15 +753,23 @@ index 000000000..d1740b012
 +
 +    func settleScheduledSwitches(at date: Date) async throws {
 +        try await context.perform { [context] in
-+            let request = TherapyProfileStored.fetchRequest()
-+            request.predicate = NSPredicate(format: "isActive == %@", true as NSNumber)
-+            try context.fetch(request).forEach { $0.scheduledSwitchesSettledAt = date }
-+            try context.save()
++            do {
++                let request = TherapyProfileStored.fetchRequest()
++                request.predicate = NSPredicate(format: "isActive == %@", true as NSNumber)
++                let rows = try context.fetch(request)
++                guard !rows.isEmpty else { throw TherapyProfileStorageError.noActiveProfile }
++                rows.forEach { $0.scheduledSwitchesSettledAt = date }
++                try context.save()
++            } catch {
++                context.rollback()
++                warning(.storage, "Saving the settled instant of the scheduled profile switches failed", error: error)
++                throw error
++            }
 +        }
 +    }
 +
-+    func profilesNotYetUploaded() throws -> Bool {
-+        try context.performAndWait {
++    func profilesNotYetUploaded() async throws -> Bool {
++        try await context.perform { [context] in
 +            let predicate = NSPredicate(format: "isUploadedToNS == %@", false as NSNumber)
 +            let profiles = TherapyProfileStored.fetchRequest()
 +            profiles.predicate = predicate
@@ -769,12 +792,17 @@ index 000000000..d1740b012
 +            guard current == uploaded else { return }
 +            rows.forEach { $0.isUploadedToNS = true }
 +            switches.forEach { $0.isUploadedToNS = true }
-+            try context.save()
++            do {
++                try context.save()
++            } catch {
++                context.rollback()
++                throw error
++            }
 +        }
 +    }
 +
-+    func profileSwitchesNotYetUploaded() throws -> [TherapyProfileSwitch] {
-+        try context.performAndWait {
++    func profileSwitchesNotYetUploaded() async throws -> [TherapyProfileSwitch] {
++        try await context.perform { [context] in
 +            let request = TherapyProfileSwitchStored.fetchRequest()
 +            request.predicate = NSPredicate(format: "isUploadedToNS == %@", false as NSNumber)
 +            request.sortDescriptors = [NSSortDescriptor(keyPath: \TherapyProfileSwitchStored.date, ascending: true)]
@@ -798,12 +826,48 @@ index 000000000..d1740b012
 +                profileSwitch.date as NSDate
 +            )
 +            try context.fetch(request).forEach { $0.isUploadedToNS = true }
-+            try context.save()
++            do {
++                try context.save()
++            } catch {
++                context.rollback()
++                throw error
++            }
++        }
++    }
++
++    private static func validate(_ profiles: StoredTherapyProfiles) throws {
++        let hasActiveProfileState = profiles.activeProfileValues != nil || !profiles.scheduledSwitches.isEmpty ||
++            profiles.scheduledSwitchesSettledAt != nil
++        if profiles.activeProfileName == nil, hasActiveProfileState {
++            throw TherapyProfileStorageError.noActiveProfile
++        }
++
++        var names = Set<String>()
++        for name in profiles.inactiveProfiles.map(\.name) + [profiles.activeProfileName].compactMap({ $0 }) {
++            guard names.insert(name.folding(options: .caseInsensitive, locale: nil)).inserted else {
++                throw TherapyProfileStorageError.duplicateName
++            }
++        }
++
++        let day = 0 ..< 24 * 3600
++        for profile in profiles.inactiveProfiles + [profiles.activeProfileValues].compactMap({ $0 }) {
++            let offsets = (profile.basal + profile.carbRatio + profile.sensitivity).map(\.seconds) + profile.target.map(\.seconds)
++            if let offset = offsets.first(where: { !day.contains($0) }) {
++                throw TherapyProfileStorageError.valueOutOfRange("schedule offset \(offset)")
++            }
++        }
++        for entry in profiles.scheduledSwitches {
++            guard (1 ... 7).contains(entry.weekday) else {
++                throw TherapyProfileStorageError.valueOutOfRange("weekday \(entry.weekday)")
++            }
++            guard day.contains(entry.time), entry.time % 60 == 0 else {
++                throw TherapyProfileStorageError.valueOutOfRange("time \(entry.time)")
++            }
 +        }
 +    }
 +}
 diff --git a/Trio/Sources/Application/TrioApp.swift b/Trio/Sources/Application/TrioApp.swift
-index 2410c8597..1ef91c3d9 100644
+index 3a8a34008..14f15fb45 100644
 --- a/Trio/Sources/Application/TrioApp.swift
 +++ b/Trio/Sources/Application/TrioApp.swift
 @@ -197,6 +197,7 @@ extension Notification.Name {
@@ -866,20 +930,20 @@ index 0ec8b8f8e..c9d8a8275 100644
          container.register(DeterminationStorage.self) { r in BaseDeterminationStorage(resolver: r) }
          container.register(TDDStorage.self) { r in BaseTDDStorage(resolver: r) }
 diff --git a/Trio/Sources/Localizations/Main/Localizable.xcstrings b/Trio/Sources/Localizations/Main/Localizable.xcstrings
-index a8e21b989..4b144b97c 100644
+index 93ed8c9d3..9a000e18a 100644
 --- a/Trio/Sources/Localizations/Main/Localizable.xcstrings
 +++ b/Trio/Sources/Localizations/Main/Localizable.xcstrings
-@@ -1142,6 +1142,9 @@
-     },
-     "Discord Name" : {
- 
+@@ -1286,6 +1286,9 @@
+           }
+         }
+       }
 +    },
 +    "Edit %@" : {
 +
      },
      "Email" : {
  
-@@ -1235,6 +1238,9 @@
+@@ -1559,6 +1562,9 @@
      },
      "The Trio team's server sent an answer the app doesn't understand." : {
  
@@ -889,7 +953,7 @@ index a8e21b989..4b144b97c 100644
      },
      "This build of Trio can't send reports. Please share your logs on Discord or Facebook instead." : {
  
-@@ -172391,6 +172397,9 @@
+@@ -172735,6 +172741,9 @@
            }
          }
        }
@@ -899,7 +963,7 @@ index a8e21b989..4b144b97c 100644
      },
      "Insulin doses will be decreased by %@." : {
        "comment" : "Adjustment footer; the value is a percentage, e.g. 20%"
-@@ -351668,6 +351677,454 @@
+@@ -352012,6 +352021,454 @@
            }
          }
        }
@@ -2536,10 +2600,10 @@ index ea9661e94..94ce69513 100644
  
          @MainActor func validate() {
 diff --git a/Trio/Sources/Modules/BasalProfileEditor/View/BasalProfileEditorRootView.swift b/Trio/Sources/Modules/BasalProfileEditor/View/BasalProfileEditorRootView.swift
-index 2a4edea7c..9cee0ff4b 100644
+index 6923c3140..0a4c3ebd3 100644
 --- a/Trio/Sources/Modules/BasalProfileEditor/View/BasalProfileEditorRootView.swift
 +++ b/Trio/Sources/Modules/BasalProfileEditor/View/BasalProfileEditorRootView.swift
-@@ -5,6 +5,8 @@ import Swinject
+@@ -4,6 +4,8 @@ import Swinject
  extension BasalProfileEditor {
      struct RootView: BaseView {
          let resolver: Resolver
@@ -2547,8 +2611,8 @@ index 2a4edea7c..9cee0ff4b 100644
 +        var profileName: String? = nil
          @State var state = StateModel()
          @State private var refreshUI = UUID()
-         @State private var now = Date()
-@@ -141,6 +143,17 @@ extension BasalProfileEditor {
+         @Namespace private var bottomID
+@@ -87,6 +89,17 @@ extension BasalProfileEditor {
              )
          }
  
@@ -2566,7 +2630,7 @@ index 2a4edea7c..9cee0ff4b 100644
          var totalBasalRow: some View {
              VStack(alignment: .leading, spacing: 0) {
                  HStack {
-@@ -170,6 +183,15 @@ extension BasalProfileEditor {
+@@ -116,6 +129,15 @@ extension BasalProfileEditor {
                      ScrollView {
                          LazyVStack {
                              VStack(alignment: .leading, spacing: 0) {
@@ -2582,7 +2646,7 @@ index 2a4edea7c..9cee0ff4b 100644
                                  if !state.canAdd {
                                      fullScheduleWarning
                                          .padding()
-@@ -228,6 +250,17 @@ extension BasalProfileEditor {
+@@ -174,6 +196,17 @@ extension BasalProfileEditor {
                      }
  
                      saveButton
@@ -2600,7 +2664,7 @@ index 2a4edea7c..9cee0ff4b 100644
                  }
                  .background(appState.trioBackgroundColor(for: colorScheme))
                  .alert(isPresented: $state.showAlert) {
-@@ -240,7 +273,7 @@ extension BasalProfileEditor {
+@@ -186,7 +219,7 @@ extension BasalProfileEditor {
                  .navigationTitle("Basal Rates")
                  .navigationBarTitleDisplayMode(.automatic)
                  .onAppear {
@@ -2697,10 +2761,10 @@ index cd9896aa6..0e5877cb1 100644
          }
  
 diff --git a/Trio/Sources/Modules/CarbRatioEditor/View/CarbRatioEditorRootView.swift b/Trio/Sources/Modules/CarbRatioEditor/View/CarbRatioEditorRootView.swift
-index 866655a8a..55c74b8b0 100644
+index 71d70e8e5..5d52bff46 100644
 --- a/Trio/Sources/Modules/CarbRatioEditor/View/CarbRatioEditorRootView.swift
 +++ b/Trio/Sources/Modules/CarbRatioEditor/View/CarbRatioEditorRootView.swift
-@@ -5,6 +5,8 @@ import Swinject
+@@ -4,6 +4,8 @@ import Swinject
  extension CarbRatioEditor {
      struct RootView: BaseView {
          let resolver: Resolver
@@ -2708,8 +2772,8 @@ index 866655a8a..55c74b8b0 100644
 +        var profileName: String? = nil
          @StateObject var state = StateModel()
          @State private var refreshUI = UUID()
-         @State private var now = Date()
-@@ -64,6 +66,10 @@ extension CarbRatioEditor {
+         @Namespace private var bottomID
+@@ -62,6 +64,10 @@ extension CarbRatioEditor {
                      ScrollView {
                          LazyVStack {
                              VStack(alignment: .leading, spacing: 0) {
@@ -2720,7 +2784,7 @@ index 866655a8a..55c74b8b0 100644
                                  // Chart visualization
                                  if !state.items.isEmpty {
                                      carbRatioChart
-@@ -113,9 +119,20 @@ extension CarbRatioEditor {
+@@ -111,9 +117,20 @@ extension CarbRatioEditor {
                      }
  
                      saveButton
@@ -2917,10 +2981,10 @@ index eb2acc87a..f7eca6e07 100644
          }
  
 diff --git a/Trio/Sources/Modules/ISFEditor/View/ISFEditorRootView.swift b/Trio/Sources/Modules/ISFEditor/View/ISFEditorRootView.swift
-index 7c5175d08..2297ea680 100644
+index a7b5d29bd..6b6f65ac6 100644
 --- a/Trio/Sources/Modules/ISFEditor/View/ISFEditorRootView.swift
 +++ b/Trio/Sources/Modules/ISFEditor/View/ISFEditorRootView.swift
-@@ -5,6 +5,8 @@ import Swinject
+@@ -4,6 +4,8 @@ import Swinject
  extension ISFEditor {
      struct RootView: BaseView {
          let resolver: Resolver
@@ -2928,8 +2992,8 @@ index 7c5175d08..2297ea680 100644
 +        var profileName: String? = nil
          @State var state = StateModel()
          @State private var refreshUI = UUID()
-         @State private var now = Date()
-@@ -68,6 +70,10 @@ extension ISFEditor {
+         @Namespace private var bottomID
+@@ -66,6 +68,10 @@ extension ISFEditor {
                      ScrollView {
                          LazyVStack {
                              VStack(alignment: .leading, spacing: 0) {
@@ -2940,7 +3004,7 @@ index 7c5175d08..2297ea680 100644
                                  // Chart visualization
                                  if !state.items.isEmpty {
                                      isfChart
-@@ -117,9 +123,20 @@ extension ISFEditor {
+@@ -115,9 +121,20 @@ extension ISFEditor {
                      }
  
                      saveButton
@@ -3353,10 +3417,10 @@ index 1e1b785e0..89f78e2f8 100644
          }
  
 diff --git a/Trio/Sources/Modules/TargetsEditor/View/TargetsEditorRootView.swift b/Trio/Sources/Modules/TargetsEditor/View/TargetsEditorRootView.swift
-index f7346ab89..c2c220e05 100644
+index e8ccc3c52..739a1eb3c 100644
 --- a/Trio/Sources/Modules/TargetsEditor/View/TargetsEditorRootView.swift
 +++ b/Trio/Sources/Modules/TargetsEditor/View/TargetsEditorRootView.swift
-@@ -5,6 +5,8 @@ import Swinject
+@@ -4,6 +4,8 @@ import Swinject
  extension TargetsEditor {
      struct RootView: BaseView {
          let resolver: Resolver
@@ -3364,8 +3428,8 @@ index f7346ab89..c2c220e05 100644
 +        var profileName: String? = nil
          @StateObject var state = StateModel()
          @State private var refreshUI = UUID()
-         @State private var now = Date()
-@@ -63,6 +65,10 @@ extension TargetsEditor {
+         @Namespace private var bottomID
+@@ -61,6 +63,10 @@ extension TargetsEditor {
                      ScrollView {
                          LazyVStack {
                              VStack(alignment: .leading, spacing: 0) {
@@ -3376,7 +3440,7 @@ index f7346ab89..c2c220e05 100644
                                  // Chart visualization
                                  if !state.items.isEmpty {
                                      glucoseTargetChart
-@@ -113,9 +119,20 @@ extension TargetsEditor {
+@@ -111,9 +117,20 @@ extension TargetsEditor {
                      }
  
                      saveButton
@@ -4308,7 +4372,7 @@ index 8bfffd7e1..108bb496b 100644
  }
  
 diff --git a/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift b/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
-index 89dcbbc2d..396df2679 100644
+index 89dcbbc2d..0771807e8 100644
 --- a/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
 +++ b/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
 @@ -19,7 +19,9 @@ protocol NightscoutManager: GlucoseSource {
@@ -4402,7 +4466,7 @@ index 89dcbbc2d..396df2679 100644
 -                }
 -
 -                let scheduledProfile = ScheduledNightscoutProfile(
-+                let storedProfiles = try therapyProfileStorage.fetchProfiles()
++                let storedProfiles = try await therapyProfileStorage.fetchProfiles()
 +                let activeProfile = TrioTherapyProfile(
 +                    name: storedProfiles.activeProfileName ?? TrioTherapyProfile.defaultName,
 +                    basalProfile: basalProfile,
@@ -4487,7 +4551,7 @@ index 89dcbbc2d..396df2679 100644
 +
 +    private func performUploadTherapyProfiles() async {
 +        do {
-+            for profileSwitch in try therapyProfileStorage.profileSwitchesNotYetUploaded() {
++            for profileSwitch in try await therapyProfileStorage.profileSwitchesNotYetUploaded() {
 +                let profileName = profileSwitch.name == TrioTherapyProfile.defaultName
 +                    ? TrioTherapyProfile.defaultStoreKey : profileSwitch.name
 +                let treatment = NightscoutTreatment(
@@ -4504,7 +4568,7 @@ index 89dcbbc2d..396df2679 100644
 +                try await therapyProfileStorage.markSwitchUploaded(profileSwitch)
 +                info(.nightscout, "Profile switch of \(profileSwitch.date) uploaded")
 +            }
-+            if try therapyProfileStorage.profilesNotYetUploaded() {
++            if try await therapyProfileStorage.profilesNotYetUploaded() {
 +                try await uploadProfiles()
 +            }
 +        } catch {
@@ -4570,10 +4634,10 @@ index 9684dacba..93047299e 100644
  
 diff --git a/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Profile.swift b/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Profile.swift
 new file mode 100644
-index 000000000..8f4e86d92
+index 000000000..1d8a7e8bc
 --- /dev/null
 +++ b/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Profile.swift
-@@ -0,0 +1,205 @@
+@@ -0,0 +1,206 @@
 +import Foundation
 +
 +/// Remembers command ids for a while, so a replayed command is recognized.
@@ -4695,6 +4759,7 @@ index 000000000..8f4e86d92
 +        }
 +
 +        do {
++            await therapyProfileManager.loadProfiles()
 +            let original = originalName.flatMap { therapyProfileManager.profile(named: $0) }
 +            let profile = try compact.therapyProfile(named: name, original: original)
 +            let saved = try await therapyProfileManager.save(
@@ -4812,10 +4877,10 @@ index 1f8c6621e..2b6b0fc98 100644
                  "Command rejected: unsupported command type.",
 diff --git a/Trio/Sources/Services/TherapyProfiles/TherapyProfileManager.swift b/Trio/Sources/Services/TherapyProfiles/TherapyProfileManager.swift
 new file mode 100644
-index 000000000..24383e0fd
+index 000000000..84aec2fc6
 --- /dev/null
 +++ b/Trio/Sources/Services/TherapyProfiles/TherapyProfileManager.swift
-@@ -0,0 +1,926 @@
+@@ -0,0 +1,986 @@
 +import Foundation
 +import LoopKit
 +import Swinject
@@ -4906,6 +4971,8 @@ index 000000000..24383e0fd
 +    func profiles() -> [TrioTherapyProfile]
 +    /// `default` also names the Default profile.
 +    func profile(named name: String) -> TrioTherapyProfile?
++    /// Loads the stored profiles the getters read, when they are not loaded yet.
++    func loadProfiles() async
 +
 +    /// Validates, writes the basal schedule to the pump, then makes the profile's values the live settings.
 +    @discardableResult func activate(
@@ -4939,8 +5006,9 @@ index 000000000..24383e0fd
 +        activeProfileName: String,
 +        scheduledSwitches: [ScheduledProfileSwitch]
 +    ) async throws
-+    /// Makes the profile whose values the live settings hold active, when the app stopped during a switch after writing
-+    /// the live settings and before storing the profiles.
++    /// Runs at launch, before the profiles are read: loads the stored profiles, and makes the profile whose values the live
++    /// settings hold active, when the app stopped during a switch after writing the live settings and before storing the
++    /// profiles.
 +    func completeInterruptedSwitch() async
 +
 +    /// Ordered as a week from Monday.
@@ -4996,6 +5064,10 @@ index 000000000..24383e0fd
 +    private let calendarOverride: Calendar?
 +    private let armedAlertLock = NSLock()
 +    private var armedAlert: ArmedScheduledSwitchAlert?
++    private let storedProfilesLock = NSLock()
++    /// The stored profiles as this manager last loaded or stored them. Every change of the stored profiles goes through this
++    /// manager, so the getters read these.
++    private var storedProfiles: StoredTherapyProfiles?
 +
 +    /// Tests pass `syncBasalSchedule`, `basalLimits`, `pumpSuspended`, `bolusInProgress` and `recompute` in place of the
 +    /// pump and the determination.
@@ -5030,19 +5102,27 @@ index 000000000..24383e0fd
 +    }
 +
 +    var activeProfileName: String {
-+        (try? loadState())?.activeProfileName ?? TrioTherapyProfile.defaultName
++        loadedState?.activeProfileName ?? TrioTherapyProfile.defaultName
 +    }
 +
 +    func activeProfile() -> TrioTherapyProfile {
-+        (try? loadState())?.activeProfile ?? liveProfile(named: TrioTherapyProfile.defaultName)
++        loadedState?.activeProfile ?? liveProfile(named: TrioTherapyProfile.defaultName)
 +    }
 +
 +    func profiles() -> [TrioTherapyProfile] {
-+        (try? loadState())?.profiles ?? [liveProfile(named: TrioTherapyProfile.defaultName)]
++        loadedState?.profiles ?? [liveProfile(named: TrioTherapyProfile.defaultName)]
 +    }
 +
 +    func profile(named name: String) -> TrioTherapyProfile? {
-+        (try? loadState())?.profile(named: name)
++        loadedState?.profile(named: name)
++    }
++
++    func loadProfiles() async {
++        do {
++            _ = try await loadStoredProfiles()
++        } catch {
++            warning(.settings, "Loading the therapy profiles failed", error: error)
++        }
 +    }
 +
 +    // MARK: State
@@ -5077,8 +5157,7 @@ index 000000000..24383e0fd
 +    /// When the live settings differ from the values stored with the active profile and equal another stored profile's,
 +    /// a switch wrote the live settings and stopped before storing the profiles: that profile is active, and the stored
 +    /// values belong to the previously active one.
-+    private func loadState() throws -> State {
-+        let stored = try therapyProfileStorage.fetchProfiles()
++    private func state(from stored: StoredTherapyProfiles) -> State {
 +        var activeName = stored.activeProfileName ?? TrioTherapyProfile.defaultName
 +        var inactiveProfiles = stored.inactiveProfiles
 +        let live = liveProfile(named: activeName)
@@ -5099,6 +5178,51 @@ index 000000000..24383e0fd
 +            scheduledSwitches: stored.scheduledSwitches,
 +            scheduledSwitchesSettledAt: stored.scheduledSwitchesSettledAt
 +        )
++    }
++
++    private func loadState() async throws -> State {
++        state(from: try await loadStoredProfiles())
++    }
++
++    /// Nil until the stored profiles are first loaded.
++    private var loadedState: State? {
++        storedProfilesLock.withLock { storedProfiles }.map(state(from:))
++    }
++
++    /// Until the first load the getters return Default with the live settings; observers are told when a later load changes
++    /// that.
++    private func loadStoredProfiles(notifiesObservers: Bool = true) async throws -> StoredTherapyProfiles {
++        if let storedProfiles = storedProfilesLock.withLock({ storedProfiles }) {
++            return storedProfiles
++        }
++        let fetched = try await therapyProfileStorage.fetchProfiles()
++        let loaded = storedProfilesLock.withLock { () -> Bool in
++            guard storedProfiles == nil else { return false }
++            storedProfiles = fetched
++            return true
++        }
++        if loaded, notifiesObservers, fetched != StoredTherapyProfiles(activeProfileName: nil, inactiveProfiles: []) {
++            broadcaster.notify(TherapyProfilesObserver.self, on: .main) { $0.therapyProfilesDidChange() }
++        }
++        return storedProfilesLock.withLock { storedProfiles } ?? fetched
++    }
++
++    private func store(
++        _ profiles: StoredTherapyProfiles,
++        switchDate: Date? = nil,
++        switchTrigger: TherapyProfileSwitch.Trigger? = nil
++    ) async throws {
++        do {
++            try await therapyProfileStorage.storeProfiles(profiles, switchDate: switchDate, switchTrigger: switchTrigger)
++        } catch is TherapyProfileStorageError {
++            throw TherapyProfileError.storageFailed
++        }
++        storedProfilesLock.withLock { storedProfiles = profiles }
++    }
++
++    private func settleScheduledSwitches(at date: Date) async throws {
++        try await therapyProfileStorage.settleScheduledSwitches(at: date)
++        storedProfilesLock.withLock { storedProfiles?.scheduledSwitchesSettledAt = date }
 +    }
 +
 +    private func liveProfile(named name: String) -> TrioTherapyProfile {
@@ -5145,7 +5269,7 @@ index 000000000..24383e0fd
 +    ) async throws {
 +        do {
 +            try writeLive(live)
-+            try await therapyProfileStorage.storeProfiles(state.stored, switchDate: switchDate, switchTrigger: switchTrigger)
++            try await store(state.stored, switchDate: switchDate, switchTrigger: switchTrigger)
 +        } catch let commitError {
 +            try? writeLive(previousLive)
 +            if live.basal != previousLive.basal {
@@ -5173,7 +5297,7 @@ index 000000000..24383e0fd
 +        write: @escaping @Sendable() async throws -> Void
 +    ) async throws -> TrioTherapyProfile {
 +        let (saved, stored) = try await serializer.run { () -> (TrioTherapyProfile, Bool) in
-+            var state = try self.loadState()
++            var state = try await self.loadState()
 +            guard let active = state.activeProfile else { throw TherapyProfileError.storageFailed }
 +            guard active.name == expectedActiveName, active.matchesFingerprint(expectedFingerprint) else {
 +                warning(.settings, "Therapy settings edit refused, the active profile changed while editing")
@@ -5189,7 +5313,7 @@ index 000000000..24383e0fd
 +                state.profiles[index] = live
 +            }
 +            do {
-+                try await self.therapyProfileStorage.storeProfiles(state.stored)
++                try await self.store(state.stored)
 +                return (live, true)
 +            } catch {
 +                warning(.settings, "Storing the therapy profiles after a therapy settings edit failed", error: error)
@@ -5204,12 +5328,13 @@ index 000000000..24383e0fd
 +    func completeInterruptedSwitch() async {
 +        do {
 +            let switchedTo = try await serializer.run { () -> TrioTherapyProfile? in
-+                var state = try self.loadState()
-+                let storedActiveName = try self.therapyProfileStorage.fetchProfiles().activeProfileName
++                let stored = try await self.loadStoredProfiles(notifiesObservers: false)
++                var state = self.state(from: stored)
++                let storedActiveName = stored.activeProfileName
 +                guard let storedActiveName, storedActiveName != state.activeProfileName else { return nil }
 +                let switchDate = self.now()
 +                state.scheduledSwitchesSettledAt = switchDate
-+                try await self.therapyProfileStorage.storeProfiles(state.stored, switchDate: switchDate, switchTrigger: nil)
++                try await self.store(state.stored, switchDate: switchDate, switchTrigger: nil)
 +                return state.activeProfile
 +            }
 +            guard let switchedTo else { return }
@@ -5229,7 +5354,7 @@ index 000000000..24383e0fd
 +        trigger: TherapyProfileSwitch.Trigger
 +    ) async throws -> TrioTherapyProfile {
 +        let (profile, switchDate) = try await serializer.run { () -> (TrioTherapyProfile, Date?) in
-+            var state = try self.loadState()
++            var state = try await self.loadState()
 +            guard let target = state.profile(named: name) else { throw TherapyProfileError.notFound(name) }
 +            if let expectedFingerprint, !target.matchesFingerprint(expectedFingerprint) {
 +                throw TherapyProfileError.conflict(target.name)
@@ -5266,7 +5391,7 @@ index 000000000..24383e0fd
 +        baseFingerprint: String?
 +    ) async throws -> TrioTherapyProfile {
 +        let (saved, liveChanged, changed) = try await serializer.run { () -> (TrioTherapyProfile, Bool, Bool) in
-+            var state = try self.loadState()
++            var state = try await self.loadState()
 +
 +            var original: TrioTherapyProfile?
 +            if let originalName {
@@ -5313,7 +5438,7 @@ index 000000000..24383e0fd
 +            }
 +
 +            guard let original, original.name == state.activeProfileName else {
-+                try await self.therapyProfileStorage.storeProfiles(state.stored)
++                try await self.store(state.stored)
 +                return (updated, false, true)
 +            }
 +            if updated.basal != original.basal {
@@ -5332,7 +5457,7 @@ index 000000000..24383e0fd
 +
 +    @discardableResult func delete(_ name: String, expectedFingerprint: String?) async throws -> Int {
 +        let (deleted, removedSwitches) = try await serializer.run { () -> (TrioTherapyProfile, Int) in
-+            var state = try self.loadState()
++            var state = try await self.loadState()
 +            guard let target = state.profile(named: name) else { throw TherapyProfileError.notFound(name) }
 +            if target.isDefault { throw TherapyProfileError.cannotDeleteDefault }
 +            if target.name == state.activeProfileName { throw TherapyProfileError.cannotDeleteActive }
@@ -5343,7 +5468,7 @@ index 000000000..24383e0fd
 +            let remainingSwitches = state.scheduledSwitches.removingProfile(target.name)
 +            let removedSwitches = state.scheduledSwitches.count - remainingSwitches.count
 +            state.scheduledSwitches = remainingSwitches
-+            try await self.therapyProfileStorage.storeProfiles(state.stored)
++            try await self.store(state.stored)
 +            return (target, removedSwitches)
 +        }
 +        info(.settings, "Therapy profile \(deleted.fingerprint(units: .mgdL)) deleted with \(removedSwitches) scheduled switches")
@@ -5361,7 +5486,7 @@ index 000000000..24383e0fd
 +            if activeProfileName != TrioTherapyProfile.defaultName, !inactiveProfiles.contains(where: \.isDefault) {
 +                inactiveProfiles.append(self.liveProfile(named: TrioTherapyProfile.defaultName))
 +            }
-+            try await self.therapyProfileStorage.storeProfiles(
++            try await self.store(
 +                StoredTherapyProfiles(
 +                    activeProfileName: activeProfileName,
 +                    inactiveProfiles: inactiveProfiles,
@@ -5383,7 +5508,7 @@ index 000000000..24383e0fd
 +    static let scheduledSwitchAlertDelay: TimeInterval = 30 * 60
 +
 +    func scheduledSwitches() -> [ScheduledProfileSwitch] {
-+        (try? loadState())?.scheduledSwitches.sortedByWeek ?? []
++        loadedState?.scheduledSwitches.sortedByWeek ?? []
 +    }
 +
 +    @discardableResult func saveScheduledSwitches(
@@ -5391,7 +5516,7 @@ index 000000000..24383e0fd
 +        baseFingerprint: String?
 +    ) async throws -> [ScheduledProfileSwitch] {
 +        let saved = try await serializer.run { () -> [ScheduledProfileSwitch] in
-+            var state = try self.loadState()
++            var state = try await self.loadState()
 +            if let baseFingerprint, !state.scheduledSwitches.matchesFingerprint(baseFingerprint) {
 +                throw TherapyProfileError.scheduledSwitchesConflict
 +            }
@@ -5407,7 +5532,7 @@ index 000000000..24383e0fd
 +                return entry
 +            }.sortedByWeek
 +            state.scheduledSwitchesSettledAt = self.now()
-+            try await self.therapyProfileStorage.storeProfiles(state.stored)
++            try await self.store(state.stored)
 +            return state.scheduledSwitches
 +        }
 +        info(.settings, "\(saved.count) scheduled profile switches saved, \(saved.filter(\.paused).count) paused")
@@ -5450,33 +5575,33 @@ index 000000000..24383e0fd
 +    }
 +
 +    private func runDueScheduledSwitchStep() async throws -> ScheduledSwitchRun {
-+        var state = try loadState()
++        var state = try await loadState()
 +        let now = self.now()
 +        guard !state.scheduledSwitches.isEmpty else { return .idle }
 +        guard let settledAt = state.scheduledSwitchesSettledAt else {
-+            try await therapyProfileStorage.settleScheduledSwitches(at: now)
++            try await settleScheduledSwitches(at: now)
 +            return .idle
 +        }
 +        guard let due = state.scheduledSwitches.newestOccurrence(after: settledAt, upTo: now, calendar: calendar) else {
 +            return .idle
 +        }
 +        guard now.timeIntervalSince(due.date) <= Self.scheduledSwitchGrace else {
-+            try await therapyProfileStorage.settleScheduledSwitches(at: now)
++            try await settleScheduledSwitches(at: now)
 +            return .failed(due, reason: String(localized: "Trio could not switch within 24 hours of the scheduled time."))
 +        }
 +        guard let target = state.profile(named: due.entry.profileName) else {
-+            try await therapyProfileStorage.settleScheduledSwitches(at: now)
++            try await settleScheduledSwitches(at: now)
 +            return .failed(due, reason: TherapyProfileError.notFound(due.entry.profileName).localizedDescription)
 +        }
 +        guard target.name != state.activeProfileName else {
-+            try await therapyProfileStorage.settleScheduledSwitches(at: now)
++            try await settleScheduledSwitches(at: now)
 +            return .idle
 +        }
 +        guard !isBolusInProgress else {
 +            return .retrying(due, reason: String(localized: "A bolus was in progress."))
 +        }
 +        if let reason = TherapyProfileValidator.validate(target, basalLimits: basalLimits) {
-+            try await therapyProfileStorage.settleScheduledSwitches(at: now)
++            try await settleScheduledSwitches(at: now)
 +            return .failed(due, reason: reason)
 +        }
 +
@@ -5491,7 +5616,7 @@ index 000000000..24383e0fd
 +        do {
 +            try await commit(state, live: target, previousLive: previousLive, switchDate: now, switchTrigger: .scheduled)
 +        } catch {
-+            try? await therapyProfileStorage.settleScheduledSwitches(at: now)
++            try? await settleScheduledSwitches(at: now)
 +            return .failed(due, reason: error.localizedDescription)
 +        }
 +        return .switched(due, target, at: now)
@@ -5562,7 +5687,7 @@ index 000000000..24383e0fd
 +    /// alert that was delivered stays until its start is settled.
 +    private func armScheduledSwitchAlert(reason: String? = nil) async {
 +        let now = self.now()
-+        let state = try? loadState()
++        let state = try? await loadState()
 +        if let state, let settledAt = state.scheduledSwitchesSettledAt,
 +           let unsettled = state.scheduledSwitches.nextOccurrence(after: settledAt, calendar: calendar),
 +           unsettled.date.addingTimeInterval(Self.scheduledSwitchAlertDelay) <= now
@@ -6053,10 +6178,10 @@ index d581e6eeb..5362e4cd8 100644
              BaseDeterminationStorage(resolver: r, contextProvider: { self.testContext })
 diff --git a/TrioTests/CoreDataTests/TherapyProfileStorageTests.swift b/TrioTests/CoreDataTests/TherapyProfileStorageTests.swift
 new file mode 100644
-index 000000000..af735c8a1
+index 000000000..e6101843a
 --- /dev/null
 +++ b/TrioTests/CoreDataTests/TherapyProfileStorageTests.swift
-@@ -0,0 +1,146 @@
+@@ -0,0 +1,228 @@
 +import CoreData
 +import Foundation
 +import Swinject
@@ -6090,8 +6215,8 @@ index 000000000..af735c8a1
 +        }
 +    }
 +
-+    @Test("Nothing is stored before the first save") func emptyStore() throws {
-+        #expect(try storage.fetchProfiles() == StoredTherapyProfiles(activeProfileName: nil, inactiveProfiles: []))
++    @Test("Nothing is stored before the first save") func emptyStore() async throws {
++        #expect(try await storage.fetchProfiles() == StoredTherapyProfiles(activeProfileName: nil, inactiveProfiles: []))
 +    }
 +
 +    @Test("Profiles round-trip, the active one by name only") func roundTrip() async throws {
@@ -6109,7 +6234,7 @@ index 000000000..af735c8a1
 +        try await storage.storeProfiles(StoredTherapyProfiles(activeProfileName: "Default", inactiveProfiles: [sport]))
 +        try await storage.storeProfiles(stored)
 +
-+        let fetched = try storage.fetchProfiles()
++        let fetched = try await storage.fetchProfiles()
 +        #expect(fetched.activeProfileName == "Sport")
 +        #expect(fetched.inactiveProfiles.sorted { $0.name < $1.name } == stored.inactiveProfiles)
 +        #expect(try await rowCount(TherapyProfileStored.self) == 3)
@@ -6121,16 +6246,16 @@ index 000000000..af735c8a1
 +        try await storage.storeProfiles(
 +            StoredTherapyProfiles(activeProfileName: "Sport", inactiveProfiles: [], activeProfileValues: live)
 +        )
-+        #expect(try storage.fetchProfiles().activeProfileValues == live.renamed("Sport"))
++        #expect(try await storage.fetchProfiles().activeProfileValues == live.renamed("Sport"))
 +
 +        try await storage.storeProfiles(StoredTherapyProfiles(activeProfileName: "Sport", inactiveProfiles: []))
-+        #expect(try storage.fetchProfiles().activeProfileValues == nil)
++        #expect(try await storage.fetchProfiles().activeProfileValues == nil)
 +    }
 +
 +    @Test("Schedules come back in time order") func scheduleOrder() async throws {
 +        let profile = TherapyProfileFixtures.profile("Order", basal: [(0, 1), (1800, 1.1), (3600, 1.2), (84600, 0.9)])
 +        try await storage.storeProfiles(StoredTherapyProfiles(activeProfileName: "Default", inactiveProfiles: [profile]))
-+        #expect(try storage.fetchProfiles().inactiveProfiles == [profile])
++        #expect(try await storage.fetchProfiles().inactiveProfiles == [profile])
 +    }
 +
 +    @Test("Scheduled switches and the settled instant are stored and replaced with the profiles") func scheduledSwitches() async throws {
@@ -6145,16 +6270,16 @@ index 000000000..af735c8a1
 +            scheduledSwitches: entries,
 +            scheduledSwitchesSettledAt: settledAt
 +        ))
-+        var fetched = try storage.fetchProfiles()
++        var fetched = try await storage.fetchProfiles()
 +        #expect(fetched.scheduledSwitches == entries.sortedByWeek)
 +        #expect(fetched.scheduledSwitchesSettledAt == settledAt)
 +
 +        try await storage.settleScheduledSwitches(at: settledAt.addingTimeInterval(60))
-+        #expect(try storage.fetchProfiles().scheduledSwitchesSettledAt == settledAt.addingTimeInterval(60))
++        #expect(try await storage.fetchProfiles().scheduledSwitchesSettledAt == settledAt.addingTimeInterval(60))
 +
 +        fetched.scheduledSwitches = [entries[1]]
 +        try await storage.storeProfiles(fetched)
-+        #expect(try storage.fetchProfiles().scheduledSwitches == [entries[1]])
++        #expect(try await storage.fetchProfiles().scheduledSwitches == [entries[1]])
 +        #expect(try await rowCount(ScheduledProfileSwitchStored.self) == 1)
 +    }
 +
@@ -6168,44 +6293,126 @@ index 000000000..af735c8a1
 +        try await storage.storeProfiles(StoredTherapyProfiles(activeProfileName: "Default", inactiveProfiles: [sport]))
 +        try await storage.storeProfiles(stored, switchDate: switchDate, switchTrigger: .scheduled)
 +
-+        #expect(try storage.profilesNotYetUploaded())
++        #expect(try await storage.profilesNotYetUploaded())
 +        #expect(
-+            try storage.profileSwitchesNotYetUploaded() ==
++            try await storage.profileSwitchesNotYetUploaded() ==
 +                [TherapyProfileSwitch(name: "Sport", date: switchDate, trigger: .scheduled)]
 +        )
 +
 +        try await storage.markProfilesUploaded(StoredTherapyProfiles(activeProfileName: "Default", inactiveProfiles: [sport]))
-+        #expect(try storage.profilesNotYetUploaded())
++        #expect(try await storage.profilesNotYetUploaded())
 +
 +        try await storage.markProfilesUploaded(stored)
 +        try await storage.markSwitchUploaded(TherapyProfileSwitch(name: "Sport", date: switchDate))
-+        #expect(try !storage.profilesNotYetUploaded())
-+        #expect(try storage.profileSwitchesNotYetUploaded().isEmpty)
++        #expect(try await !storage.profilesNotYetUploaded())
++        #expect(try await storage.profileSwitchesNotYetUploaded().isEmpty)
 +    }
 +
 +    @Test("A changed list of scheduled switches is pending upload, settling is not") func scheduledSwitchUploadTracking() async throws {
 +        var stored = StoredTherapyProfiles(activeProfileName: "Default", inactiveProfiles: [])
 +        try await storage.storeProfiles(stored)
 +        try await storage.markProfilesUploaded(stored)
-+        #expect(try !storage.profilesNotYetUploaded())
++        #expect(try await !storage.profilesNotYetUploaded())
 +
 +        try await storage.settleScheduledSwitches(at: Date(timeIntervalSince1970: 1_800_000_000))
-+        #expect(try !storage.profilesNotYetUploaded())
++        #expect(try await !storage.profilesNotYetUploaded())
 +
 +        stored.scheduledSwitches = [ScheduledProfileSwitch(id: "s", profileName: "Default", weekday: 2, time: 21600)]
 +        stored.scheduledSwitchesSettledAt = Date(timeIntervalSince1970: 1_800_000_060)
 +        try await storage.storeProfiles(stored)
-+        #expect(try storage.profilesNotYetUploaded())
++        #expect(try await storage.profilesNotYetUploaded())
 +        try await storage.markProfilesUploaded(StoredTherapyProfiles(activeProfileName: "Default", inactiveProfiles: []))
-+        #expect(try storage.profilesNotYetUploaded())
++        #expect(try await storage.profilesNotYetUploaded())
 +        stored.scheduledSwitchesSettledAt = nil
 +        try await storage.markProfilesUploaded(stored)
-+        #expect(try !storage.profilesNotYetUploaded())
++        #expect(try await !storage.profilesNotYetUploaded())
++    }
++
++    @Test("Two profiles with the same name ignoring case are refused and nothing changes") func duplicateNames() async throws {
++        let stored = StoredTherapyProfiles(
++            activeProfileName: "Default",
++            inactiveProfiles: [TherapyProfileFixtures.profile("Sport")]
++        )
++        try await storage.storeProfiles(stored)
++
++        let duplicates = [
++            StoredTherapyProfiles(activeProfileName: "Default", inactiveProfiles: [TherapyProfileFixtures.profile("default")]),
++            StoredTherapyProfiles(
++                activeProfileName: "Default",
++                inactiveProfiles: [TherapyProfileFixtures.profile("Sport"), TherapyProfileFixtures.profile("SPORT")]
++            )
++        ]
++        for profiles in duplicates {
++            await #expect(throws: TherapyProfileStorageError.duplicateName) { try await storage.storeProfiles(profiles) }
++        }
++        #expect(try await storage.fetchProfiles() == stored)
++    }
++
++    @Test("Out-of-range weekdays, times and schedule offsets are refused and nothing changes") func outOfRange() async throws {
++        let stored = StoredTherapyProfiles(
++            activeProfileName: "Default",
++            inactiveProfiles: [TherapyProfileFixtures.profile("Sport")],
++            scheduledSwitches: [ScheduledProfileSwitch(id: "s", profileName: "Sport", weekday: 2, time: 21600)]
++        )
++        try await storage.storeProfiles(stored)
++
++        let switches: [(weekday: Int, time: Int, error: String)] = [
++            (0, 0, "weekday 0"),
++            (8, 0, "weekday 8"),
++            (1, 86400, "time 86400"),
++            (1, -60, "time -60"),
++            (1, 30, "time 30"),
++            (1, Int(Int32.max) + 61, "time \(Int(Int32.max) + 61)")
++        ]
++        for entry in switches {
++            var profiles = stored
++            profiles.scheduledSwitches = [ScheduledProfileSwitch(profileName: "Sport", weekday: entry.weekday, time: entry.time)]
++            await #expect(throws: TherapyProfileStorageError.valueOutOfRange(entry.error)) {
++                try await storage.storeProfiles(profiles)
++            }
++        }
++        for offset in [-1800, 86400, Int(Int32.max) + 1] {
++            let profile = TherapyProfileFixtures.profile("Sport", basal: [(0, 1), (offset, 1.2)])
++            var inactive = stored
++            inactive.inactiveProfiles = [profile]
++            var active = stored
++            active.activeProfileValues = profile
++            for profiles in [inactive, active] {
++                await #expect(throws: TherapyProfileStorageError.valueOutOfRange("schedule offset \(offset)")) {
++                    try await storage.storeProfiles(profiles)
++                }
++            }
++        }
++        #expect(try await storage.fetchProfiles() == stored)
++    }
++
++    @Test("Values, scheduled switches or a settled instant without an active profile are refused") func noActiveProfile() async throws {
++        let refused = [
++            StoredTherapyProfiles(
++                activeProfileName: nil,
++                inactiveProfiles: [],
++                scheduledSwitches: [ScheduledProfileSwitch(profileName: "Default", weekday: 2, time: 0)]
++            ),
++            StoredTherapyProfiles(activeProfileName: nil, inactiveProfiles: [], scheduledSwitchesSettledAt: Date()),
++            StoredTherapyProfiles(
++                activeProfileName: nil,
++                inactiveProfiles: [],
++                activeProfileValues: TherapyProfileFixtures.profile("Default")
++            )
++        ]
++        for profiles in refused {
++            await #expect(throws: TherapyProfileStorageError.noActiveProfile) { try await storage.storeProfiles(profiles) }
++        }
++        await #expect(throws: TherapyProfileStorageError.noActiveProfile) {
++            try await storage.settleScheduledSwitches(at: Date())
++        }
++        #expect(try await rowCount(TherapyProfileStored.self) == 0)
++        #expect(try await rowCount(ScheduledProfileSwitchStored.self) == 0)
 +    }
 +}
 diff --git a/TrioTests/TherapyProfileTests/NightscoutProfileImportTests.swift b/TrioTests/TherapyProfileTests/NightscoutProfileImportTests.swift
 new file mode 100644
-index 000000000..230b380ba
+index 000000000..8d1d57a55
 --- /dev/null
 +++ b/TrioTests/TherapyProfileTests/NightscoutProfileImportTests.swift
 @@ -0,0 +1,276 @@
@@ -6482,7 +6689,7 @@ index 000000000..230b380ba
 +            scheduledSwitches: imported.scheduledSwitches
 +        )
 +        #expect(context.manager.scheduledSwitches().map(\.id) == ["s", "w"])
-+        #expect(try context.profileStorage.fetchProfiles().scheduledSwitchesSettledAt == context.recorder.now)
++        #expect(try await context.profileStorage.fetchProfiles().scheduledSwitchesSettledAt == context.recorder.now)
 +    }
 +}
 diff --git a/TrioTests/TherapyProfileTests/ScheduledProfileSwitchTests.swift b/TrioTests/TherapyProfileTests/ScheduledProfileSwitchTests.swift
@@ -6688,10 +6895,10 @@ index 000000000..ba073a7df
 +}
 diff --git a/TrioTests/TherapyProfileTests/TherapyProfileManagerTests.swift b/TrioTests/TherapyProfileTests/TherapyProfileManagerTests.swift
 new file mode 100644
-index 000000000..209ec7a88
+index 000000000..4fc306936
 --- /dev/null
 +++ b/TrioTests/TherapyProfileTests/TherapyProfileManagerTests.swift
-@@ -0,0 +1,699 @@
+@@ -0,0 +1,778 @@
 +@testable import DanaKit
 +import Foundation
 +import LoopKit
@@ -6707,14 +6914,14 @@ index 000000000..209ec7a88
 +        #expect(context.manager.activeProfileName == "Default")
 +        #expect(context.manager.profiles().map(\.name) == ["Default"])
 +        #expect(context.manager.activeProfile().hasSameValues(as: TherapyProfileFixtures.profile("Default")))
-+        #expect(try context.profileStorage.fetchProfiles().activeProfileName == nil)
++        #expect(try await context.profileStorage.fetchProfiles().activeProfileName == nil)
 +    }
 +
 +    @Test("Saving a new profile stores it and leaves the pump and live settings alone") func create() async throws {
 +        let context = try await TherapyProfileTestContext.make()
 +        try await context.manager.save(sport, originalName: nil, baseFingerprint: nil)
 +
-+        let stored = try context.profileStorage.fetchProfiles()
++        let stored = try await context.profileStorage.fetchProfiles()
 +        #expect(stored.activeProfileName == "Default")
 +        #expect(stored.inactiveProfiles == [sport])
 +        #expect(context.manager.profiles().map(\.name) == ["Default", "Sport"])
@@ -6754,7 +6961,7 @@ index 000000000..209ec7a88
 +        )
 +        #expect(context.fileStorage.retrieve(OpenAPS.Settings.bgTargets, as: BGTargets.self)?.targets.map(\.low) == [120])
 +
-+        let stored = try context.profileStorage.fetchProfiles()
++        let stored = try await context.profileStorage.fetchProfiles()
 +        #expect(stored.activeProfileName == "Sport")
 +        #expect(stored.inactiveProfiles.map(\.name) == ["Default"])
 +        #expect(stored.inactiveProfiles.first?.hasSameValues(as: TherapyProfileFixtures.profile("Default")) == true)
@@ -6766,8 +6973,8 @@ index 000000000..209ec7a88
 +        try await context.manager.activate("Sport", expectedFingerprint: nil)
 +        try await context.manager.save(sport.renamed("Sports"), originalName: "Sport", baseFingerprint: nil)
 +
-+        #expect(try context.profileStorage.profileSwitchesNotYetUploaded().map(\.name) == ["Sport"])
-+        #expect(try context.profileStorage.profilesNotYetUploaded())
++        #expect(try await context.profileStorage.profileSwitchesNotYetUploaded().map(\.name) == ["Sport"])
++        #expect(try await context.profileStorage.profilesNotYetUploaded())
 +    }
 +
 +    @Test("Activating the active profile changes nothing") func switchToActive() async throws {
@@ -6885,19 +7092,18 @@ index 000000000..209ec7a88
 +        _ = try? await context.manager.activate("Sport", expectedFingerprint: nil)
 +        fileStorage.failingWrites = []
 +        #expect(context.liveBasal == [0.5])
-+        #expect(try context.profileStorage.fetchProfiles().activeProfileName == "Default")
++        #expect(try await context.profileStorage.fetchProfiles().activeProfileName == "Default")
 +
 +        let relaunched = try context.relaunched()
++        await relaunched.manager.completeInterruptedSwitch()
 +        #expect(relaunched.manager.activeProfileName == "Sport")
 +        #expect(relaunched.manager.profile(named: "Default")?.hasSameValues(as: defaultValues) == true)
-+
-+        await relaunched.manager.completeInterruptedSwitch()
-+        let stored = try relaunched.profileStorage.fetchProfiles()
++        let stored = try await relaunched.profileStorage.fetchProfiles()
 +        #expect(stored.activeProfileName == "Sport")
 +        #expect(stored.inactiveProfiles.map(\.name) == ["Default"])
 +        #expect(stored.inactiveProfiles.first?.hasSameValues(as: defaultValues) == true)
 +        #expect(relaunched.recorder.events == [.profilesChanged])
-+        #expect(try relaunched.profileStorage.profileSwitchesNotYetUploaded() == [
++        #expect(try await relaunched.profileStorage.profileSwitchesNotYetUploaded() == [
 +            TherapyProfileSwitch(name: "Sport", date: relaunched.recorder.now)
 +        ])
 +
@@ -6905,15 +7111,95 @@ index 000000000..209ec7a88
 +        #expect(relaunched.liveBasal == defaultBasal)
 +    }
 +
++    @Test("The profiles are read from Core Data once, and a failed store leaves them as they were") func readsOnce() async throws {
++        let context = try await TherapyProfileTestContext.make()
++        try await context.manager.save(sport, originalName: nil, baseFingerprint: nil)
++        try await context.manager.activate("Sport", expectedFingerprint: nil)
++        #expect(context.manager.profiles().map(\.name) == ["Default", "Sport"])
++        #expect(context.manager.activeProfileName == "Sport")
++        #expect(context.profileStorage.fetchCount.value == 1)
++
++        context.profileStorage.failsToStore = true
++        await #expect(throws: TherapyProfileError.self) {
++            try await context.manager.save(TherapyProfileFixtures.profile("Night"), originalName: nil, baseFingerprint: nil)
++        }
++        #expect(context.manager.profiles().map(\.name) == ["Default", "Sport"])
++        #expect(context.profileStorage.fetchCount.value == 1)
++    }
++
++    @Test("The getters read the same as a fresh load after every change") func matchesFreshLoad() async throws {
++        let context = try await TherapyProfileTestContext.make()
++        func expectFreshLoad() async throws {
++            let relaunched = try context.relaunched()
++            await relaunched.manager.completeInterruptedSwitch()
++            #expect(context.manager.activeProfileName == relaunched.manager.activeProfileName)
++            #expect(context.manager.profiles() == relaunched.manager.profiles())
++            #expect(context.manager.scheduledSwitches() == relaunched.manager.scheduledSwitches())
++        }
++
++        try await context.manager.save(sport, originalName: nil, baseFingerprint: nil)
++        try await expectFreshLoad()
++        try await context.manager.activate("Sport", expectedFingerprint: nil)
++        try await expectFreshLoad()
++        try await context.manager.saveScheduledSwitches(
++            [ScheduledProfileSwitch(profileName: "Default", weekday: 2, time: 21600)],
++            baseFingerprint: nil
++        )
++        try await expectFreshLoad()
++        try await context.manager.save(sport.renamed("Run"), originalName: "Sport", baseFingerprint: nil)
++        try await expectFreshLoad()
++        try await context.manager.save(TherapyProfileFixtures.profile("Night"), originalName: nil, baseFingerprint: nil)
++        try await context.manager.delete("Night", expectedFingerprint: nil)
++        try await expectFreshLoad()
++        context.profileStorage.failsToStore = true
++        _ = try? await context.manager.activate("Default", expectedFingerprint: nil)
++        context.profileStorage.failsToStore = false
++        try await expectFreshLoad()
++    }
++
++    @Test("Before the profiles are loaded the getters return Default, and an edit based on that is refused") func notLoaded() async throws {
++        let context = try await TherapyProfileTestContext.make()
++        try await context.manager.save(sport, originalName: nil, baseFingerprint: nil)
++        try await context.manager.activate("Sport", expectedFingerprint: nil)
++
++        let relaunched = try context.relaunched()
++        #expect(relaunched.manager.activeProfileName == "Default")
++        let fallback = relaunched.manager.activeProfile()
++        await #expect(throws: TherapyProfileError.activeProfileChanged(expected: "Default", current: "Sport")) {
++            try await relaunched.manager.saveLiveSettings(
++                expectedActiveName: fallback.name,
++                expectedFingerprint: fallback.fingerprint(units: .mgdL),
++                write: {}
++            )
++        }
++    }
++
++    @Test("A failed load at launch is retried by the next operation, which tells observers") func loadRetried() async throws {
++        let context = try await TherapyProfileTestContext.make()
++        try await context.manager.save(sport, originalName: nil, baseFingerprint: nil)
++        try await context.manager.activate("Sport", expectedFingerprint: nil)
++
++        let relaunched = try context.relaunched()
++        relaunched.profileStorage.failsToFetch = true
++        await relaunched.manager.completeInterruptedSwitch()
++        #expect(relaunched.manager.activeProfileName == "Default")
++        #expect(relaunched.recorder.events.isEmpty)
++
++        relaunched.profileStorage.failsToFetch = false
++        await relaunched.manager.runDueScheduledSwitch()
++        #expect(relaunched.manager.activeProfileName == "Sport")
++        #expect(relaunched.recorder.events == [.profilesChanged])
++    }
++
 +    @Test("A launch after completed changes leaves the stored profiles alone") func noInterruptedSwitch() async throws {
 +        let context = try await TherapyProfileTestContext.make()
 +        try await context.manager.save(sport, originalName: nil, baseFingerprint: nil)
 +        try await context.manager.activate("Sport", expectedFingerprint: nil)
-+        let stored = try context.profileStorage.fetchProfiles()
++        let stored = try await context.profileStorage.fetchProfiles()
 +
 +        let relaunched = try context.relaunched()
 +        await relaunched.manager.completeInterruptedSwitch()
-+        #expect(try relaunched.profileStorage.fetchProfiles() == stored)
++        #expect(try await relaunched.profileStorage.fetchProfiles() == stored)
 +        #expect(relaunched.recorder.events.isEmpty)
 +    }
 +
@@ -7084,7 +7370,7 @@ index 000000000..209ec7a88
 +        ) { fileStorage.save(carbRatios, as: OpenAPS.Settings.carbRatios) }
 +        #expect(saved.name == "Sport")
 +        #expect(saved.carbRatio.map(\.value) == [7])
-+        #expect(try context.profileStorage.fetchProfiles().activeProfileValues?.carbRatio.map(\.value) == [7])
++        #expect(try await context.profileStorage.fetchProfiles().activeProfileValues?.carbRatio.map(\.value) == [7])
 +        #expect(context.recorder.events.suffix(2) == [.liveChanged, .profilesChanged])
 +
 +        try await context.manager.activate("Default", expectedFingerprint: nil)
@@ -7096,7 +7382,7 @@ index 000000000..209ec7a88
 +        let context = try await TherapyProfileTestContext.make()
 +        try await context.manager.save(sport, originalName: nil, baseFingerprint: nil)
 +        try await context.profileStorage.markProfilesUploaded(context.profileStorage.fetchProfiles())
-+        #expect(try !context.profileStorage.profilesNotYetUploaded())
++        #expect(try await !context.profileStorage.profilesNotYetUploaded())
 +        let base = context.manager.activeProfile()
 +        let carbRatios = TherapyProfileFixtures.profile("x", carbratio: [(0, 7)]).carbRatios
 +        let fileStorage = context.fileStorage
@@ -7106,7 +7392,7 @@ index 000000000..209ec7a88
 +            expectedFingerprint: base.fingerprint(units: .mgdL)
 +        ) { fileStorage.save(carbRatios, as: OpenAPS.Settings.carbRatios) }
 +
-+        #expect(try context.profileStorage.profilesNotYetUploaded())
++        #expect(try await context.profileStorage.profilesNotYetUploaded())
 +    }
 +
 +    @Test("A live settings save is refused after a switch") func liveSaveAfterSwitch() async throws {
@@ -7189,7 +7475,7 @@ index 000000000..209ec7a88
 +        }
 +        try await context.manager.delete("Sport", expectedFingerprint: sport.fingerprint(units: .mgdL))
 +        #expect(context.manager.profiles().map(\.name) == ["Default"])
-+        #expect(try context.profileStorage.fetchProfiles().inactiveProfiles.isEmpty)
++        #expect(try await context.profileStorage.fetchProfiles().inactiveProfiles.isEmpty)
 +    }
 +
 +    @Test("Concurrent changes run one at a time") func serialized() async throws {
@@ -7269,7 +7555,7 @@ index 000000000..209ec7a88
 +            expectedActiveName: edited.name,
 +            expectedFingerprint: edited.fingerprint(units: .mgdL)
 +        ) { fileStorage.save(carbRatios, as: OpenAPS.Settings.carbRatios) }
-+        #expect(try context.profileStorage.fetchProfiles().activeProfileValues?.carbRatio.map(\.value) == [7])
++        #expect(try await context.profileStorage.fetchProfiles().activeProfileValues?.carbRatio.map(\.value) == [7])
 +    }
 +
 +    @Test("Dana rates stored with binary noise equal the same rates sent as exact decimals") func danaRatesKeepValues() async throws {
@@ -7510,7 +7796,7 @@ index 000000000..4902afefb
 +}
 diff --git a/TrioTests/TherapyProfileTests/TherapyProfileNightscoutTests.swift b/TrioTests/TherapyProfileTests/TherapyProfileNightscoutTests.swift
 new file mode 100644
-index 000000000..3c0f484b4
+index 000000000..649e5cce8
 --- /dev/null
 +++ b/TrioTests/TherapyProfileTests/TherapyProfileNightscoutTests.swift
 @@ -0,0 +1,157 @@
@@ -7668,7 +7954,7 @@ index 000000000..3c0f484b4
 +        )
 +        context.recorder.now = start.addingTimeInterval(180)
 +        await context.manager.runDueScheduledSwitch()
-+        #expect(try context.profileStorage.profileSwitchesNotYetUploaded().map(\.trigger) == [.local, .remote, .scheduled])
++        #expect(try await context.profileStorage.profileSwitchesNotYetUploaded().map(\.trigger) == [.local, .remote, .scheduled])
 +    }
 +}
 diff --git a/TrioTests/TherapyProfileTests/TherapyProfileRemoteValuesTests.swift b/TrioTests/TherapyProfileTests/TherapyProfileRemoteValuesTests.swift
@@ -7789,7 +8075,7 @@ index 000000000..7163302f0
 +}
 diff --git a/TrioTests/TherapyProfileTests/TherapyProfileScheduledSwitchTests.swift b/TrioTests/TherapyProfileTests/TherapyProfileScheduledSwitchTests.swift
 new file mode 100644
-index 000000000..ccadf05d2
+index 000000000..e5f531016
 --- /dev/null
 +++ b/TrioTests/TherapyProfileTests/TherapyProfileScheduledSwitchTests.swift
 @@ -0,0 +1,337 @@
@@ -7824,8 +8110,8 @@ index 000000000..ccadf05d2
 +        return context
 +    }
 +
-+    private func settledAt(_ context: TherapyProfileTestContext) throws -> Date? {
-+        try context.profileStorage.fetchProfiles().scheduledSwitchesSettledAt
++    private func settledAt(_ context: TherapyProfileTestContext) async throws -> Date? {
++        try await context.profileStorage.fetchProfiles().scheduledSwitchesSettledAt
 +    }
 +
 +    private func issued(_ context: TherapyProfileTestContext, _ name: String) -> [Alert] {
@@ -7835,7 +8121,7 @@ index 000000000..ccadf05d2
 +    @Test("Saving the list names Default by its profile name, settles now and arms the next start") func saveList() async throws {
 +        let context = try await makeContext()
 +        #expect(context.manager.scheduledSwitches().map(\.profileName) == ["Default", "Weekend"])
-+        #expect(try settledAt(context) == date("2026-11-13 12:00"))
++        #expect(try await settledAt(context) == date("2026-11-13 12:00"))
 +        let pending = try #require(issued(context, "pending").last)
 +        #expect(pending.trigger == .delayed(interval: date("2026-11-14 07:30").timeIntervalSince(date("2026-11-13 12:00"))))
 +        #expect(pending.backgroundContent.body.contains("Weekend"))
@@ -7887,7 +8173,7 @@ index 000000000..ccadf05d2
 +            .profilesChanged,
 +            .recompute
 +        ])
-+        #expect(try settledAt(context) == date("2026-11-14 07:00"))
++        #expect(try await settledAt(context) == date("2026-11-14 07:00"))
 +        let done = try #require(issued(context, "done").last)
 +        #expect(done.interruptionLevel == .active)
 +        #expect(done.backgroundContent.body.contains("as scheduled"))
@@ -7933,7 +8219,7 @@ index 000000000..ccadf05d2
 +        await context.manager.runDueScheduledSwitch()
 +        #expect(context.recorder.pumpWrites == 0)
 +        #expect(context.manager.activeProfileName == "Default")
-+        #expect(try settledAt(context) == date("2026-11-16 06:30"))
++        #expect(try await settledAt(context) == date("2026-11-16 06:30"))
 +    }
 +
 +    @Test("A start older than the grace is not applied and the user is told") func missed() async throws {
@@ -7943,7 +8229,7 @@ index 000000000..ccadf05d2
 +
 +        #expect(context.recorder.pumpWrites == 0)
 +        #expect(context.manager.activeProfileName == "Default")
-+        #expect(try settledAt(context) == date("2026-11-15 07:01"))
++        #expect(try await settledAt(context) == date("2026-11-15 07:01"))
 +        let failed = try #require(issued(context, "failed").last)
 +        #expect(failed.interruptionLevel == .timeSensitive)
 +        #expect(failed.backgroundContent.body.contains("Weekend"))
@@ -7958,7 +8244,7 @@ index 000000000..ccadf05d2
 +
 +        #expect(context.fileStorage.sameContents(as: before))
 +        #expect(context.manager.activeProfileName == "Default")
-+        #expect(try settledAt(context) == date("2026-11-13 12:00"))
++        #expect(try await settledAt(context) == date("2026-11-13 12:00"))
 +        let pending = try #require(issued(context, "pending").last)
 +        #expect(pending.backgroundContent.body.contains("pump unreachable"))
 +        #expect(pending.trigger == .delayed(interval: 29 * 60))
@@ -8018,7 +8304,7 @@ index 000000000..ccadf05d2
 +        context.recorder.now = date("2026-11-14 07:01")
 +        await context.manager.runDueScheduledSwitch()
 +        #expect(context.recorder.pumpWrites == 0)
-+        #expect(try settledAt(context) == date("2026-11-13 12:00"))
++        #expect(try await settledAt(context) == date("2026-11-13 12:00"))
 +
 +        context.recorder.bolusInProgress = false
 +        await context.manager.runDueScheduledSwitch()
@@ -8032,7 +8318,7 @@ index 000000000..ccadf05d2
 +        await context.manager.runDueScheduledSwitch()
 +
 +        #expect(context.recorder.pumpWrites == 0)
-+        #expect(try settledAt(context) == date("2026-11-14 07:01"))
++        #expect(try await settledAt(context) == date("2026-11-14 07:01"))
 +        #expect(issued(context, "failed").last?.backgroundContent.body.contains("not supported by the pump") == true)
 +    }
 +
@@ -8047,7 +8333,7 @@ index 000000000..ccadf05d2
 +        #expect(context.fileStorage.sameContents(as: before))
 +        #expect(context.manager.activeProfileName == "Default")
 +        #expect(context.recorder.pumpWrites == 2)
-+        #expect(try settledAt(context) == date("2026-11-14 07:01"))
++        #expect(try await settledAt(context) == date("2026-11-14 07:01"))
 +        let failed = try #require(issued(context, "failed").last)
 +        #expect(failed.interruptionLevel == .timeSensitive)
 +        #expect(
@@ -8079,7 +8365,7 @@ index 000000000..ccadf05d2
 +        context.recorder.now = date("2026-11-14 07:01")
 +        await context.manager.runDueScheduledSwitch()
 +        #expect(context.recorder.pumpWrites == 0)
-+        #expect(try settledAt(context) == date("2026-11-13 12:00"))
++        #expect(try await settledAt(context) == date("2026-11-13 12:00"))
 +
 +        context.recorder.now = date("2026-11-14 07:10")
 +        var entries = context.manager.scheduledSwitches()
@@ -8132,10 +8418,10 @@ index 000000000..ccadf05d2
 +}
 diff --git a/TrioTests/TherapyProfileTests/TherapyProfileTestSupport.swift b/TrioTests/TherapyProfileTests/TherapyProfileTestSupport.swift
 new file mode 100644
-index 000000000..da0f56694
+index 000000000..bfafb4467
 --- /dev/null
 +++ b/TrioTests/TherapyProfileTests/TherapyProfileTestSupport.swift
-@@ -0,0 +1,287 @@
+@@ -0,0 +1,300 @@
 +import CoreData
 +import Foundation
 +import Swinject
@@ -8200,6 +8486,8 @@ index 000000000..da0f56694
 +final class FailableTherapyProfileStorage: TherapyProfileStorage, @unchecked Sendable {
 +    private let base: TherapyProfileStorage
 +    var failsToStore = false
++    var failsToFetch = false
++    let fetchCount = LockedCounter()
 +    /// Runs before every store; a throw stops the store.
 +    var beforeStore: (() throws -> Void)?
 +
@@ -8207,8 +8495,10 @@ index 000000000..da0f56694
 +        self.base = base
 +    }
 +
-+    func fetchProfiles() throws -> StoredTherapyProfiles {
-+        try base.fetchProfiles()
++    func fetchProfiles() async throws -> StoredTherapyProfiles {
++        fetchCount.increment()
++        if failsToFetch { throw TherapyProfileError.storageFailed }
++        return try await base.fetchProfiles()
 +    }
 +
 +    func storeProfiles(
@@ -8225,16 +8515,16 @@ index 000000000..da0f56694
 +        try await base.settleScheduledSwitches(at: date)
 +    }
 +
-+    func profilesNotYetUploaded() throws -> Bool {
-+        try base.profilesNotYetUploaded()
++    func profilesNotYetUploaded() async throws -> Bool {
++        try await base.profilesNotYetUploaded()
 +    }
 +
 +    func markProfilesUploaded(_ profiles: StoredTherapyProfiles) async throws {
 +        try await base.markProfilesUploaded(profiles)
 +    }
 +
-+    func profileSwitchesNotYetUploaded() throws -> [TherapyProfileSwitch] {
-+        try base.profileSwitchesNotYetUploaded()
++    func profileSwitchesNotYetUploaded() async throws -> [TherapyProfileSwitch] {
++        try await base.profileSwitchesNotYetUploaded()
 +    }
 +
 +    func markSwitchUploaded(_ profileSwitch: TherapyProfileSwitch) async throws {
@@ -8359,7 +8649,9 @@ index 000000000..da0f56694
 +        fileStorage.save(live.carbRatios, as: OpenAPS.Settings.carbRatios)
 +        fileStorage.save(live.insulinSensitivities, as: OpenAPS.Settings.insulinSensitivities)
 +        fileStorage.save(live.bgTargets, as: OpenAPS.Settings.bgTargets)
-+        return try make(coreDataStack: try await CoreDataStack.createForTests(), fileStorage: fileStorage)
++        let context = try make(coreDataStack: try await CoreDataStack.createForTests(), fileStorage: fileStorage)
++        await context.manager.completeInterruptedSwitch()
++        return context
 +    }
 +
 +    /// A new manager over the same Core Data store and settings files, as after an app restart.
@@ -8411,6 +8703,13 @@ index 000000000..da0f56694
 +        waiters.forEach { $0.resume() }
 +        waiters = []
 +    }
++}
++
++final class LockedCounter: @unchecked Sendable {
++    private let lock = NSLock()
++    private var count = 0
++    var value: Int { lock.withLock { count } }
++    func increment() { lock.withLock { count += 1 } }
 +}
 +
 +final class LockedFlag: @unchecked Sendable {
@@ -8509,7 +8808,7 @@ index 000000000..79727d1f6
 +}
 diff --git a/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift b/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift
 new file mode 100644
-index 000000000..dd3953966
+index 000000000..28fdb62e7
 --- /dev/null
 +++ b/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift
 @@ -0,0 +1,481 @@
@@ -8991,6 +9290,6 @@ index 000000000..dd3953966
 +        _ = try await send(command("switch_profile", [
 +            "profile_name": "Sport", "base_fingerprint": sport.fingerprint(units: .mgdL)
 +        ]))
-+        #expect(try context.profileStorage.profileSwitchesNotYetUploaded().map(\.trigger) == [.remote])
++        #expect(try await context.profileStorage.profileSwitchesNotYetUploaded().map(\.trigger) == [.remote])
 +    }
 +}
