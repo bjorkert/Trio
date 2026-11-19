@@ -1,0 +1,2956 @@
+diff --git a/Trio.xcodeproj/project.pbxproj b/Trio.xcodeproj/project.pbxproj
+index 0cbdfc9e6..ed642a478 100644
+--- a/Trio.xcodeproj/project.pbxproj
++++ b/Trio.xcodeproj/project.pbxproj
+@@ -7,6 +7,10 @@
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
++		CD5433515FD75D1421AFE509 /* RemoteTreatmentGuardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55FF1780B839DC309AE2581 /* RemoteTreatmentGuardTests.swift */; };
++		59590795A904CD4E7C8AA7CD /* NightscoutObjectIdStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9CAF7E4571224EBB2EF567 /* NightscoutObjectIdStore.swift */; };
++		034BF913F9639417555E1B4A /* TrioRemoteControl+TreatmentGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2CFC1FA4917A7921B13B88A /* TrioRemoteControl+TreatmentGuard.swift */; };
++		6B8993C91BED4001A5D8304A /* RemoteTreatmentGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77E21E5C9279F886D2BE46E3 /* RemoteTreatmentGuard.swift */; };
+ 		0EE3091BCB5620EA4AA5A757 /* TherapyProfileRemoteValuesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4827A4B7DD2D3BFD529DE267 /* TherapyProfileRemoteValuesTests.swift */; };
+ 		1994FB53A99174972EF458B0 /* TrioRemoteControlProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1042483A35E77F38E714A9C2 /* TrioRemoteControlProfileTests.swift */; };
+ 		662B8B7A520F2A09917A1F48 /* TrioRemoteControl+Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35347DB1DA2F240DA37B5571 /* TrioRemoteControl+Profile.swift */; };
+@@ -1295,6 +1299,10 @@
+ /* End PBXCopyFilesBuildPhase section */
+ 
+ /* Begin PBXFileReference section */
++		B55FF1780B839DC309AE2581 /* RemoteTreatmentGuardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTreatmentGuardTests.swift; sourceTree = "<group>"; };
++		4B9CAF7E4571224EBB2EF567 /* NightscoutObjectIdStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightscoutObjectIdStore.swift; sourceTree = "<group>"; };
++		F2CFC1FA4917A7921B13B88A /* TrioRemoteControl+TreatmentGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrioRemoteControl+TreatmentGuard.swift"; sourceTree = "<group>"; };
++		77E21E5C9279F886D2BE46E3 /* RemoteTreatmentGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteTreatmentGuard.swift; sourceTree = "<group>"; };
+ 		4827A4B7DD2D3BFD529DE267 /* TherapyProfileRemoteValuesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TherapyProfileRemoteValuesTests.swift; sourceTree = "<group>"; };
+ 		1042483A35E77F38E714A9C2 /* TrioRemoteControlProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrioRemoteControlProfileTests.swift; sourceTree = "<group>"; };
+ 		35347DB1DA2F240DA37B5571 /* TrioRemoteControl+Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrioRemoteControl+Profile.swift"; sourceTree = "<group>"; };
+@@ -3724,6 +3732,7 @@
+ 				CE1F6DD82BADF4620064EB8D /* PluginManagerTests.swift */,
+ 				DC01A00D2E9F100000000004 /* DeviceCatalogTests.swift */,
+ 				98546920BB7247B0AC73449A /* ContainerResolutionTests.swift */,
++				B55FF1780B839DC309AE2581 /* RemoteTreatmentGuardTests.swift */,
+ 				7AF74BBFE9F7B8CA9187C4DB /* RemoteMealMutationPayloadTests.swift */,
+ 				3B5CD2C72D4AECD500CE213C /* OpenAPSSwiftTests */,
+ 				B3919BBB515547118D684CA2 /* SettingsSearchTests.swift */,
+@@ -5070,6 +5079,8 @@
+ 		DD9ECB662CA99EFE00AA7C45 /* RemoteControl */ = {
+ 			isa = PBXGroup;
+ 			children = (
++				77E21E5C9279F886D2BE46E3 /* RemoteTreatmentGuard.swift */,
++				F2CFC1FA4917A7921B13B88A /* TrioRemoteControl+TreatmentGuard.swift */,
+ 				35347DB1DA2F240DA37B5571 /* TrioRemoteControl+Profile.swift */,
+ 				DD485F172E466F1800CE8CBF /* SecureMessenger.swift */,
+ 				DD17A0312E3FEA1F008E1BF0 /* RemoteNotificationResponseManager.swift */,
+@@ -5128,6 +5139,7 @@
+ 				DD906BF32EA6AA0100262772 /* NightscoutUploadPipeline.swift */,
+ 				10E61A0885164081B57C357C /* NightscoutUploadSerializer.swift */,
+ 				3811DE9725C9D88300A708ED /* NightscoutManager.swift */,
++				4B9CAF7E4571224EBB2EF567 /* NightscoutObjectIdStore.swift */,
+ 				38FE826C25CC8461001FF17A /* NightscoutAPI.swift */,
+ 				DD906BF52EA6AAE900262772 /* BaseNightscoutManager+Subscribers.swift */,
+ 			);
+@@ -6145,6 +6157,7 @@
+ 				3811DEAF25C9D88300A708ED /* KeyValueStorage.swift in Sources */,
+ 				DDD6D4D32CDE90720029439A /* EstimatedA1cDisplayUnit.swift in Sources */,
+ 				DDA6E3572D25988500C2988C /* ContactImageHelpView.swift in Sources */,
++				59590795A904CD4E7C8AA7CD /* NightscoutObjectIdStore.swift in Sources */,
+ 				38FE826D25CC8461001FF17A /* NightscoutAPI.swift in Sources */,
+ 				388358C825EEF6D200E024B2 /* BasalProfileEntry.swift in Sources */,
+ 				DDA9AC092D672CF100E6F1A9 /* AppVersionChecker.swift in Sources */,
+@@ -6155,6 +6168,8 @@
+ 				DD32CFA22CC824E2003686D6 /* TrioRemoteControl+Helpers.swift in Sources */,
+ 				CE1856F52ADC4858007E39C7 /* AddCarbPresetIntent.swift in Sources */,
+ 				38569347270B5DFB0002C50D /* CGMType.swift in Sources */,
++				6B8993C91BED4001A5D8304A /* RemoteTreatmentGuard.swift in Sources */,
++				034BF913F9639417555E1B4A /* TrioRemoteControl+TreatmentGuard.swift in Sources */,
+ 				DD485F182E466F1800CE8CBF /* SecureMessenger.swift in Sources */,
+ 				3821ED4C25DD18BA00BC42AD /* Constants.swift in Sources */,
+ 				CE1F6DE92BAF37C90064EB8D /* TidepoolConfigView.swift in Sources */,
+@@ -6786,6 +6801,7 @@
+ 				CE1F6DD92BADF4620064EB8D /* PluginManagerTests.swift in Sources */,
+ 				DC01A00E2E9F100000000005 /* DeviceCatalogTests.swift in Sources */,
+ 				10DAA318F47843A4B894173D /* ContainerResolutionTests.swift in Sources */,
++				CD5433515FD75D1421AFE509 /* RemoteTreatmentGuardTests.swift in Sources */,
+ 				940584C38CB62676214A2107 /* RemoteMealMutationPayloadTests.swift in Sources */,
+ 				3B1C5C432D68E269004E9273 /* Extensions.swift in Sources */,
+ 				3BC26E552D7418830066ACD6 /* IobSuspendTests.swift in Sources */,
+diff --git a/Trio/Sources/APS/APSManager.swift b/Trio/Sources/APS/APSManager.swift
+index 76a1a0ced..52c7d3e7f 100644
+--- a/Trio/Sources/APS/APSManager.swift
++++ b/Trio/Sources/APS/APSManager.swift
+@@ -13,7 +13,8 @@ protocol APSManager {
+     /// usual dwell threshold — when the user explicitly asks for a loop,
+     /// they want feedback even if the underlying error is "transient".
+     func markNextLoopUserInitiated()
+-    func enactBolus(amount: Double, isSMB: Bool, callback: ((Bool, String) -> Void)?) async
++    /// Reports whether the bolus was enacted, failed, or may have been delivered.
++    func enactBolus(amount: Double, isSMB: Bool, completion: ((BolusEnactmentResult) -> Void)?) async
+     var pumpManager: PumpManagerUI? { get set }
+     var bluetoothManager: BluetoothStateManager? { get }
+     var pumpDisplayState: CurrentValueSubject<PumpDisplayState?, Never> { get }
+@@ -42,6 +43,48 @@ protocol APSManager {
+     var iobFileDidUpdate: PassthroughSubject<Void, Never> { get }
+ }
+ 
++extension APSManager {
++    /// `enactBolus(amount:isSMB:completion:)`, reporting success and the message.
++    func enactBolus(amount: Double, isSMB: Bool, callback: ((Bool, String) -> Void)?) async {
++        await enactBolus(amount: amount, isSMB: isSMB) { (result: BolusEnactmentResult) in
++            callback?(result.isSuccess, result.message)
++        }
++    }
++}
++
++enum BolusEnactmentResult {
++    case enacted(message: String)
++    /// Nothing was delivered. `error` is the pump's error when the pump refused the bolus.
++    case failed(message: String, error: Error?)
++    /// The command was sent to the pump without a confirmation; the bolus may have been delivered.
++    case uncertainDelivery(message: String, error: Error)
++
++    var isSuccess: Bool {
++        if case .enacted = self { return true }
++        return false
++    }
++
++    var message: String {
++        switch self {
++        case let .enacted(message),
++             let .failed(message, _),
++             let .uncertainDelivery(message, _):
++            return message
++        }
++    }
++
++    /// The result of a bolus that threw `error`.
++    static func failure(message: String, error: Error) -> BolusEnactmentResult {
++        if case PumpManagerError.uncertainDelivery = error {
++            return .uncertainDelivery(message: message, error: error)
++        }
++        if case let APSError.pumpError(pumpError) = error, case PumpManagerError.uncertainDelivery = pumpError {
++            return .uncertainDelivery(message: message, error: error)
++        }
++        return .failed(message: message, error: error)
++    }
++}
++
+ /// Notified after a bolus-related failure so observing UI (e.g. the
+ /// treatment screen's bolus state) can clean up state. Broadcast by
+ /// `APSManager` from `enactBolus` / `cancelBolus` error paths.
+@@ -633,11 +676,11 @@ final class BaseAPSManager: APSManager, Injectable {
+         return min(rounded, maxBolus)
+     }
+ 
+-    func enactBolus(amount: Double, isSMB: Bool, callback: ((Bool, String) -> Void)?) async {
++    func enactBolus(amount: Double, isSMB: Bool, completion: ((BolusEnactmentResult) -> Void)?) async {
+         // Answer every caller: a silent return here left the watch waiting on "Processing…" forever
+         guard amount > 0 else {
+             warning(.bolus, "Bolus of \(amount) U not enacted, amount must be above 0")
+-            callback?(false, Self.invalidBolusAmountMessage)
++            completion?(.failed(message: Self.invalidBolusAmountMessage, error: nil))
+             return
+         }
+ 
+@@ -651,12 +694,18 @@ final class BaseAPSManager: APSManager, Injectable {
+                     $0.bolusDidFail()
+                 }
+             }
+-            callback?(false, String(localized: "Error! Failed to enact bolus.", comment: "Error message for enacting a bolus"))
++            completion?(.failed(
++                message: String(localized: "Error! Failed to enact bolus.", comment: "Error message for enacting a bolus"),
++                error: nil
++            ))
+             return
+         }
+ 
+         guard let pump = pumpManager else {
+-            callback?(false, String(localized: "Error! Failed to enact bolus.", comment: "Error message for enacting a bolus"))
++            completion?(.failed(
++                message: String(localized: "Error! Failed to enact bolus.", comment: "Error message for enacting a bolus"),
++                error: nil
++            ))
+             return
+         }
+ 
+@@ -664,7 +713,7 @@ final class BaseAPSManager: APSManager, Injectable {
+ 
+         guard roundedAmount > 0 else {
+             warning(.bolus, "Bolus of \(amount) U not enacted, rounds to 0 U on this pump")
+-            callback?(false, Self.invalidBolusAmountMessage)
++            completion?(.failed(message: Self.invalidBolusAmountMessage, error: nil))
+             return
+         }
+ 
+@@ -674,7 +723,9 @@ final class BaseAPSManager: APSManager, Injectable {
+             try await pump.enactBolus(units: roundedAmount, automatic: isSMB)
+             info(.bolus, "Bolus enacted: \(roundedAmount) U, \(isSMB ? "automatic" : "manual")")
+             bolusProgress.send(0)
+-            callback?(true, String(localized: "Bolus enacted successfully.", comment: "Success message for enacting a bolus"))
++            completion?(.enacted(
++                message: String(localized: "Bolus enacted successfully.", comment: "Success message for enacting a bolus")
++            ))
+             if !isSMB {
+                 do {
+                     try await determineBasalSync()
+@@ -699,10 +750,10 @@ final class BaseAPSManager: APSManager, Injectable {
+                     }
+                 }
+             }
+-            callback?(
+-                false,
+-                String(localized: "Error! Bolus failed with error: \(bolusError.localizedDescription)")
+-            )
++            completion?(.failure(
++                message: String(localized: "Error! Bolus failed with error: \(bolusError.localizedDescription)"),
++                error: bolusError
++            ))
+         }
+     }
+ 
+diff --git a/Trio/Sources/APS/FetchTreatmentsManager.swift b/Trio/Sources/APS/FetchTreatmentsManager.swift
+index 969b9c147..959733fff 100644
+--- a/Trio/Sources/APS/FetchTreatmentsManager.swift
++++ b/Trio/Sources/APS/FetchTreatmentsManager.swift
+@@ -35,8 +35,12 @@ final class BaseFetchTreatmentsManager: FetchTreatmentsManager, Injectable {
+ 
+                         // Store carbs directly (no filtering, as it's done in fetchCarbs)
+                         let fetchedCarbs = await carbs
+-                        if fetchedCarbs.isNotEmpty {
+-                            try await self.carbsStorage.storeCarbs(fetchedCarbs, areFetchedFromRemote: true)
++                        if fetchedCarbs.entries.isNotEmpty {
++                            try await self.carbsStorage.storeCarbs(
++                                fetchedCarbs.entries,
++                                areFetchedFromRemote: true,
++                                nightscoutSiteURL: fetchedCarbs.siteURL
++                            )
+                         }
+ 
+                         // Store temp targets directly (no filtering, as it's done in fetchTempTargets)
+diff --git a/Trio/Sources/APS/Storage/CarbsStorage.swift b/Trio/Sources/APS/Storage/CarbsStorage.swift
+index f1d07b242..818489caf 100644
+--- a/Trio/Sources/APS/Storage/CarbsStorage.swift
++++ b/Trio/Sources/APS/Storage/CarbsStorage.swift
+@@ -10,7 +10,8 @@ protocol CarbsObserver {
+ 
+ protocol CarbsStorage {
+     var updatePublisher: AnyPublisher<Void, Never> { get }
+-    func storeCarbs(_ carbs: [CarbsEntry], areFetchedFromRemote: Bool) async throws
++    /// Remote entries' Nightscout `_id`s are recorded for `nightscoutSiteURL`, the site they were fetched from.
++    func storeCarbs(_ carbs: [CarbsEntry], areFetchedFromRemote: Bool, nightscoutSiteURL: String?) async throws
+     /// Builds a single, real, locally-entered carb entry ready to pass to `storeCarbs`.
+     func makeCarbEntry(carbs: Decimal, date: Date) -> CarbsEntry
+     /// Swaps a stored meal in one Core Data transaction.
+@@ -26,6 +27,12 @@ protocol CarbsStorage {
+     func fetchMealRoot(handle: UUID) async throws -> (objectID: NSManagedObjectID, snapshot: MealSnapshot)?
+ }
+ 
++extension CarbsStorage {
++    func storeCarbs(_ carbs: [CarbsEntry], areFetchedFromRemote: Bool) async throws {
++        try await storeCarbs(carbs, areFetchedFromRemote: areFetchedFromRemote, nightscoutSiteURL: nil)
++    }
++}
++
+ enum CarbsStorageError: Error, Equatable {
+     case ambiguousMealHandle(UUID)
+ }
+@@ -51,7 +58,7 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
+         injectServices(resolver)
+     }
+ 
+-    func storeCarbs(_ entries: [CarbsEntry], areFetchedFromRemote: Bool) async throws {
++    func storeCarbs(_ entries: [CarbsEntry], areFetchedFromRemote: Bool, nightscoutSiteURL: String?) async throws {
+         var entriesToStore = entries
+ 
+         if areFetchedFromRemote {
+@@ -80,8 +87,16 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
+             entriesToStore.append(additionalEntry)
+         }
+ 
+-        await saveCarbsToCoreData(entries: entriesToStore, areFetchedFromRemote: areFetchedFromRemote)
+-        await saveCarbEquivalents(entries: entriesToStore, areFetchedFromRemote: areFetchedFromRemote)
++        await saveCarbsToCoreData(
++            entries: entriesToStore,
++            areFetchedFromRemote: areFetchedFromRemote,
++            nightscoutSiteURL: nightscoutSiteURL
++        )
++        await saveCarbEquivalents(
++            entries: entriesToStore,
++            areFetchedFromRemote: areFetchedFromRemote,
++            nightscoutSiteURL: nightscoutSiteURL
++        )
+     }
+ 
+     private func filterRemoteEntries(entries: [CarbsEntry]) async throws -> [CarbsEntry] {
+@@ -272,7 +287,7 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
+         return buckets
+     }
+ 
+-    private func saveCarbEquivalents(entries: [CarbsEntry], areFetchedFromRemote: Bool) async {
++    private func saveCarbEquivalents(entries: [CarbsEntry], areFetchedFromRemote: Bool, nightscoutSiteURL: String?) async {
+         guard let lastEntry = entries.last else { return }
+ 
+         if let fat = lastEntry.fat, let protein = lastEntry.protein, fat > 0 || protein > 0 {
+@@ -286,17 +301,28 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
+ 
+             if carbEquivalentCount > 0 {
+                 await saveFPUToCoreDataAsBatchInsert(entries: futureCarbEquivalents, areFetchedFromRemote: areFetchedFromRemote)
++
++                // Equivalents of a downloaded meal are known to Nightscout through the meal's `_id`.
++                if areFetchedFromRemote, let objectId = lastEntry.id {
++                    let localIds = futureCarbEquivalents.compactMap(\.id) + [futureCarbEquivalents.first?.fpuID].compactMap { $0 }
++                    NightscoutObjectIdStore.shared.record(localIds.map { ($0, objectId) }, fromSite: nightscoutSiteURL)
++                }
+             }
+         }
+     }
+ 
+-    private func saveCarbsToCoreData(entries: [CarbsEntry], areFetchedFromRemote: Bool) async {
++    private func saveCarbsToCoreData(entries: [CarbsEntry], areFetchedFromRemote: Bool, nightscoutSiteURL: String?) async {
+         guard let entry = entries.last else { return }
+ 
+         let context = makeContext()
+         context.name = "saveCarbsToCoreData"
+         await context.perform {
+-            self.insertCarbEntry(entry, into: context, areFetchedFromRemote: areFetchedFromRemote)
++            self.insertCarbEntry(
++                entry,
++                into: context,
++                areFetchedFromRemote: areFetchedFromRemote,
++                nightscoutSiteURL: nightscoutSiteURL
++            )
+ 
+             do {
+                 guard context.hasChanges else { return }
+@@ -308,7 +334,12 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
+     }
+ 
+     /// Inserts a meal root row into `context` without saving, so callers decide when to commit.
+-    private func insertCarbEntry(_ entry: CarbsEntry, into context: NSManagedObjectContext, areFetchedFromRemote: Bool) {
++    private func insertCarbEntry(
++        _ entry: CarbsEntry,
++        into context: NSManagedObjectContext,
++        areFetchedFromRemote: Bool,
++        nightscoutSiteURL: String? = nil
++    ) {
+         let newItem = CarbEntryStored(context: context)
+         newItem.date = entry.actualDate ?? entry.createdAt
+         newItem.carbs = Double(truncating: NSDecimalNumber(decimal: entry.carbs))
+@@ -325,6 +356,10 @@ final class BaseCarbsStorage: CarbsStorage, Injectable {
+         if entry.fat != nil, entry.protein != nil, let fpuId = entry.fpuID {
+             newItem.fpuID = UUID(uuidString: fpuId)
+         }
++
++        if areFetchedFromRemote, let localId = newItem.id?.uuidString, let objectId = entry.id {
++            NightscoutObjectIdStore.shared.record([(localId, objectId)], fromSite: nightscoutSiteURL)
++        }
+     }
+ 
+     /// Inserts a locally created carb equivalent row into `context` without saving.
+diff --git a/Trio/Sources/Models/CommandPayload.swift b/Trio/Sources/Models/CommandPayload.swift
+index 92950e911..a591640bf 100644
+--- a/Trio/Sources/Models/CommandPayload.swift
++++ b/Trio/Sources/Models/CommandPayload.swift
+@@ -28,6 +28,8 @@ struct CommandPayload: Decodable, Sendable {
+     var profile: CompactTherapyProfile?
+     var scheduledSwitches: [ScheduledProfileSwitch]?
+     var returnNotification: ReturnNotificationInfo?
++    /// Newest Nightscout `_id` among the treatments the sender had fetched when it sent the command.
++    var knownThroughId: String?
+ 
+     /// Nightscout `id` of the meal root or of one of its carb equivalents.
+     var mealHandle: UUID? {
+@@ -72,6 +74,7 @@ struct CommandPayload: Decodable, Sendable {
+         case profile
+         case scheduledSwitches = "scheduled_switches"
+         case returnNotification = "return_notification"
++        case knownThroughId = "known_through_id"
+     }
+ 
+     func humanReadableDescription() -> String {
+diff --git a/Trio/Sources/Modules/NightscoutConfig/NightscoutConfigStateModel.swift b/Trio/Sources/Modules/NightscoutConfig/NightscoutConfigStateModel.swift
+index b5eba4e48..8a2cd7fa9 100644
+--- a/Trio/Sources/Modules/NightscoutConfig/NightscoutConfigStateModel.swift
++++ b/Trio/Sources/Modules/NightscoutConfig/NightscoutConfigStateModel.swift
+@@ -100,6 +100,7 @@ extension NightscoutConfig {
+                     self.message = "Connected!"
+                     self.keychain.setValue(self.url, forKey: Config.urlKey)
+                     self.keychain.setValue(self.secret, forKey: Config.secretKey)
++                    NightscoutObjectIdStore.shared.snapshot()
+                     self.connecting = true
+                     self.isConnectedToNS = self.nightscoutAPI != nil
+                 }
+@@ -167,6 +168,7 @@ extension NightscoutConfig {
+         func delete() {
+             keychain.removeObject(forKey: Config.urlKey)
+             keychain.removeObject(forKey: Config.secretKey)
++            NightscoutObjectIdStore.shared.snapshot()
+             url = ""
+             secret = ""
+             isConnectedToNS = false
+diff --git a/Trio/Sources/Modules/Onboarding/OnboardingStateModel+Nightscout.swift b/Trio/Sources/Modules/Onboarding/OnboardingStateModel+Nightscout.swift
+index 09227baed..627169c41 100644
+--- a/Trio/Sources/Modules/Onboarding/OnboardingStateModel+Nightscout.swift
++++ b/Trio/Sources/Modules/Onboarding/OnboardingStateModel+Nightscout.swift
+@@ -35,6 +35,7 @@ extension Onboarding.StateModel {
+             } receiveValue: {
+                 self.keychain.setValue(self.nightscoutUrl, forKey: NightscoutConfig.Config.urlKey)
+                 self.keychain.setValue(self.nightscoutSecret, forKey: NightscoutConfig.Config.secretKey)
++                NightscoutObjectIdStore.shared.snapshot()
+                 self.isConnectedToNS = true
+             }
+             .store(in: &lifetime)
+diff --git a/Trio/Sources/Services/BolusSafety/BolusSafetyValidator.swift b/Trio/Sources/Services/BolusSafety/BolusSafetyValidator.swift
+index c20a5b855..83d8c1539 100644
+--- a/Trio/Sources/Services/BolusSafety/BolusSafetyValidator.swift
++++ b/Trio/Sources/Services/BolusSafety/BolusSafetyValidator.swift
+@@ -5,20 +5,14 @@ import Swinject
+ /// Shared safety checks applied to any bolus command originating outside the main bolus UI
+ /// (remote notifications, Shortcuts, etc.). Keeps validation logic consistent across call sites.
+ protocol BolusSafetyValidator {
+-    /// - Parameter lookbackStart: start of the window used for the recent-bolus 20% check.
+-    ///   Defaults to `now - BolusSafetyEvaluator.recentBolusWindowMinutes`. Callers that know when the
+-    ///   command was originally issued (e.g. APNS payload timestamp) should pass that instead so the
+-    ///   check covers any bolus since the command was sent.
+-    func validate(bolusAmount: Decimal, lookbackStart: Date?) async throws -> BolusSafetyResult
++    /// Max bolus, max IOB, and the recent-bolus 20% check over the last
++    /// `BolusSafetyEvaluator.recentBolusWindowMinutes`.
++    func validate(bolusAmount: Decimal) async throws -> BolusSafetyResult
++    /// Max bolus and max IOB only, for callers that check recent treatments themselves.
++    func validateLimits(bolusAmount: Decimal) -> BolusSafetyResult
+     func fetchTotalRecentBolusAmount(since date: Date) async throws -> Decimal
+ }
+ 
+-extension BolusSafetyValidator {
+-    func validate(bolusAmount: Decimal) async throws -> BolusSafetyResult {
+-        try await validate(bolusAmount: bolusAmount, lookbackStart: nil)
+-    }
+-}
+-
+ enum BolusSafetyResult: Equatable {
+     case allowed
+     case rejected(BolusSafetyRejection)
+@@ -43,16 +37,32 @@ enum BolusSafetyEvaluator {
+     static let recentBolusThreshold: Decimal = 0.2
+     static let recentBolusWindowMinutes: Int = 6
+ 
+-    static func evaluate(bolusAmount: Decimal, inputs: BolusSafetyInputs) -> BolusSafetyResult {
+-        if bolusAmount > inputs.maxBolus {
+-            return .rejected(.exceedsMaxBolus(maxBolus: inputs.maxBolus))
++    static func evaluateLimits(
++        bolusAmount: Decimal,
++        maxBolus: Decimal,
++        maxIOB: Decimal,
++        currentIOB: Decimal?
++    ) -> BolusSafetyResult {
++        if bolusAmount > maxBolus {
++            return .rejected(.exceedsMaxBolus(maxBolus: maxBolus))
+         }
+-        guard let currentIOB = inputs.currentIOB else {
++        guard let currentIOB = currentIOB else {
+             return .rejected(.iobUnavailable)
+         }
+-        if (currentIOB + bolusAmount) > inputs.maxIOB {
+-            return .rejected(.exceedsMaxIOB(currentIOB: currentIOB, maxIOB: inputs.maxIOB))
++        if (currentIOB + bolusAmount) > maxIOB {
++            return .rejected(.exceedsMaxIOB(currentIOB: currentIOB, maxIOB: maxIOB))
+         }
++        return .allowed
++    }
++
++    static func evaluate(bolusAmount: Decimal, inputs: BolusSafetyInputs) -> BolusSafetyResult {
++        let limits = evaluateLimits(
++            bolusAmount: bolusAmount,
++            maxBolus: inputs.maxBolus,
++            maxIOB: inputs.maxIOB,
++            currentIOB: inputs.currentIOB
++        )
++        guard limits == .allowed else { return limits }
+         if inputs.totalRecentBolus >= bolusAmount * recentBolusThreshold {
+             return .rejected(.recentBolusWithinWindow(totalRecent: inputs.totalRecentBolus))
+         }
+@@ -68,9 +78,17 @@ final class BaseBolusSafetyValidator: BolusSafetyValidator, Injectable {
+         injectServices(resolver)
+     }
+ 
+-    func validate(bolusAmount: Decimal, lookbackStart: Date?) async throws -> BolusSafetyResult {
+-        let windowStart = lookbackStart
+-            ?? Date().addingTimeInterval(-Double(BolusSafetyEvaluator.recentBolusWindowMinutes * 60))
++    func validateLimits(bolusAmount: Decimal) -> BolusSafetyResult {
++        BolusSafetyEvaluator.evaluateLimits(
++            bolusAmount: bolusAmount,
++            maxBolus: settingsManager.pumpSettings.maxBolus,
++            maxIOB: settingsManager.preferences.maxIOB,
++            currentIOB: iobService.currentIOB
++        )
++    }
++
++    func validate(bolusAmount: Decimal) async throws -> BolusSafetyResult {
++        let windowStart = Date().addingTimeInterval(-Double(BolusSafetyEvaluator.recentBolusWindowMinutes * 60))
+         let inputs = BolusSafetyInputs(
+             maxBolus: settingsManager.pumpSettings.maxBolus,
+             maxIOB: settingsManager.preferences.maxIOB,
+diff --git a/Trio/Sources/Services/Network/Nightscout/NightscoutAPI.swift b/Trio/Sources/Services/Network/Nightscout/NightscoutAPI.swift
+index 108bb496b..1455267d9 100644
+--- a/Trio/Sources/Services/Network/Nightscout/NightscoutAPI.swift
++++ b/Trio/Sources/Services/Network/Nightscout/NightscoutAPI.swift
+@@ -152,6 +152,47 @@ extension NightscoutAPI {
+         return carbs
+     }
+ 
++    /// Upper bound on treatments one `_id` lookup returns; covers a meal's whole series of carb equivalents.
++    static let objectIdLookupCount = 100
++
++    /// Query for the treatments uploaded with `id` == `localId` and created at or after `createdSince`.
++    static func objectIdLookupQueryItems(localId: String, createdSince: Date) -> [URLQueryItem] {
++        [
++            URLQueryItem(name: "find[id]", value: localId),
++            URLQueryItem(
++                name: "find[created_at][$gte]",
++                value: Formatter.iso8601withFractionalSeconds.string(from: createdSince)
++            ),
++            URLQueryItem(name: "count", value: String(objectIdLookupCount))
++        ]
++    }
++
++    /// The greatest `_id` among the treatments uploaded with `id` == `localId` and created at or after `createdSince`.
++    func fetchObjectId(forLocalId localId: String, createdSince: Date) async throws -> String? {
++        var components = URLComponents()
++        components.scheme = url.scheme
++        components.host = url.host
++        components.port = url.port
++        components.path = Config.treatmentsPath
++        components.queryItems = Self.objectIdLookupQueryItems(localId: localId, createdSince: createdSince)
++
++        var request = URLRequest(url: components.url!)
++        request.timeoutInterval = Config.timeout
++
++        if let secret = secret {
++            request.addValue(secret.sha1(), forHTTPHeaderField: "api-secret")
++        }
++
++        let (data, response) = try await URLSession.shared.data(for: request)
++
++        guard let httpResponse = response as? HTTPURLResponse, (200 ... 299).contains(httpResponse.statusCode) else {
++            throw URLError(.badServerResponse)
++        }
++        return NightscoutObjectIdCache.mappings(fromUploadResponse: data, localIds: [localId])
++            .compactMap { NightscoutObjectId($0.objectId) }
++            .max()?.value
++    }
++
+     func deleteCarbs(withId id: String) async throws {
+         var components = URLComponents()
+         components.scheme = url.scheme
+@@ -285,7 +326,8 @@ extension NightscoutAPI {
+         return tempTargets
+     }
+ 
+-    func uploadTreatments(_ treatments: [NightscoutTreatment]) async throws {
++    /// - Returns: the response body, the stored treatments as Nightscout echoes them.
++    @discardableResult func uploadTreatments(_ treatments: [NightscoutTreatment]) async throws -> Data {
+         var components = URLComponents()
+         components.scheme = url.scheme
+         components.host = url.host
+@@ -315,7 +357,7 @@ extension NightscoutAPI {
+         }
+         request.httpMethod = "POST"
+ 
+-        let (_, response) = try await URLSession.shared.data(for: request)
++        let (data, response) = try await URLSession.shared.data(for: request)
+ 
+         // Check the response status code
+         guard let httpResponse = response as? HTTPURLResponse, 200 ..< 300 ~= httpResponse.statusCode else {
+@@ -323,6 +365,7 @@ extension NightscoutAPI {
+         }
+ 
+ //        debugPrint("Upload successful, response data: \(String(data: data, encoding: .utf8) ?? "No data")")
++        return data
+     }
+ 
+     func uploadGlucose(_ glucose: [BloodGlucose]) async throws {
+diff --git a/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift b/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
+index 0771807e8..e5b636d28 100644
+--- a/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
++++ b/Trio/Sources/Services/Network/Nightscout/NightscoutManager.swift
+@@ -8,7 +8,8 @@ import UIKit
+ 
+ protocol NightscoutManager: GlucoseSource {
+     func fetchGlucose(since date: Date) async -> [BloodGlucose]
+-    func fetchCarbs() async -> [CarbsEntry]
++    /// Carb entries from Nightscout and the site URL they were fetched from.
++    func fetchCarbs() async -> (entries: [CarbsEntry], siteURL: String?)
+     func fetchTempTargets() async -> [TempTarget]
+     /// Returns false when Nightscout rejected the delete; unconfigured or upload-disabled Nightscout counts as success.
+     func deleteCarbs(withID id: String) async -> Bool
+@@ -96,13 +97,18 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
+     }
+ 
+     private var nightscoutAPI: NightscoutAPI? {
++        nightscoutSite?.api
++    }
++
++    /// The API for the configured site and the URL string it was built from.
++    private var nightscoutSite: (api: NightscoutAPI, url: String)? {
+         guard let urlString = keychain.getValue(String.self, forKey: NightscoutConfig.Config.urlKey),
+               let url = URL(string: urlString),
+               let secret = keychain.getValue(String.self, forKey: NightscoutConfig.Config.secretKey)
+         else {
+             return nil
+         }
+-        return NightscoutAPI(url: url, secret: secret)
++        return (NightscoutAPI(url: url, secret: secret), urlString)
+     }
+ 
+     private var lastEnactedDetermination: Determination?
+@@ -272,6 +278,8 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
+     init(resolver: Resolver) {
+         injectServices(resolver)
+ 
++        NightscoutObjectIdStore.shared.snapshot()
++
+         uploadSerializer = NightscoutUploadSerializer { [weak self] pipeline in
+             await self?.performUpload(for: pipeline)
+         }
+@@ -410,18 +418,18 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
+         fetch(nil)
+     }
+ 
+-    func fetchCarbs() async -> [CarbsEntry] {
+-        guard let nightscout = nightscoutAPI, isNetworkReachable, isDownloadEnabled else {
+-            return []
++    func fetchCarbs() async -> (entries: [CarbsEntry], siteURL: String?) {
++        guard let site = nightscoutSite, isNetworkReachable, isDownloadEnabled else {
++            return ([], nil)
+         }
+ 
+         let since = carbsStorage.syncDate()
+         do {
+-            let carbs = try await nightscout.fetchCarbs(sinceDate: since)
+-            return carbs
++            let carbs = try await site.api.fetchCarbs(sinceDate: since)
++            return (carbs, site.url)
+         } catch {
+             warning(.nightscout, "Carbs fetch failed", error: error)
+-            return []
++            return ([], nil)
+         }
+     }
+ 
+@@ -1006,14 +1014,20 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
+     }
+ 
+     private func uploadPumpHistory(_ treatments: [NightscoutTreatment]) async {
+-        guard !treatments.isEmpty, let nightscout = nightscoutAPI, isUploadEnabled else {
++        guard !treatments.isEmpty, let site = nightscoutSite, isUploadEnabled else {
+             return
+         }
+ 
+         do {
+             for chunk in treatments.chunks(ofCount: 100) {
+-                try await nightscout.uploadTreatments(Array(chunk))
++                let response = try await site.api.uploadTreatments(Array(chunk))
++                let bolusIds = Set(chunk.filter { $0.insulin != nil }.compactMap(\.id))
++                NightscoutObjectIdStore.shared.record(
++                    NightscoutObjectIdCache.mappings(fromUploadResponse: response, localIds: bolusIds),
++                    fromSite: site.url
++                )
+             }
++            await resolveMissingObjectIds(localIds: treatments.filter { $0.insulin != nil }.compactMap(\.id), site: site)
+ 
+             await updatePumpEventStoredsAsUploaded(treatments)
+ 
+@@ -1023,6 +1037,14 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
+         }
+     }
+ 
++    /// Looks up on `site` the `_id`s an upload response did not return, by the uploaded local ids.
++    private func resolveMissingObjectIds(localIds: [String], site: (api: NightscoutAPI, url: String)) async {
++        let createdSince = Date().addingTimeInterval(-NightscoutObjectIdCache.retention)
++        await NightscoutObjectIdStore.shared.resolveMissing(localIds: localIds, fromSite: site.url) { localId in
++            try await site.api.fetchObjectId(forLocalId: localId, createdSince: createdSince)
++        }
++    }
++
+     private func updatePumpEventStoredsAsUploaded(_ treatments: [NightscoutTreatment]) async {
+         let context = CoreDataStack.shared.newTaskContext()
+         context.name = "updatePumpEventStoredsAsUploaded"
+@@ -1072,14 +1094,19 @@ final class BaseNightscoutManager: NightscoutManager, Injectable {
+     }
+ 
+     private func uploadCarbs(_ treatments: [NightscoutTreatment]) async {
+-        guard !treatments.isEmpty, let nightscout = nightscoutAPI, isUploadEnabled else {
++        guard !treatments.isEmpty, let site = nightscoutSite, isUploadEnabled else {
+             return
+         }
+ 
+         do {
+             for chunk in treatments.chunks(ofCount: 100) {
+-                try await nightscout.uploadTreatments(Array(chunk))
++                let response = try await site.api.uploadTreatments(Array(chunk))
++                NightscoutObjectIdStore.shared.record(
++                    NightscoutObjectIdCache.mappings(fromUploadResponse: response, localIds: Set(chunk.compactMap(\.id))),
++                    fromSite: site.url
++                )
+             }
++            await resolveMissingObjectIds(localIds: treatments.compactMap(\.id), site: site)
+ 
+             // If successful, update the isUploadedToNS property of the CarbEntryStored objects
+             await updateCarbsAsUploaded(treatments)
+diff --git a/Trio/Sources/Services/Network/Nightscout/NightscoutObjectIdStore.swift b/Trio/Sources/Services/Network/Nightscout/NightscoutObjectIdStore.swift
+new file mode 100644
+index 000000000..f28d4efe5
+--- /dev/null
++++ b/Trio/Sources/Services/Network/Nightscout/NightscoutObjectIdStore.swift
+@@ -0,0 +1,154 @@
++import Foundation
++
++/// Nightscout `_id` per local treatment id for one Nightscout site, kept for `retention` after it was recorded.
++///
++/// Keys are local ids as uploaded in the treatment's `id` field: a pump event id, a carb entry id,
++/// or the `fpuID` shared by a meal's carb equivalents. Several `_id`s for one key keep the newest.
++struct NightscoutObjectIdCache: Codable, Equatable {
++    static let retention: TimeInterval = 24 * 60 * 60
++
++    struct Entry: Codable, Equatable {
++        let objectId: String
++        let recordedAt: Date
++    }
++
++    private(set) var siteURL: String?
++    /// When recording started for this site: when the cache for it was created.
++    private(set) var firstRecordedAt: Date?
++    private(set) var entries: [String: Entry] = [:]
++
++    init(siteURL: String? = nil, createdAt: Date? = nil) {
++        self.siteURL = siteURL
++        firstRecordedAt = createdAt
++    }
++
++    func objectId(forLocalId localId: String) -> String? {
++        entries[localId.lowercased()]?.objectId
++    }
++
++    /// Starts an empty cache created at `date` when `siteURL` differs from the site the cache belongs to, and sets
++    /// the recording start to `date` when it has none. Returns whether the cache changed.
++    @discardableResult mutating func switchSite(to siteURL: String?, at date: Date) -> Bool {
++        if siteURL != self.siteURL {
++            self = NightscoutObjectIdCache(siteURL: siteURL, createdAt: date)
++            return true
++        }
++        guard firstRecordedAt == nil else { return false }
++        firstRecordedAt = date
++        return true
++    }
++
++    mutating func record(localId: String, objectId: String, at date: Date) {
++        guard let newId = NightscoutObjectId(objectId) else { return }
++        let key = localId.lowercased()
++        if let existing = NightscoutObjectId(entries[key]?.objectId), existing > newId {
++            return
++        }
++        entries[key] = Entry(objectId: newId.value, recordedAt: date)
++    }
++
++    mutating func purge(now: Date) {
++        entries = entries.filter { now.timeIntervalSince($0.value.recordedAt) < Self.retention }
++    }
++
++    /// Pairs of echoed `id` and `_id` from a Nightscout treatments POST response, limited to `localIds`.
++    /// Objects missing either are skipped.
++    static func mappings(fromUploadResponse data: Data, localIds: Set<String>) -> [(localId: String, objectId: String)] {
++        guard let objects = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return [] }
++        return objects.compactMap { object in
++            guard let localId = object["id"] as? String, localIds.contains(localId),
++                  let objectId = object["_id"] as? String
++            else { return nil }
++            return (localId, objectId)
++        }
++    }
++
++    static func normalizedSiteURL(_ url: String?) -> String? {
++        guard var url = url?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased(), !url.isEmpty else { return nil }
++        while url.hasSuffix("/") {
++            url.removeLast()
++        }
++        return url
++    }
++}
++
++/// Persists the `_id` cache of the configured Nightscout site; a different site URL starts an empty cache.
++final class NightscoutObjectIdStore {
++    static let shared = NightscoutObjectIdStore()
++
++    private let lock = NSLock()
++    private let configuredSiteURL: () -> String?
++    @Persisted private var cache: NightscoutObjectIdCache
++
++    convenience init() {
++        let keychain = BaseKeychain()
++        self.init(storage: UserDefaults.standard) {
++            keychain.getValue(String.self, forKey: NightscoutConfig.Config.urlKey)
++        }
++    }
++
++    init(storage: KeyValueStorage, configuredSiteURL: @escaping () -> String?) {
++        self.configuredSiteURL = configuredSiteURL
++        _cache = Persisted(wrappedValue: NightscoutObjectIdCache(), key: "NightscoutObjectIdStore.cache", storage: storage)
++    }
++
++    private var currentSiteURL: String? {
++        NightscoutObjectIdCache.normalizedSiteURL(configuredSiteURL())
++    }
++
++    /// Records `mappings` obtained from a request made against `siteURL`.
++    /// Mappings for any site other than the configured one are ignored.
++    func record(_ mappings: [(localId: String, objectId: String)], fromSite siteURL: String?, at date: Date = Date()) {
++        guard !mappings.isEmpty else { return }
++        let currentSiteURL = self.currentSiteURL
++        guard let currentSiteURL, NightscoutObjectIdCache.normalizedSiteURL(siteURL) == currentSiteURL else { return }
++        lock.lock()
++        defer { lock.unlock() }
++        var updated = cache
++        updated.switchSite(to: currentSiteURL, at: date)
++        updated.purge(now: date)
++        for mapping in mappings {
++            updated.record(localId: mapping.localId, objectId: mapping.objectId, at: date)
++        }
++        cache = updated
++    }
++
++    /// Upper bound on Nightscout lookups after one upload.
++    static let maxLookupsPerUpload = 10
++
++    /// Looks up, on `siteURL`, the `_id` of uploaded treatments whose upload response had none, at most
++    /// `maxLookupsPerUpload` of them, and records what it finds while `siteURL` is the configured site.
++    func resolveMissing(
++        localIds: [String],
++        fromSite siteURL: String?,
++        lookup: (String) async throws -> String?
++    ) async {
++        let cache = snapshot()
++        guard let siteURL, NightscoutObjectIdCache.normalizedSiteURL(siteURL) == cache.siteURL else { return }
++        var seen = Set<String>()
++        let missing = localIds.filter { localId in
++            seen.insert(localId.lowercased()).inserted && NightscoutObjectId(cache.objectId(forLocalId: localId)) == nil
++        }
++        for localId in missing.prefix(Self.maxLookupsPerUpload) {
++            do {
++                if let objectId = try await lookup(localId) {
++                    record([(localId, objectId)], fromSite: siteURL)
++                }
++            } catch {
++                warning(.nightscout, "Nightscout _id lookup failed", error: error)
++            }
++        }
++    }
++
++    /// The cache for the configured site, created and persisted at `date` when there is none yet.
++    @discardableResult func snapshot(at date: Date = Date()) -> NightscoutObjectIdCache {
++        let siteURL = currentSiteURL
++        lock.lock()
++        defer { lock.unlock() }
++        var current = cache
++        if current.switchSite(to: siteURL, at: date) {
++            cache = current
++        }
++        return current
++    }
++}
+diff --git a/Trio/Sources/Services/RemoteControl/RemoteTreatmentGuard.swift b/Trio/Sources/Services/RemoteControl/RemoteTreatmentGuard.swift
+new file mode 100644
+index 000000000..e660b6893
+--- /dev/null
++++ b/Trio/Sources/Services/RemoteControl/RemoteTreatmentGuard.swift
+@@ -0,0 +1,275 @@
++import Foundation
++
++/// A Nightscout `_id`: 24 hex characters whose first 8 are the server insertion time in seconds.
++struct NightscoutObjectId: Equatable, Comparable {
++    let value: String
++    let date: Date
++
++    init?(_ string: String?) {
++        guard let string = string, string.utf8.count == 24,
++              string.utf8.allSatisfy({ (48 ... 57).contains($0) || (65 ... 70).contains($0) || (97 ... 102).contains($0) }),
++              let seconds = UInt32(string.prefix(8), radix: 16)
++        else { return nil }
++        value = string.lowercased()
++        date = Date(timeIntervalSince1970: TimeInterval(seconds))
++    }
++
++    static func < (lhs: NightscoutObjectId, rhs: NightscoutObjectId) -> Bool {
++        lhs.value < rhs.value
++    }
++}
++
++/// Decides whether a remote bolus or carb command was sent without knowledge of treatments recorded on this device.
++///
++/// A candidate treatment is unknown to the sender when it is dated after the command's send time (a carb entry also
++/// not after now), or, when the command carries a valid marker and treatments are uploaded to Nightscout, when it was
++/// created after `_id` recording started and has no known Nightscout `_id` or an `_id` greater than the marker.
++enum RemoteTreatmentGuard {
++    static let lookback: TimeInterval = 6 * 60 * 60
++    static let unknownInsulinThreshold: Decimal = 0.2
++    /// A marker whose server time lies further ahead of now than this is invalid.
++    static let markerFutureTolerance: TimeInterval = 5 * 60
++    /// A manual bolus starting this long before a remote bolus was accepted can still be that remote bolus.
++    static let pendingBolusMatchTolerance: TimeInterval = 10
++    /// An accepted remote bolus counts for at most this long, also when the dose history never shows it.
++    static let pendingBolusRetention: TimeInterval = 15 * 60
++    /// A stored bolus within this time of the pump's bolus in progress, with the same programmed units, is that bolus.
++    static let inProgressMatchTolerance: TimeInterval = 10
++    static let inProgressUnitsTolerance: Decimal = 0.025
++
++    /// Same bolus: start dates within 10 s and programmed units within 0.025 U, both inclusive. The margins absorb
++    /// binary floating point error in dates and in units converted from `Double`.
++    static func isSameBolus(date: Date, units: Decimal, as otherDate: Date, units otherUnits: Decimal) -> Bool {
++        abs(date.timeIntervalSince(otherDate)) <= inProgressMatchTolerance + 0.001
++            && abs(units - otherUnits) <= inProgressUnitsTolerance + 0.000001
++    }
++
++    struct Context {
++        let sendTime: Date
++        let now: Date
++        /// Newest Nightscout `_id` the sender had seen.
++        let knownThrough: NightscoutObjectId?
++        let isNightscoutUploadEnabled: Bool
++        /// When `_id` recording started for the configured site; the marker rule covers only candidates created after it.
++        let markerRuleStart: Date?
++
++        init(
++            sendTime: Date,
++            now: Date,
++            knownThroughId: String?,
++            isNightscoutUploadEnabled: Bool,
++            markerRuleStart: Date?
++        ) {
++            self.sendTime = sendTime
++            self.now = now
++            knownThrough = NightscoutObjectId(knownThroughId).flatMap {
++                $0.date.timeIntervalSince(now) > RemoteTreatmentGuard.markerFutureTolerance ? nil : $0
++            }
++            self.isNightscoutUploadEnabled = isNightscoutUploadEnabled
++            self.markerRuleStart = markerRuleStart
++        }
++
++        var lookbackStart: Date { now.addingTimeInterval(-RemoteTreatmentGuard.lookback) }
++    }
++
++    struct Candidate: Equatable {
++        let date: Date
++        /// Delivered units for a finalized bolus, programmed units while in progress; grams for a carb entry.
++        let amount: Decimal
++        let nightscoutId: String?
++        /// When the treatment was recorded on this device, or its date when no creation time is stored.
++        let createdAt: Date
++
++        init(date: Date, amount: Decimal, nightscoutId: String?, createdAt: Date? = nil) {
++            self.date = date
++            self.amount = amount
++            self.nightscoutId = nightscoutId
++            self.createdAt = createdAt ?? date
++        }
++    }
++
++    struct StoredBolus: Equatable {
++        let candidate: Candidate
++        let syncIdentifier: String?
++        let isAutomatic: Bool
++        let programmedUnits: Decimal
++    }
++
++    /// A bolus being delivered or accepted for delivery that may not be in the dose history yet.
++    struct InFlightBolus: Equatable {
++        let date: Date
++        /// Programmed units.
++        let units: Decimal
++        let syncIdentifier: String?
++        let isAutomatic: Bool
++
++        init(date: Date, units: Decimal, syncIdentifier: String?, isAutomatic: Bool = false) {
++            self.date = date
++            self.units = units
++            self.syncIdentifier = syncIdentifier
++            self.isAutomatic = isAutomatic
++        }
++    }
++
++    enum Reason: Equatable {
++        case afterSendTime
++        case notUploaded
++        case uploadedAfterMarker
++    }
++
++    enum Decision: Equatable {
++        case allowed
++        case unknownInsulin(units: Decimal, notUploadedOnly: Bool)
++        case unknownCarbs(count: Int, grams: Decimal)
++    }
++
++    /// Insulin a bolus counts with: delivered units once finalized, at least the programmed units while in progress.
++    static func bolusUnits(delivered: Decimal, programmed: Decimal, isInProgress: Bool) -> Decimal {
++        isInProgress ? max(delivered, programmed) : delivered
++    }
++
++    /// Whether a bolus is the accepted remote bolus `pending`: not automatic, starting at or after 10 s before
++    /// `pending` was accepted, with programmed units within 0.025 U of it (inclusive).
++    static func isPendingBolus(
++        _ pending: InFlightBolus,
++        date: Date,
++        programmedUnits: Decimal,
++        isAutomatic: Bool
++    ) -> Bool {
++        !isAutomatic
++            && date.timeIntervalSince(pending.date) >= -(pendingBolusMatchTolerance + 0.001)
++            && abs(programmedUnits - pending.units) <= inProgressUnitsTolerance + 0.000001
++    }
++
++    /// The accepted remote bolus while it still counts: younger than `pendingBolusRetention` and not yet shown by
++    /// the dose history or the pump's bolus in progress.
++    static func activePendingBolus(
++        _ pending: InFlightBolus?,
++        stored: [StoredBolus],
++        pumpBolusInProgress: InFlightBolus?,
++        now: Date
++    ) -> InFlightBolus? {
++        guard let pending = pending, now.timeIntervalSince(pending.date) <= pendingBolusRetention else { return nil }
++        let isRecorded = stored.contains {
++            isPendingBolus(pending, date: $0.candidate.date, programmedUnits: $0.programmedUnits, isAutomatic: $0.isAutomatic)
++        } || pumpBolusInProgress.map {
++            isPendingBolus(pending, date: $0.date, programmedUnits: $0.units, isAutomatic: $0.isAutomatic)
++        } ?? false
++        return isRecorded ? nil : pending
++    }
++
++    /// Stored boluses plus the pump's bolus in progress and the active pending remote bolus, each unless the
++    /// dose history already holds it.
++    static func bolusCandidates(
++        stored: [StoredBolus],
++        pumpBolusInProgress: InFlightBolus?,
++        pendingRemoteBolus: InFlightBolus?,
++        now: Date
++    ) -> [Candidate] {
++        var candidates = stored.map(\.candidate)
++        let storedSyncIdentifiers = Set(stored.compactMap(\.syncIdentifier))
++
++        var inFlight: [InFlightBolus] = []
++        if let pump = pumpBolusInProgress {
++            let isStored = pump.syncIdentifier.map(storedSyncIdentifiers.contains) ?? false
++                || stored.contains { storedBolus in
++                    isSameBolus(
++                        date: storedBolus.candidate.date,
++                        units: storedBolus.programmedUnits,
++                        as: pump.date,
++                        units: pump.units
++                    )
++                }
++            if !isStored {
++                inFlight.append(pump)
++            }
++        }
++        if let pending = activePendingBolus(
++            pendingRemoteBolus,
++            stored: stored,
++            pumpBolusInProgress: pumpBolusInProgress,
++            now: now
++        ) {
++            inFlight.append(pending)
++        }
++
++        candidates += inFlight.map { Candidate(date: $0.date, amount: $0.units, nightscoutId: nil) }
++        return candidates
++    }
++
++    /// With `boundedByNow`, the send-time rule covers candidates dated up to now; without it, every candidate dated
++    /// after the send time.
++    static func unknownReason(_ candidate: Candidate, context: Context, boundedByNow: Bool = true) -> Reason? {
++        if candidate.date > context.sendTime, !boundedByNow || candidate.date <= context.now {
++            return .afterSendTime
++        }
++        guard let marker = context.knownThrough, context.isNightscoutUploadEnabled,
++              let markerRuleStart = context.markerRuleStart, candidate.createdAt > markerRuleStart
++        else {
++            return nil
++        }
++        guard let objectId = NightscoutObjectId(candidate.nightscoutId) else {
++            return .notUploaded
++        }
++        return objectId > marker ? .uploadedAfterMarker : nil
++    }
++
++    private static func unknownCandidates(
++        _ candidates: [Candidate],
++        context: Context,
++        boundedByNow: Bool
++    ) -> [(Candidate, Reason)] {
++        candidates.compactMap { candidate in
++            guard candidate.date >= context.lookbackStart,
++                  let reason = unknownReason(candidate, context: context, boundedByNow: boundedByNow)
++            else { return nil }
++            return (candidate, reason)
++        }
++    }
++
++    /// A bolus dated after the send time is unknown also when it is dated after now, as when the pump clock runs ahead.
++    static func evaluateBolus(requested: Decimal, boluses: [Candidate], context: Context) -> Decision {
++        let unknown = unknownCandidates(boluses, context: context, boundedByNow: false)
++        let unknownUnits = unknown.reduce(Decimal(0)) { $0 + $1.0.amount }
++        if unknownUnits > 0, unknownUnits >= requested * unknownInsulinThreshold {
++            return .unknownInsulin(units: unknownUnits, notUploadedOnly: unknown.allSatisfy { $0.1 == .notUploaded })
++        }
++        return .allowed
++    }
++
++    /// A carb entry dated after now (a carb equivalent or scheduled meal) is judged by the marker rule only.
++    static func evaluateCarbs(carbEntries: [Candidate], context: Context) -> Decision {
++        let unknown = unknownCandidates(carbEntries, context: context, boundedByNow: true)
++        guard !unknown.isEmpty else { return .allowed }
++        return .unknownCarbs(count: unknown.count, grams: unknown.reduce(Decimal(0)) { $0 + $1.0.amount })
++    }
++
++    /// `value` rounded half up to `scale` decimals, printed with "." and without trailing zeros.
++    static func format(_ value: Decimal, scale: Int) -> String {
++        var input = value
++        var rounded = Decimal()
++        NSDecimalRound(&rounded, &input, scale, .plain)
++        return NSDecimalNumber(decimal: rounded).description(withLocale: Locale(identifier: "en_US_POSIX"))
++    }
++}
++
++extension RemoteTreatmentGuard.Decision {
++    var rejectionMessage: String? {
++        switch self {
++        case .allowed:
++            return nil
++        case let .unknownInsulin(units, notUploadedOnly):
++            let insulin = RemoteTreatmentGuard.format(units, scale: 2)
++            if notUploadedOnly {
++                return "Command rejected: \(insulin) U of insulin has not been uploaded to Nightscout yet."
++            }
++            return "Command rejected: \(insulin) U of insulin was delivered after the command was sent (or after the newest treatment you had seen)."
++        case let .unknownCarbs(count, grams):
++            let carbs = RemoteTreatmentGuard.format(grams, scale: 0)
++            if count == 1 {
++                return "Command rejected: a carb entry of \(carbs) g was recorded that you had not seen."
++            }
++            return "Command rejected: \(count) carb entries totaling \(carbs) g were recorded that you had not seen."
++        }
++    }
++}
+diff --git a/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Bolus.swift b/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Bolus.swift
+index 6ed91b970..15d7a976e 100644
+--- a/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Bolus.swift
++++ b/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Bolus.swift
+@@ -8,28 +8,32 @@ extension TrioRemoteControl {
+             return
+         }
+ 
+-        let validation = try await bolusSafetyValidator.validate(
+-            bolusAmount: bolusAmount,
+-            lookbackStart: Date(timeIntervalSince1970: payload.timestamp)
+-        )
++        if let rejection = bolusLimitRejection(bolusAmount: bolusAmount) {
++            await logError(rejection, payload: payload)
++            return
++        }
+ 
+-        switch validation {
+-        case .allowed:
+-            break
+-        case let .rejected(reason):
+-            await logError(reason.remoteCommandMessage(bolusAmount: bolusAmount), payload: payload)
++        if let rejection = try await treatmentGuardRejection(for: payload, bolusAmount: bolusAmount, checkCarbs: false) {
++            await logError(rejection, payload: payload)
+             return
+         }
+ 
+-        debug(.remote, "Enacting remote bolus of \(bolusAmount) U")
++        await enactRemoteBolus(payload, bolusAmount: bolusAmount)
++    }
+ 
+-        guard let apsManager = await TrioApp.resolver.resolve(APSManager.self) else {
+-            await logError(
+-                "Error: unable to process bolus command because the APS Manager is not available.",
+-                payload: payload
+-            )
+-            return
++    /// Max bolus and max IOB rejection message, or nil when the amount is within limits.
++    func bolusLimitRejection(bolusAmount: Decimal) -> String? {
++        switch bolusSafetyValidator.validateLimits(bolusAmount: bolusAmount) {
++        case .allowed:
++            return nil
++        case let .rejected(reason):
++            return reason.remoteCommandMessage(bolusAmount: bolusAmount)
+         }
++    }
++
++    /// Hands the bolus to the pump. `carbsStored` tells the sender in a failure reply that the meal's carbs are stored.
++    func enactRemoteBolus(_ payload: CommandPayload, bolusAmount: Decimal, carbsStored: Bool = false) async {
++        debug(.remote, "Enacting remote bolus of \(bolusAmount) U")
+ 
+         if let returnInfo = payload.returnNotification {
+             await RemoteNotificationResponseManager.shared.sendResponseNotification(
+@@ -40,11 +44,29 @@ extension TrioRemoteControl {
+             )
+         }
+ 
++        let pending = RemoteTreatmentGuard.InFlightBolus(
++            date: Date(),
++            units: Self.pendingBolusUnits(
++                requested: bolusAmount,
++                roundToSupportedVolume: apsManager.pumpManager.map { pump in
++                    { pump.roundToSupportedBolusVolume(units: $0) }
++                }
++            ),
++            syncIdentifier: nil
++        )
++        pendingRemoteBolus = pending
++
+         await apsManager
+-            .enactBolus(amount: Double(truncating: bolusAmount as NSNumber), isSMB: false) { [weak self] success, message in
++            .enactBolus(
++                amount: Double(truncating: bolusAmount as NSNumber),
++                isSMB: false
++            ) { [weak self] (result: BolusEnactmentResult) in
+                 guard let self = self else { return }
++                if !Self.keepsPendingRemoteBolus(after: result) {
++                    self.clearPendingRemoteBolus(pending)
++                }
+                 Task {
+-                    if success {
++                    if result.isSuccess {
+                         await self.logSuccess(
+                             "Remote command processed successfully. \(payload.humanReadableDescription())",
+                             payload: payload,
+@@ -52,13 +74,45 @@ extension TrioRemoteControl {
+                         )
+                     } else {
+                         await self.logError(
+-                            message,
++                            Self.remoteBolusFailureMessage(for: result, carbsStored: carbsStored),
+                             payload: payload
+                         )
+                     }
+                 }
+             }
+     }
++
++    /// The units the pump delivers for `requested`, rounded to the pump's supported bolus volume when a pump is set up.
++    static func pendingBolusUnits(requested: Decimal, roundToSupportedVolume: ((Double) -> Double)?) -> Decimal {
++        guard let roundToSupportedVolume = roundToSupportedVolume else { return requested }
++        return NSNumber(value: roundToSupportedVolume(Double(truncating: requested as NSNumber))).decimalValue
++    }
++
++    static let uncertainDeliveryMessage = "Bolus may have been delivered. Check the history before sending another bolus."
++
++    /// An enacted bolus, or one whose delivery is uncertain, stays pending until the dose history shows it.
++    static func keepsPendingRemoteBolus(after result: BolusEnactmentResult) -> Bool {
++        switch result {
++        case .enacted,
++             .uncertainDelivery:
++            return true
++        case .failed:
++            return false
++        }
++    }
++
++    /// The reply to the sender when the bolus was not confirmed by the pump.
++    static func remoteBolusFailureMessage(for result: BolusEnactmentResult, carbsStored: Bool) -> String {
++        switch result {
++        case .uncertainDelivery:
++            return carbsStored ? "Carbs were stored. " + uncertainDeliveryMessage : uncertainDeliveryMessage
++        case let .failed(message, error):
++            guard carbsStored else { return message }
++            return "Carbs were stored, but the bolus failed: \(error?.localizedDescription ?? message)"
++        case let .enacted(message):
++            return message
++        }
++    }
+ }
+ 
+ private extension BolusSafetyRejection {
+diff --git a/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Meal.swift b/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Meal.swift
+index dcd7a1576..a7ea161c2 100644
+--- a/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Meal.swift
++++ b/Trio/Sources/Services/RemoteControl/TrioRemoteControl+Meal.swift
+@@ -37,26 +37,17 @@ extension TrioRemoteControl {
+             return
+         }
+ 
+-        let payloadDate = Date(timeIntervalSince1970: payload.timestamp)
+-        let taskContext = CoreDataStack.shared.newTaskContext()
+-        // Only entries already in the past can indicate a replay; equivalents and scheduled
+-        // meals are dated ahead and would otherwise reject every command until their date passed.
+-        let results = try await CoreDataStack.shared.fetchEntitiesAsync(
+-            ofType: CarbEntryStored.self, onContext: taskContext, predicate: NSPredicate(
+-                format: "date > %@ AND date <= %@",
+-                payloadDate as NSDate,
+-                Date() as NSDate
+-            ), key: "date", ascending: false
+-        )
+-
+-        let hasNewerCarbEntries = await taskContext.perform {
+-            (results as? [CarbEntryStored])?.isEmpty == false
++        if let bolusAmount = payload.bolusAmount, let rejection = bolusLimitRejection(bolusAmount: bolusAmount) {
++            await logError(rejection, payload: payload)
++            return
+         }
+-        if hasNewerCarbEntries {
+-            await logError(
+-                "Command rejected: newer carb entries have been logged since the command was sent.",
+-                payload: payload
+-            )
++
++        if let rejection = try await treatmentGuardRejection(
++            for: payload,
++            bolusAmount: payload.bolusAmount,
++            checkCarbs: true
++        ) {
++            await logError(rejection, payload: payload)
+             return
+         }
+ 
+@@ -71,8 +62,8 @@ extension TrioRemoteControl {
+ 
+         try await carbsStorage.storeCarbs([mealEntry], areFetchedFromRemote: false)
+ 
+-        if payload.bolusAmount != nil {
+-            try await handleBolusCommand(payload)
++        if let bolusAmount = payload.bolusAmount {
++            await enactRemoteBolus(payload, bolusAmount: bolusAmount, carbsStored: true)
+             return
+         }
+ 
+diff --git a/Trio/Sources/Services/RemoteControl/TrioRemoteControl+TreatmentGuard.swift b/Trio/Sources/Services/RemoteControl/TrioRemoteControl+TreatmentGuard.swift
+new file mode 100644
+index 000000000..d90cab1cc
+--- /dev/null
++++ b/Trio/Sources/Services/RemoteControl/TrioRemoteControl+TreatmentGuard.swift
+@@ -0,0 +1,158 @@
++import CoreData
++import Foundation
++import LoopKit
++
++extension TrioRemoteControl {
++    func treatmentGuardContext(
++        for payload: CommandPayload,
++        objectIds: NightscoutObjectIdCache
++    ) -> RemoteTreatmentGuard.Context {
++        RemoteTreatmentGuard.Context(
++            sendTime: Date(timeIntervalSince1970: payload.timestamp),
++            now: Date(),
++            knownThroughId: payload.knownThroughId,
++            isNightscoutUploadEnabled: settings.settings.isUploadEnabled,
++            markerRuleStart: objectIds.firstRecordedAt
++        )
++    }
++
++    /// Boluses of every kind (manual, SMB, external, remote) dated at or after `date`.
++    /// A bolus still in progress counts with its programmed amount.
++    static func fetchTreatmentGuardBoluses(
++        since date: Date,
++        objectIds: NightscoutObjectIdCache,
++        context: NSManagedObjectContext
++    ) async throws -> [RemoteTreatmentGuard.StoredBolus] {
++        try await context.perform {
++            let request: NSFetchRequest<PumpEventStored> = PumpEventStored.fetchRequest()
++            request.predicate = NSPredicate(
++                format: "type == %@ AND timestamp >= %@",
++                PumpEventStored.EventType.bolus.rawValue,
++                date as NSDate
++            )
++            request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: false)]
++            request.relationshipKeyPathsForPrefetching = ["bolus"]
++
++            return try context.fetch(request).compactMap { event in
++                guard let timestamp = event.timestamp, let bolus = event.bolus else { return nil }
++                let candidate = RemoteTreatmentGuard.Candidate(
++                    date: timestamp,
++                    amount: RemoteTreatmentGuard.bolusUnits(
++                        delivered: bolus.amount?.decimalValue ?? 0,
++                        programmed: bolus.programmedAmount?.decimalValue ?? 0,
++                        isInProgress: event.isMutable
++                    ),
++                    nightscoutId: event.id.flatMap(objectIds.objectId(forLocalId:))
++                )
++                return RemoteTreatmentGuard.StoredBolus(
++                    candidate: candidate,
++                    syncIdentifier: event.syncIdentifier,
++                    isAutomatic: bolus.isSMB,
++                    programmedUnits: bolus.programmedAmount?.decimalValue ?? bolus.amount?.decimalValue ?? 0
++                )
++            }
++        }
++    }
++
++    /// Carb entries dated at or after `date`, including future-dated meals and carb equivalents.
++    /// Carb equivalents are uploaded under their shared `fpuID`, and were created no later than their meal's date,
++    /// which is their creation time when that meal is stored.
++    static func fetchTreatmentGuardCarbEntries(
++        since date: Date,
++        objectIds: NightscoutObjectIdCache,
++        context: NSManagedObjectContext
++    ) async throws -> [RemoteTreatmentGuard.Candidate] {
++        try await context.perform {
++            let request: NSFetchRequest<CarbEntryStored> = CarbEntryStored.fetchRequest()
++            request.predicate = NSPredicate(format: "date >= %@", date as NSDate)
++            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
++            let entries = try context.fetch(request)
++
++            let fpuIds = Set(entries.filter(\.isFPU).compactMap(\.fpuID))
++            var mealDates: [UUID: Date] = [:]
++            if !fpuIds.isEmpty {
++                let mealRequest: NSFetchRequest<CarbEntryStored> = CarbEntryStored.fetchRequest()
++                mealRequest.predicate = NSPredicate(format: "isFPU == NO AND fpuID IN %@", Array(fpuIds))
++                for meal in try context.fetch(mealRequest) {
++                    guard let fpuId = meal.fpuID, let mealDate = meal.date else { continue }
++                    mealDates[fpuId] = min(mealDates[fpuId] ?? mealDate, mealDate)
++                }
++            }
++
++            return entries.compactMap { entry in
++                guard let entryDate = entry.date else { return nil }
++                let localId = (entry.isFPU ? entry.fpuID : nil) ?? entry.id
++                let mealDate = entry.isFPU ? entry.fpuID.flatMap { mealDates[$0] } : nil
++                return RemoteTreatmentGuard.Candidate(
++                    date: entryDate,
++                    amount: NSNumber(value: entry.carbs).decimalValue,
++                    nightscoutId: localId.flatMap { objectIds.objectId(forLocalId: $0.uuidString) },
++                    createdAt: mealDate.map { min($0, entryDate) }
++                )
++            }
++        }
++    }
++
++    /// The bolus the pump reports as being delivered.
++    func pumpBolusInProgress() -> RemoteTreatmentGuard.InFlightBolus? {
++        guard case let .inProgress(dose) = apsManager.pumpManager?.status.bolusState else { return nil }
++        return RemoteTreatmentGuard.InFlightBolus(
++            date: dose.startDate,
++            units: NSNumber(value: dose.programmedUnits).decimalValue,
++            syncIdentifier: dose.syncIdentifier,
++            isAutomatic: dose.automatic ?? false
++        )
++    }
++
++    /// Rejection message when `payload` was sent without knowledge of recent boluses or carb entries, otherwise nil.
++    func treatmentGuardRejection(
++        for payload: CommandPayload,
++        bolusAmount: Decimal?,
++        checkCarbs: Bool
++    ) async throws -> String? {
++        let objectIds = NightscoutObjectIdStore.shared.snapshot()
++        let context = treatmentGuardContext(for: payload, objectIds: objectIds)
++
++        if checkCarbs {
++            let carbEntries = try await Self.fetchTreatmentGuardCarbEntries(
++                since: context.lookbackStart,
++                objectIds: objectIds,
++                context: treatmentGuardStoreContext()
++            )
++            let decision = RemoteTreatmentGuard.evaluateCarbs(carbEntries: carbEntries, context: context)
++            if let message = decision.rejectionMessage {
++                return message
++            }
++        }
++
++        if let bolusAmount = bolusAmount {
++            let stored = try await Self.fetchTreatmentGuardBoluses(
++                since: context.lookbackStart,
++                objectIds: objectIds,
++                context: treatmentGuardStoreContext()
++            )
++            let pumpBolus = pumpBolusInProgress()
++            let pending = pendingRemoteBolus
++            if let pending = pending, RemoteTreatmentGuard.activePendingBolus(
++                pending,
++                stored: stored,
++                pumpBolusInProgress: pumpBolus,
++                now: context.now
++            ) == nil {
++                clearPendingRemoteBolus(pending)
++            }
++            let boluses = RemoteTreatmentGuard.bolusCandidates(
++                stored: stored,
++                pumpBolusInProgress: pumpBolus,
++                pendingRemoteBolus: pending,
++                now: context.now
++            )
++            let decision = RemoteTreatmentGuard.evaluateBolus(requested: bolusAmount, boluses: boluses, context: context)
++            if let message = decision.rejectionMessage {
++                return message
++            }
++        }
++
++        return nil
++    }
++}
+diff --git a/Trio/Sources/Services/RemoteControl/TrioRemoteControl.swift b/Trio/Sources/Services/RemoteControl/TrioRemoteControl.swift
+index 2b6b0fc98..6a8e666c8 100644
+--- a/Trio/Sources/Services/RemoteControl/TrioRemoteControl.swift
++++ b/Trio/Sources/Services/RemoteControl/TrioRemoteControl.swift
+@@ -16,7 +16,33 @@ class TrioRemoteControl: Injectable {
+     @Injected() internal var apsManager: APSManager!
+     @Injected() internal var therapyProfileManager: TherapyProfileManager!
+ 
+-    private let timeWindow: TimeInterval = 600
++    /// How long before now a command may have been sent.
++    static let timeWindow: TimeInterval = 720
++    /// How far ahead of now a command's send time may lie, for clock differences between the devices.
++    static let futureTolerance: TimeInterval = 120
++
++    private let commandQueue = RemoteCommandQueue()
++    /// Core Data context the treatment guard reads boluses and carb entries from.
++    var treatmentGuardStoreContext: () -> NSManagedObjectContext = { CoreDataStack.shared.newTaskContext() }
++    /// Accessed only from `commandQueue`.
++    @Persisted(key: "TrioRemoteControl.handledRemoteCommands") private var handledCommands = HandledRemoteCommands()
++
++    private let pendingRemoteBolusLock = NSLock()
++    private var pendingRemoteBolusValue: RemoteTreatmentGuard.InFlightBolus?
++    /// The last remote bolus handed to the pump; counted by the treatment guard until it is in the dose history.
++    var pendingRemoteBolus: RemoteTreatmentGuard.InFlightBolus? {
++        get {
++            pendingRemoteBolusLock.lock()
++            defer { pendingRemoteBolusLock.unlock() }
++            return pendingRemoteBolusValue
++        }
++        set {
++            pendingRemoteBolusLock.lock()
++            defer { pendingRemoteBolusLock.unlock() }
++            pendingRemoteBolusValue = newValue
++        }
++    }
++
+     /// Command ids of profile commands, kept for twice the accepted clock skew.
+     let seenProfileCommands = RemoteCommandReplayGuard(window: 1200)
+ 
+@@ -24,7 +50,46 @@ class TrioRemoteControl: Injectable {
+         injectServices(resolver)
+     }
+ 
++    /// Clears the pending remote bolus if it is still `pending`.
++    func clearPendingRemoteBolus(_ pending: RemoteTreatmentGuard.InFlightBolus) {
++        pendingRemoteBolusLock.lock()
++        defer { pendingRemoteBolusLock.unlock() }
++        if pendingRemoteBolusValue == pending {
++            pendingRemoteBolusValue = nil
++        }
++    }
++
++    /// Records `payload` as handled and returns true, or returns false when the same command was already handled.
++    /// A repeated command is logged to the app log only; the sender gets no reply and Nightscout no note.
++    func markFirstHandling(of payload: CommandPayload, at date: Date) -> Bool {
++        var handled = handledCommands
++        let isFirst = handled.markHandled(payload, at: date)
++        handledCommands = handled
++        if !isFirst {
++            warning(.remote, "Command already handled. Details: \(payload.humanReadableDescription())")
++        }
++        return isFirst
++    }
++
++    /// Rejection message for a command sent `timeDifference` seconds ago, or nil when it is within the window.
++    static func timestampRejection(timeDifference: TimeInterval) -> String? {
++        if timeDifference > timeWindow {
++            return "Command rejected: the message is too old (sent \(Int(timeDifference)) seconds ago)."
++        }
++        if timeDifference < -futureTolerance {
++            return "Command rejected: the message has an invalid future timestamp."
++        }
++        return nil
++    }
++
++    /// Handles one remote command at a time, in arrival order.
+     func handleRemoteNotification(encryptedData: String) async throws {
++        try await commandQueue.run {
++            try await self.processRemoteNotification(encryptedData: encryptedData)
++        }
++    }
++
++    private func processRemoteNotification(encryptedData: String) async throws {
+         let isTrioRemoteControlEnabled = UserDefaults.standard.bool(forKey: "isTrioRemoteControlEnabled")
+         guard isTrioRemoteControlEnabled else {
+             await logError("Remote command received, but remote control is disabled in settings. Ignoring the command.")
+@@ -52,19 +117,18 @@ class TrioRemoteControl: Injectable {
+             return
+         }
+ 
++        // A repeat of a handled command is logged only, also when it arrives after the time window
++        if !commandPayload.commandType.hasOwnReplayGuard, handledCommands.handledCommandId(of: commandPayload, at: Date()) {
++            warning(.remote, "Command already handled. Details: \(commandPayload.humanReadableDescription())")
++            return
++        }
++
+         let currentTime = Date().timeIntervalSince1970
+         let timeDifference = currentTime - commandPayload.timestamp
+ 
+-        if timeDifference > timeWindow {
++        if let rejection = Self.timestampRejection(timeDifference: timeDifference) {
+             await logError(
+-                "Command rejected: the message is too old (sent \(Int(timeDifference)) seconds ago).",
+-                payload: commandPayload,
+-                ack: RemoteCommandAck(commandId: commandPayload.commandId, mealId: commandPayload.mealId, result: .rejected)
+-            )
+-            return
+-        } else if timeDifference < -timeWindow {
+-            await logError(
+-                "Command rejected: the message has an invalid future timestamp.",
++                rejection,
+                 payload: commandPayload,
+                 ack: RemoteCommandAck(commandId: commandPayload.commandId, mealId: commandPayload.mealId, result: .rejected)
+             )
+@@ -73,6 +137,8 @@ class TrioRemoteControl: Injectable {
+ 
+         debug(.remote, "Command authenticated, sent \(Int(timeDifference)) s ago")
+ 
++        guard commandPayload.commandType.hasOwnReplayGuard || markFirstHandling(of: commandPayload, at: Date()) else { return }
++
+         switch commandPayload.commandType {
+         case .bolus:
+             try await handleBolusCommand(commandPayload)
+@@ -107,3 +173,84 @@ class TrioRemoteControl: Injectable {
+         }
+     }
+ }
++
++/// Runs operations one after another; each starts once the previous one has finished.
++actor RemoteCommandQueue {
++    private var tail: Task<Void, Never>?
++
++    func run(_ operation: @escaping () async throws -> Void) async throws {
++        let previous = tail
++        let task = Task {
++            await previous?.value
++            try await operation()
++        }
++        tail = Task { _ = await task.result }
++        try await task.value
++    }
++}
++
++/// Commands handled recently, so a repeated command is answered without being enacted again.
++///
++/// A command with a `commandId` is identified by it for `retention`. A command without one is identified by its
++/// send time, type and values for as long as its send time passes the time window check.
++struct HandledRemoteCommands: Codable, Equatable {
++    static let retention: TimeInterval = 24 * 60 * 60
++    static let contentRetention: TimeInterval = TrioRemoteControl.timeWindow + TrioRemoteControl.futureTolerance
++
++    private(set) var expiresAt: [String: Date] = [:]
++
++    /// Records `key` until `date + retention` and returns true, or returns false when it is still recorded.
++    mutating func markHandled(_ key: String, at date: Date, retention: TimeInterval = Self.retention) -> Bool {
++        expiresAt = expiresAt.filter { $0.value > date }
++        guard expiresAt[key] == nil else { return false }
++        expiresAt[key] = date.addingTimeInterval(retention)
++        return true
++    }
++
++    /// Whether a command with the same `commandId` was handled and is still recorded at `date`.
++    func handledCommandId(of payload: CommandPayload, at date: Date) -> Bool {
++        guard let commandId = payload.commandId, let expiry = expiresAt["id:" + commandId] else { return false }
++        return expiry > date
++    }
++
++    /// Records `payload` and returns true, or returns false when the same command was already handled.
++    mutating func markHandled(_ payload: CommandPayload, at date: Date) -> Bool {
++        if let commandId = payload.commandId {
++            return markHandled("id:" + commandId, at: date)
++        }
++        return markHandled(Self.contentKey(of: payload), at: date, retention: Self.contentRetention)
++    }
++
++    /// Send time, command type and every value the command carries.
++    static func contentKey(of payload: CommandPayload) -> String {
++        let values: [String] = [
++            payload.commandType.rawValue,
++            "\(payload.timestamp)",
++            payload.bolusAmount.map { "\($0)" } ?? "-",
++            payload.carbs.map(String.init) ?? "-",
++            payload.fat.map(String.init) ?? "-",
++            payload.protein.map(String.init) ?? "-",
++            payload.target.map(String.init) ?? "-",
++            payload.duration.map(String.init) ?? "-",
++            payload.overrideName ?? "-",
++            payload.scheduledTime.map { "\($0)" } ?? "-",
++            payload.mealId ?? "-"
++        ]
++        return "content:" + values.joined(separator: "|")
++    }
++}
++
++extension TrioRemoteControl.CommandType {
++    /// Profile commands reject a repeated `command_id` with a reply, through `seenProfileCommands`
++    var hasOwnReplayGuard: Bool {
++        switch self {
++        case .deleteProfile,
++             .saveProfile,
++             .saveScheduledSwitches,
++             .switchProfile:
++            return true
++        default:
++            return false
++        }
++    }
++}
+diff --git a/TrioTests/BolusSafetyTests/EnactBolusAmountTests.swift b/TrioTests/BolusSafetyTests/EnactBolusAmountTests.swift
+index eeafdd37a..b09ea638f 100644
+--- a/TrioTests/BolusSafetyTests/EnactBolusAmountTests.swift
++++ b/TrioTests/BolusSafetyTests/EnactBolusAmountTests.swift
+@@ -37,4 +37,21 @@ import Testing
+         #expect(answers.first?.success == false)
+         #expect(answers.first?.message == BaseAPSManager.invalidBolusAmountMessage)
+     }
++
++    @Test("The completion form reports a refused bolus as failed, not delivered") func testInvalidAmountCompletion() async throws {
++        let apsManager = try await Self.makeAPSManager()
++        var results: [BolusEnactmentResult] = []
++
++        await apsManager.enactBolus(amount: 0, isSMB: false) { (result: BolusEnactmentResult) in
++            results.append(result)
++        }
++
++        #expect(results.count == 1)
++        guard case let .failed(message, error) = results.first else {
++            Issue.record("Expected a failed result")
++            return
++        }
++        #expect(message == BaseAPSManager.invalidBolusAmountMessage)
++        #expect(error == nil)
++    }
+ }
+diff --git a/TrioTests/CoreDataTests/CarbEntryMutationServiceTests.swift b/TrioTests/CoreDataTests/CarbEntryMutationServiceTests.swift
+index bf13098e0..c034a5b4d 100644
+--- a/TrioTests/CoreDataTests/CarbEntryMutationServiceTests.swift
++++ b/TrioTests/CoreDataTests/CarbEntryMutationServiceTests.swift
+@@ -230,7 +230,7 @@ private final class StubNightscoutManager: NightscoutManager {
+     func fetchIfNeeded() -> AnyPublisher<[BloodGlucose], Never> { Just([]).eraseToAnyPublisher() }
+     func sourceInfo() -> [String: Any]? { nil }
+     func fetchGlucose(since _: Date) async -> [BloodGlucose] { [] }
+-    func fetchCarbs() async -> [CarbsEntry] { [] }
++    func fetchCarbs() async -> (entries: [CarbsEntry], siteURL: String?) { ([], nil) }
+     func fetchTempTargets() async -> [TempTarget] { [] }
+     func deleteCarbs(withID id: String) async -> Bool {
+         await onDeleteCarbs(id)
+diff --git a/TrioTests/RemoteTreatmentGuardTests.swift b/TrioTests/RemoteTreatmentGuardTests.swift
+new file mode 100644
+index 000000000..a6bc814f1
+--- /dev/null
++++ b/TrioTests/RemoteTreatmentGuardTests.swift
+@@ -0,0 +1,1194 @@
++import CoreData
++import Foundation
++import LoopKit
++import Swinject
++import Testing
++
++@testable import Trio
++
++@Suite("Remote Treatment Guard Tests") struct RemoteTreatmentGuardTests {
++    private typealias Guard = RemoteTreatmentGuard
++    private typealias Candidate = RemoteTreatmentGuard.Candidate
++
++    private let now = Date(timeIntervalSince1970: 1_800_000_000)
++
++    private func minutes(_ value: Double) -> Date {
++        now.addingTimeInterval(value * 60)
++    }
++
++    /// A Nightscout `_id` inserted at `date`.
++    private func objectId(at date: Date, suffix: String = "0000000000000000") -> String {
++        String(format: "%08x", UInt32(date.timeIntervalSince1970)) + suffix
++    }
++
++    private func context(
++        sentAt sendTime: Date,
++        knownThrough marker: String? = nil,
++        uploadEnabled: Bool = true,
++        markerRuleStart: Date? = Date(timeIntervalSince1970: 1_799_900_000)
++    ) -> Guard.Context {
++        Guard.Context(
++            sendTime: sendTime,
++            now: now,
++            knownThroughId: marker,
++            isNightscoutUploadEnabled: uploadEnabled,
++            markerRuleStart: markerRuleStart
++        )
++    }
++
++    private func bolus(_ units: Decimal, at date: Date, uploadedAt uploadDate: Date? = nil) -> Candidate {
++        Candidate(date: date, amount: units, nightscoutId: uploadDate.map { objectId(at: $0) })
++    }
++
++    // MARK: - Object id
++
++    @Test("Object id time is the first 8 hex characters in seconds") func testObjectIdDate() {
++        let id = NightscoutObjectId("65a1b2c3d4e5f60718293a4b")
++        #expect(id?.date == Date(timeIntervalSince1970: TimeInterval(0x65A1_B2C3)))
++    }
++
++    @Test("Invalid object ids are rejected") func testInvalidObjectIds() {
++        #expect(NightscoutObjectId("NA") == nil)
++        #expect(NightscoutObjectId(nil) == nil)
++        #expect(NightscoutObjectId("65a1b2c3d4e5f60718293a4") == nil)
++        #expect(NightscoutObjectId("65a1b2c3d4e5f60718293a4g") == nil)
++        #expect(NightscoutObjectId("65A1B2C3D4E5F60718293A4B") != nil)
++    }
++
++    // MARK: - Bolus
++
++    @Test("Unknown insulin below 20% of the request is allowed") func testUnknownInsulinBelowThreshold() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let boluses = [bolus(0.25, at: minutes(-2), uploadedAt: minutes(-2))]
++
++        #expect(Guard.evaluateBolus(requested: 2.5, boluses: boluses, context: ctx) == .allowed)
++    }
++
++    @Test("Unknown insulin at or above 20% of the request is rejected") func testUnknownInsulinAboveThreshold() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let boluses = [bolus(0.25, at: minutes(-3), uploadedAt: minutes(-3)), bolus(0.25, at: minutes(-1))]
++
++        let decision = Guard.evaluateBolus(requested: 2.5, boluses: boluses, context: ctx)
++        #expect(decision == .unknownInsulin(units: 0.5, notUploadedOnly: false))
++        #expect(
++            decision.rejectionMessage ==
++                "Command rejected: 0.5 U of insulin was delivered after the command was sent (or after the newest treatment you had seen)."
++        )
++    }
++
++    @Test("Insulin the sender had seen is allowed") func testKnownInsulinAllowed() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-20)))
++        let boluses = [bolus(3, at: minutes(-30), uploadedAt: minutes(-29))]
++
++        #expect(Guard.evaluateBolus(requested: 2, boluses: boluses, context: ctx) == .allowed)
++    }
++
++    @Test("An in-progress bolus counts with its programmed amount") func testInProgressBolus() {
++        #expect(Guard.bolusUnits(delivered: 0.5, programmed: 3, isInProgress: true) == 3)
++        #expect(Guard.bolusUnits(delivered: 2.5, programmed: 3, isInProgress: false) == 2.5)
++
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let inProgress = Candidate(
++            date: minutes(-1),
++            amount: Guard.bolusUnits(delivered: 0.25, programmed: 2, isInProgress: true),
++            nightscoutId: nil
++        )
++        #expect(
++            Guard
++                .evaluateBolus(requested: 2, boluses: [inProgress], context: ctx) ==
++                .unknownInsulin(units: 2, notUploadedOnly: false)
++        )
++    }
++
++    @Test("A bolus without a cached _id is unknown under a marker") func testMissingObjectId() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let notUploaded = Candidate(date: minutes(-60), amount: 1, nightscoutId: nil)
++
++        let decision = Guard.evaluateBolus(requested: 2, boluses: [notUploaded], context: ctx)
++        #expect(decision == .unknownInsulin(units: 1, notUploadedOnly: true))
++        #expect(decision.rejectionMessage == "Command rejected: 1 U of insulin has not been uploaded to Nightscout yet.")
++    }
++
++    @Test("An \"NA\" _id counts as missing") func testNAObjectId() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let candidate = Candidate(date: minutes(-60), amount: 1, nightscoutId: "NA")
++
++        #expect(
++            Guard.evaluateBolus(requested: 2, boluses: [candidate], context: ctx) ==
++                .unknownInsulin(units: 1, notUploadedOnly: true)
++        )
++    }
++
++    @Test("An invalid marker is treated as absent") func testInvalidMarker() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: "not-an-object-id")
++        let notUploaded = Candidate(date: minutes(-60), amount: 1, nightscoutId: nil)
++
++        #expect(ctx.knownThrough == nil)
++        #expect(Guard.evaluateBolus(requested: 2, boluses: [notUploaded], context: ctx) == .allowed)
++    }
++
++    @Test("Without a marker only the send-time rule applies") func testNoMarkerSendTimeRule() {
++        let ctx = context(sentAt: minutes(-5))
++        let before = Candidate(date: minutes(-6), amount: 3, nightscoutId: nil)
++        let after = Candidate(date: minutes(-4), amount: 0.5, nightscoutId: nil)
++
++        #expect(Guard.evaluateBolus(requested: 2, boluses: [before], context: ctx) == .allowed)
++        #expect(
++            Guard.evaluateBolus(requested: 2, boluses: [before, after], context: ctx) ==
++                .unknownInsulin(units: 0.5, notUploadedOnly: false)
++        )
++    }
++
++    @Test("With upload disabled the marker is ignored") func testUploadDisabled() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)), uploadEnabled: false)
++        let notUploaded = Candidate(date: minutes(-60), amount: 1, nightscoutId: nil)
++
++        #expect(Guard.evaluateBolus(requested: 2, boluses: [notUploaded], context: ctx) == .allowed)
++    }
++
++    @Test("A marker older than the send time rejects insulin uploaded in between") func testMarkerOlderThanSendTime() {
++        // The sender's last fetch saw treatments through -15 min; it sent at -5 min.
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-15)))
++        let boluses = [bolus(1, at: minutes(-10), uploadedAt: minutes(-9))]
++
++        #expect(
++            Guard.evaluateBolus(requested: 2, boluses: boluses, context: ctx) ==
++                .unknownInsulin(units: 1, notUploadedOnly: false)
++        )
++    }
++
++    @Test("Two caregivers: the second command is rejected after the first bolus") func testTwoCaregivers() {
++        // Caregiver A's 2 U bolus was enacted at -4 min and uploaded at -3 min.
++        let boluses = [bolus(2, at: minutes(-4), uploadedAt: minutes(-3))]
++
++        // Caregiver B fetched before A's bolus reached Nightscout and sent at -2 min.
++        let callerB = context(sentAt: minutes(-2), knownThrough: objectId(at: minutes(-8)))
++        #expect(
++            Guard.evaluateBolus(requested: 2, boluses: boluses, context: callerB) ==
++                .unknownInsulin(units: 2, notUploadedOnly: false)
++        )
++
++        // Caregiver B after a fresh fetch that includes A's bolus.
++        let refreshedB = context(sentAt: minutes(-1), knownThrough: objectId(at: minutes(-3)))
++        #expect(Guard.evaluateBolus(requested: 2, boluses: boluses, context: refreshedB) == .allowed)
++    }
++
++    @Test("Treatments older than the lookback are ignored") func testLookback() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let old = Candidate(date: minutes(-6 * 60 - 1), amount: 5, nightscoutId: nil)
++
++        #expect(Guard.evaluateBolus(requested: 2, boluses: [old], context: ctx) == .allowed)
++    }
++
++    // MARK: - Carbs
++
++    @Test("A backdated carb entry uploaded after the marker is rejected") func testBackdatedCarbAfterMarker() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let backdated = Candidate(date: minutes(-45), amount: 20, nightscoutId: objectId(at: minutes(-2)))
++
++        let decision = Guard.evaluateCarbs(carbEntries: [backdated], context: ctx)
++        #expect(decision == .unknownCarbs(count: 1, grams: 20))
++        #expect(decision.rejectionMessage == "Command rejected: a carb entry of 20 g was recorded that you had not seen.")
++    }
++
++    @Test("A backdated carb entry is allowed without a marker") func testBackdatedCarbWithoutMarker() {
++        let ctx = context(sentAt: minutes(-5))
++        let backdated = Candidate(date: minutes(-45), amount: 20, nightscoutId: nil)
++
++        #expect(Guard.evaluateCarbs(carbEntries: [backdated], context: ctx) == .allowed)
++    }
++
++    @Test("A known future-dated carb entry is allowed") func testFutureCarbKnown() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let future = Candidate(date: minutes(60), amount: 15, nightscoutId: objectId(at: minutes(-10)))
++
++        #expect(Guard.evaluateCarbs(carbEntries: [future], context: ctx) == .allowed)
++    }
++
++    @Test("An unknown future-dated carb entry is rejected") func testFutureCarbUnknown() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let uploadedLater = Candidate(date: minutes(60), amount: 15, nightscoutId: objectId(at: minutes(-1)))
++        let notUploaded = Candidate(date: minutes(90), amount: 10, nightscoutId: nil)
++
++        #expect(Guard.evaluateCarbs(carbEntries: [uploadedLater], context: ctx) == .unknownCarbs(count: 1, grams: 15))
++        #expect(
++            Guard.evaluateCarbs(carbEntries: [uploadedLater, notUploaded], context: ctx) ==
++                .unknownCarbs(count: 2, grams: 25)
++        )
++    }
++
++    @Test("A carb entry dated after the send time is rejected without a marker") func testCarbAfterSendTime() {
++        let ctx = context(sentAt: minutes(-5))
++        let entry = Candidate(date: minutes(-1), amount: 30, nightscoutId: nil)
++
++        #expect(Guard.evaluateCarbs(carbEntries: [entry], context: ctx) == .unknownCarbs(count: 1, grams: 30))
++    }
++
++    // MARK: - Object id cache
++
++    @Test("Upload responses map echoed ids to _ids and skip incomplete objects") func testUploadResponseMappings() {
++        let response = """
++        [{"_id":"65a1b2c3d4e5f60718293a4b","id":"AAA","insulin":1},
++         {"id":"BBB","insulin":2},
++         {"_id":"65a1b2c3d4e5f60718293a4c","carbs":10}]
++        """
++        let mappings = NightscoutObjectIdCache.mappings(fromUploadResponse: Data(response.utf8), localIds: ["AAA", "BBB"])
++
++        #expect(mappings.count == 1)
++        #expect(mappings.first?.localId == "AAA")
++        #expect(mappings.first?.objectId == "65a1b2c3d4e5f60718293a4b")
++        #expect(NightscoutObjectIdCache.mappings(fromUploadResponse: Data(response.utf8), localIds: ["BBB"]).isEmpty)
++        #expect(NightscoutObjectIdCache.mappings(fromUploadResponse: Data("{}".utf8), localIds: ["AAA"]).isEmpty)
++    }
++
++    @Test("Cache keeps the newest _id per key and purges after retention") func testCacheRecordAndPurge() {
++        var cache = NightscoutObjectIdCache()
++        let older = objectId(at: minutes(-10))
++        let newer = objectId(at: minutes(-5))
++
++        cache.record(localId: "fpu-Family", objectId: newer, at: now)
++        cache.record(localId: "FPU-family", objectId: older, at: now)
++        cache.record(localId: "bolus", objectId: "NA", at: now)
++
++        #expect(cache.objectId(forLocalId: "fpu-family") == newer)
++        #expect(cache.objectId(forLocalId: "bolus") == nil)
++
++        cache.purge(now: now.addingTimeInterval(NightscoutObjectIdCache.retention + 1))
++        #expect(cache.objectId(forLocalId: "fpu-family") == nil)
++    }
++
++    // MARK: - Marker plausibility and recording start
++
++    @Test("The marker rule covers only candidates created after recording started") func testFirstMappingCutoff() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)), markerRuleStart: minutes(-30))
++        let beforeRecording = Candidate(date: minutes(-60), amount: 3, nightscoutId: nil)
++        let afterRecording = Candidate(date: minutes(-20), amount: 1, nightscoutId: nil)
++
++        #expect(Guard.evaluateBolus(requested: 2, boluses: [beforeRecording], context: ctx) == .allowed)
++        #expect(
++            Guard.evaluateBolus(requested: 2, boluses: [beforeRecording, afterRecording], context: ctx) ==
++                .unknownInsulin(units: 1, notUploadedOnly: true)
++        )
++
++        let neverRecorded = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)), markerRuleStart: nil)
++        #expect(Guard.evaluateBolus(requested: 2, boluses: [afterRecording], context: neverRecorded) == .allowed)
++    }
++
++    @Test("A marker more than 5 minutes ahead of now is invalid") func testFarFutureMarker() {
++        let farFuture = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(6)))
++        let nearFuture = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(4)))
++        let notUploaded = Candidate(date: minutes(-60), amount: 1, nightscoutId: nil)
++
++        #expect(farFuture.knownThrough == nil)
++        #expect(nearFuture.knownThrough != nil)
++        #expect(Guard.evaluateBolus(requested: 2, boluses: [notUploaded], context: farFuture) == .allowed)
++    }
++
++    // MARK: - In-flight boluses
++
++    @Test("The pump's bolus in progress counts until it is stored") func testPumpBolusInProgress() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let pump = Guard.InFlightBolus(date: minutes(-1), units: 3, syncIdentifier: "dose-1")
++
++        let candidates = Guard.bolusCandidates(stored: [], pumpBolusInProgress: pump, pendingRemoteBolus: nil, now: now)
++        #expect(candidates == [Candidate(date: minutes(-1), amount: 3, nightscoutId: nil)])
++        #expect(
++            Guard.evaluateBolus(requested: 2, boluses: candidates, context: ctx) ==
++                .unknownInsulin(units: 3, notUploadedOnly: false)
++        )
++
++        let stored = Guard.StoredBolus(
++            candidate: Candidate(date: minutes(-1), amount: 3, nightscoutId: nil),
++            syncIdentifier: "dose-1",
++            isAutomatic: false,
++            programmedUnits: 3
++        )
++        #expect(Guard.bolusCandidates(stored: [stored], pumpBolusInProgress: pump, pendingRemoteBolus: nil, now: now).count == 1)
++    }
++
++    @Test("A stored in-progress bolus with another identifier is not counted twice") func testInProgressDifferentIdentifiers() {
++        let point3 = Decimal(string: "0.3")!
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)))
++        let finished = Guard.StoredBolus(
++            candidate: Candidate(date: minutes(-3), amount: point3, nightscoutId: objectId(at: minutes(-3))),
++            syncIdentifier: "finished",
++            isAutomatic: false,
++            programmedUnits: point3
++        )
++        let storedInProgress = Guard.StoredBolus(
++            candidate: Candidate(date: minutes(-1), amount: point3, nightscoutId: nil),
++            syncIdentifier: "stored-row",
++            isAutomatic: false,
++            programmedUnits: point3
++        )
++        let pump = Guard.InFlightBolus(date: minutes(-1).addingTimeInterval(2), units: point3, syncIdentifier: "pump-dose")
++        let pending = Guard.InFlightBolus(date: minutes(-1).addingTimeInterval(-1), units: point3, syncIdentifier: nil)
++
++        let candidates = Guard.bolusCandidates(
++            stored: [finished, storedInProgress],
++            pumpBolusInProgress: pump,
++            pendingRemoteBolus: pending,
++            now: now
++        )
++        #expect(candidates.count == 2)
++        #expect(
++            Guard.evaluateBolus(requested: 1, boluses: candidates, context: ctx) ==
++                .unknownInsulin(units: Decimal(string: "0.6")!, notUploadedOnly: false)
++        )
++
++        let otherAmount = Guard.InFlightBolus(date: pump.date, units: 1, syncIdentifier: "pump-dose")
++        let automatic = Guard.StoredBolus(
++            candidate: storedInProgress.candidate,
++            syncIdentifier: "smb-row",
++            isAutomatic: true,
++            programmedUnits: point3
++        )
++        #expect(
++            Guard.bolusCandidates(stored: [storedInProgress], pumpBolusInProgress: otherAmount, pendingRemoteBolus: nil, now: now)
++                .count == 2
++        )
++        #expect(
++            Guard.bolusCandidates(stored: [automatic], pumpBolusInProgress: pump, pendingRemoteBolus: nil, now: now)
++                .count == 1
++        )
++    }
++
++    @Test("Same bolus within 10 s and 0.025 U, inclusive at both edges") func testSameBolusEdges() {
++        let date = minutes(-1)
++        let point3 = NSNumber(value: 0.3).decimalValue
++        let point325 = NSNumber(value: 0.325).decimalValue
++        let point326 = Decimal(string: "0.326")!
++
++        #expect(Guard.isSameBolus(date: date, units: point3, as: date.addingTimeInterval(10), units: point325))
++        #expect(Guard.isSameBolus(date: date.addingTimeInterval(10), units: point325, as: date, units: point3))
++        #expect(Guard.isSameBolus(
++            date: date,
++            units: Decimal(0.325 - 0.3 + 1),
++            as: date,
++            units: 1
++        ))
++        #expect(!Guard.isSameBolus(date: date, units: point3, as: date.addingTimeInterval(10.01), units: point3))
++        #expect(!Guard.isSameBolus(date: date, units: point3, as: date, units: point326))
++
++        let stored = Guard.StoredBolus(
++            candidate: Candidate(date: date, amount: point3, nightscoutId: nil),
++            syncIdentifier: "stored-row",
++            isAutomatic: false,
++            programmedUnits: point3
++        )
++        let edgePump = Guard.InFlightBolus(date: date.addingTimeInterval(10), units: point325, syncIdentifier: "pump-dose")
++        let pastEdgePump = Guard.InFlightBolus(date: date.addingTimeInterval(10), units: point326, syncIdentifier: "pump-dose")
++        #expect(
++            Guard.bolusCandidates(stored: [stored], pumpBolusInProgress: edgePump, pendingRemoteBolus: nil, now: now)
++                .count == 1
++        )
++        #expect(
++            Guard.bolusCandidates(stored: [stored], pumpBolusInProgress: pastEdgePump, pendingRemoteBolus: nil, now: now)
++                .count == 2
++        )
++    }
++
++    @Test("An accepted remote bolus counts until the dose history holds it") func testPendingRemoteBolus() {
++        let pending = Guard.InFlightBolus(date: minutes(-1), units: 2, syncIdentifier: nil)
++        let smb = Guard.StoredBolus(
++            candidate: Candidate(date: minutes(-0.5), amount: 0.25, nightscoutId: nil),
++            syncIdentifier: "smb",
++            isAutomatic: true,
++            programmedUnits: 0.25
++        )
++        let manual = Guard.StoredBolus(
++            candidate: Candidate(date: minutes(-0.5), amount: 2, nightscoutId: nil),
++            syncIdentifier: "manual",
++            isAutomatic: false,
++            programmedUnits: 2
++        )
++        let pump = Guard.InFlightBolus(date: minutes(-0.5), units: 2, syncIdentifier: "manual")
++
++        #expect(Guard.bolusCandidates(stored: [smb], pumpBolusInProgress: nil, pendingRemoteBolus: pending, now: now).count == 2)
++        #expect(
++            Guard.bolusCandidates(stored: [manual], pumpBolusInProgress: nil, pendingRemoteBolus: pending, now: now)
++                .count == 1
++        )
++        #expect(Guard.bolusCandidates(stored: [], pumpBolusInProgress: pump, pendingRemoteBolus: pending, now: now).count == 1)
++    }
++
++    // MARK: - Messages
++
++    @Test("Messages round insulin to 2 decimals and carbs to whole grams") func testMessageFormatting() {
++        #expect(
++            Guard.Decision.unknownInsulin(units: Decimal(string: "0.45")!, notUploadedOnly: true).rejectionMessage ==
++                "Command rejected: 0.45 U of insulin has not been uploaded to Nightscout yet."
++        )
++        #expect(Guard.format(Decimal(string: "1.005")!, scale: 2) == "1.01")
++        #expect(Guard.format(Decimal(string: "2.50")!, scale: 2) == "2.5")
++        #expect(Guard.format(NSNumber(value: 7.3).decimalValue, scale: 0) == "7")
++        #expect(
++            Guard.Decision.unknownCarbs(count: 1, grams: NSNumber(value: 7.3).decimalValue).rejectionMessage ==
++                "Command rejected: a carb entry of 7 g was recorded that you had not seen."
++        )
++        #expect(
++            Guard.Decision.unknownCarbs(count: 2, grams: Decimal(string: "25.5")!).rejectionMessage ==
++                "Command rejected: 2 carb entries totaling 26 g were recorded that you had not seen."
++        )
++        #expect(NSNumber(value: 7.3).decimalValue == Decimal(string: "7.3"))
++    }
++
++    // MARK: - Repeated commands
++
++    @Test("A repeated command id is reported as already handled") func testRepeatedCommandId() {
++        var handled = HandledRemoteCommands()
++
++        let first = handled.markHandled("cmd-1", at: now)
++        let repeated = handled.markHandled("cmd-1", at: now.addingTimeInterval(30))
++        let other = handled.markHandled("cmd-2", at: now.addingTimeInterval(30))
++        let afterRetention = handled.markHandled("cmd-1", at: now.addingTimeInterval(HandledRemoteCommands.retention + 1))
++
++        #expect(first)
++        #expect(!repeated)
++        #expect(other)
++        #expect(afterRetention)
++    }
++
++    @Test("Switching Nightscout site clears the cache and restarts recording") func testSiteSwitch() {
++        var cache = NightscoutObjectIdCache(siteURL: "https://a.example", createdAt: minutes(-30))
++        cache.record(localId: "bolus", objectId: objectId(at: minutes(-5)), at: now)
++        #expect(cache.firstRecordedAt == minutes(-30))
++
++        let sameSiteChanged = cache.switchSite(to: "https://a.example", at: now)
++        #expect(!sameSiteChanged)
++        #expect(cache.objectId(forLocalId: "bolus") != nil)
++        #expect(cache.firstRecordedAt == minutes(-30))
++
++        let otherSiteChanged = cache.switchSite(to: "https://b.example", at: now)
++        #expect(otherSiteChanged)
++        #expect(cache.objectId(forLocalId: "bolus") == nil)
++        #expect(cache.firstRecordedAt == now)
++
++        var withoutStart = NightscoutObjectIdCache(siteURL: "https://a.example")
++        let startAdded = withoutStart.switchSite(to: "https://a.example", at: now)
++        #expect(startAdded)
++        #expect(withoutStart.firstRecordedAt == now)
++        #expect(NightscoutObjectIdCache.normalizedSiteURL(" HTTPS://A.example/ ") == "https://a.example")
++    }
++
++    @Test("Recording starts when the store creates the cache for a site") func testRecordingStartsAtCacheCreation() throws {
++        let suite = "RemoteTreatmentGuardTests-\(UUID().uuidString)"
++        let storage = try #require(UserDefaults(suiteName: suite))
++        defer { storage.removePersistentDomain(forName: suite) }
++        var configuredSite = "https://a.example"
++        let store = NightscoutObjectIdStore(storage: storage) { configuredSite }
++
++        #expect(store.snapshot(at: minutes(-60)).firstRecordedAt == minutes(-60))
++        #expect(store.snapshot(at: minutes(-30)).firstRecordedAt == minutes(-60))
++        store.record([("bolus", objectId(at: minutes(-5)))], fromSite: configuredSite, at: now)
++        #expect(store.snapshot(at: now).firstRecordedAt == minutes(-60))
++
++        let relaunched = NightscoutObjectIdStore(storage: storage) { configuredSite }
++        #expect(relaunched.snapshot(at: now).firstRecordedAt == minutes(-60))
++
++        configuredSite = "https://b.example"
++        #expect(relaunched.snapshot(at: minutes(-2)).firstRecordedAt == minutes(-2))
++        #expect(relaunched.snapshot(at: now).firstRecordedAt == minutes(-2))
++        #expect(relaunched.snapshot(at: now).entries.isEmpty)
++    }
++
++    @Test("Store records mappings only for the configured site") func testStoreRecordsForConfiguredSite() throws {
++        let suite = "RemoteTreatmentGuardTests-\(UUID().uuidString)"
++        let storage = try #require(UserDefaults(suiteName: suite))
++        defer { storage.removePersistentDomain(forName: suite) }
++        let store = NightscoutObjectIdStore(storage: storage) { "https://a.example" }
++
++        store.record([("other", objectId(at: minutes(-5)))], fromSite: "https://b.example", at: now)
++        store.record([("none", objectId(at: minutes(-5)))], fromSite: nil, at: now)
++        #expect(store.snapshot(at: now).entries.isEmpty)
++
++        store.record([("bolus", objectId(at: minutes(-5)))], fromSite: "HTTPS://a.example/", at: now)
++        #expect(store.snapshot().objectId(forLocalId: "bolus") == objectId(at: minutes(-5)))
++        #expect(store.snapshot().firstRecordedAt == now)
++    }
++
++    @Test("Upload response arriving after a site change is not recorded") func testStoreIgnoresResponseFromPreviousSite() throws {
++        let suite = "RemoteTreatmentGuardTests-\(UUID().uuidString)"
++        let storage = try #require(UserDefaults(suiteName: suite))
++        defer { storage.removePersistentDomain(forName: suite) }
++        var configuredSite = "https://a.example"
++        let store = NightscoutObjectIdStore(storage: storage) { configuredSite }
++
++        store.record([("old", objectId(at: minutes(-10)))], fromSite: "https://a.example", at: now)
++        let requestSite = configuredSite
++        configuredSite = "https://b.example"
++        store.record([("late", objectId(at: minutes(-5)))], fromSite: requestSite, at: now)
++
++        let snapshot = store.snapshot(at: now)
++        #expect(snapshot.siteURL == "https://b.example")
++        #expect(snapshot.entries.isEmpty)
++        #expect(snapshot.firstRecordedAt == now)
++
++        store.record([("new", objectId(at: minutes(-1)))], fromSite: configuredSite, at: now)
++        #expect(store.snapshot().objectId(forLocalId: "new") != nil)
++        #expect(store.snapshot().objectId(forLocalId: "late") == nil)
++    }
++
++    // MARK: - Review fixes
++
++    @Test("An _id in the marker's second counts by its full string") func testObjectIdFullStringComparison() {
++        let second = minutes(-6)
++        let marker = objectId(at: second, suffix: "0000000000000005")
++        let ctx = context(sentAt: minutes(-5), knownThrough: marker)
++        let sameSecondLater = Candidate(
++            date: minutes(-60),
++            amount: 1,
++            nightscoutId: objectId(at: second, suffix: "0000000000000006")
++        )
++        let sameSecondEarlier = Candidate(
++            date: minutes(-60),
++            amount: 1,
++            nightscoutId: objectId(at: second, suffix: "0000000000000004")
++        )
++
++        #expect(Guard.unknownReason(sameSecondLater, context: ctx) == .uploadedAfterMarker)
++        #expect(Guard.unknownReason(sameSecondEarlier, context: ctx) == nil)
++        #expect(Guard.unknownReason(Candidate(date: minutes(-60), amount: 1, nightscoutId: marker), context: ctx) == nil)
++    }
++
++    @Test("The marker rule uses creation time, so older future-dated entries are not judged by it") func testCreationTime() {
++        let ctx = context(sentAt: minutes(-5), knownThrough: objectId(at: minutes(-6)), markerRuleStart: minutes(-30))
++        let equivalentFromBefore = Candidate(date: minutes(60), amount: 10, nightscoutId: nil, createdAt: minutes(-90))
++        let equivalentFromAfter = Candidate(date: minutes(60), amount: 10, nightscoutId: nil, createdAt: minutes(-20))
++
++        #expect(Guard.evaluateCarbs(carbEntries: [equivalentFromBefore], context: ctx) == .allowed)
++        #expect(Guard.evaluateCarbs(carbEntries: [equivalentFromAfter], context: ctx) == .unknownCarbs(count: 1, grams: 10))
++        #expect(Candidate(date: minutes(1), amount: 1, nightscoutId: nil).createdAt == minutes(1))
++    }
++
++    @Test("The pump's bolus in progress matches a stored automatic bolus") func testInProgressMatchesAutomatic() {
++        let smb = Guard.StoredBolus(
++            candidate: Candidate(date: minutes(-1), amount: Decimal(string: "0.4")!, nightscoutId: nil),
++            syncIdentifier: "smb-row",
++            isAutomatic: true,
++            programmedUnits: Decimal(string: "0.4")!
++        )
++        let pump = Guard.InFlightBolus(
++            date: minutes(-1).addingTimeInterval(10),
++            units: Decimal(string: "0.425")!,
++            syncIdentifier: "pump"
++        )
++        let candidates = Guard.bolusCandidates(stored: [smb], pumpBolusInProgress: pump, pendingRemoteBolus: nil, now: now)
++
++        #expect(candidates == [smb.candidate])
++    }
++
++    @Test("A pending remote bolus is dropped after 15 minutes") func testPendingExpiry() {
++        let pending = Guard.InFlightBolus(date: minutes(-15), units: 2, syncIdentifier: nil)
++        let expired = Guard.InFlightBolus(date: minutes(-15).addingTimeInterval(-1), units: 2, syncIdentifier: nil)
++
++        #expect(Guard.activePendingBolus(pending, stored: [], pumpBolusInProgress: nil, now: now) == pending)
++        #expect(Guard.activePendingBolus(expired, stored: [], pumpBolusInProgress: nil, now: now) == nil)
++        #expect(Guard.bolusCandidates(stored: [], pumpBolusInProgress: nil, pendingRemoteBolus: expired, now: now).isEmpty)
++        #expect(Guard.bolusCandidates(stored: [], pumpBolusInProgress: nil, pendingRemoteBolus: pending, now: now).count == 1)
++    }
++
++    @Test(
++        "A pending remote bolus is dropped by a manual bolus from 10 s before it with units within 0.025 U"
++    ) func testPendingDropRule() {
++        let point3 = NSNumber(value: 0.3).decimalValue
++        let point325 = NSNumber(value: 0.325).decimalValue
++        let point326 = Decimal(string: "0.326")!
++        let pending = Guard.InFlightBolus(date: minutes(-2), units: point3, syncIdentifier: nil)
++
++        func stored(at date: Date, programmed: Decimal, automatic: Bool = false) -> Guard.StoredBolus {
++            Guard.StoredBolus(
++                candidate: Candidate(date: date, amount: programmed, nightscoutId: nil),
++                syncIdentifier: UUID().uuidString,
++                isAutomatic: automatic,
++                programmedUnits: programmed
++            )
++        }
++        func isDropped(by bolus: Guard.StoredBolus) -> Bool {
++            Guard.activePendingBolus(pending, stored: [bolus], pumpBolusInProgress: nil, now: now) == nil
++        }
++
++        #expect(isDropped(by: stored(at: minutes(-2).addingTimeInterval(-10), programmed: point325)))
++        #expect(isDropped(by: stored(at: minutes(-1), programmed: Decimal(string: "0.275")!)))
++        #expect(!isDropped(by: stored(at: minutes(-2).addingTimeInterval(-10.01), programmed: point3)))
++        #expect(!isDropped(by: stored(at: minutes(-1), programmed: point326)))
++        #expect(!isDropped(by: stored(at: minutes(-1), programmed: point3, automatic: true)))
++        #expect(!isDropped(by: stored(at: minutes(-1), programmed: 2)))
++
++        let smbInProgress = Guard.InFlightBolus(date: minutes(-1), units: point3, syncIdentifier: "smb", isAutomatic: true)
++        let manualInProgress = Guard.InFlightBolus(date: minutes(-1), units: point3, syncIdentifier: "manual")
++        let otherInProgress = Guard.InFlightBolus(date: minutes(-1), units: 1, syncIdentifier: "manual")
++        #expect(Guard.activePendingBolus(pending, stored: [], pumpBolusInProgress: smbInProgress, now: now) == pending)
++        #expect(Guard.activePendingBolus(pending, stored: [], pumpBolusInProgress: otherInProgress, now: now) == pending)
++        #expect(Guard.activePendingBolus(pending, stored: [], pumpBolusInProgress: manualInProgress, now: now) == nil)
++
++        let candidates = Guard.bolusCandidates(
++            stored: [],
++            pumpBolusInProgress: smbInProgress,
++            pendingRemoteBolus: pending,
++            now: now
++        )
++        #expect(candidates.count == 2)
++    }
++
++    @Test("A pending remote bolus holds the amount rounded to the pump's bolus volume") func testPendingBolusRounding() {
++        typealias Control = TrioRemoteControl
++        let roundDownToTwentieth: (Double) -> Double = { ($0 / 0.05).rounded(.down) * 0.05 }
++
++        #expect(
++            Control.pendingBolusUnits(requested: Decimal(string: "1.27")!, roundToSupportedVolume: roundDownToTwentieth) ==
++                NSNumber(value: roundDownToTwentieth(1.27)).decimalValue
++        )
++        #expect(
++            Control
++                .pendingBolusUnits(requested: Decimal(string: "1.27")!, roundToSupportedVolume: nil) == Decimal(string: "1.27")
++        )
++
++        let pending = Guard.InFlightBolus(
++            date: minutes(-1),
++            units: Control.pendingBolusUnits(requested: Decimal(string: "0.33")!, roundToSupportedVolume: roundDownToTwentieth),
++            syncIdentifier: nil
++        )
++        let delivered = Guard.StoredBolus(
++            candidate: Candidate(date: minutes(-1), amount: Decimal(string: "0.3")!, nightscoutId: nil),
++            syncIdentifier: "manual",
++            isAutomatic: false,
++            programmedUnits: Decimal(string: "0.3")!
++        )
++        #expect(Guard.activePendingBolus(pending, stored: [delivered], pumpBolusInProgress: nil, now: now) == nil)
++    }
++
++    @Test(
++        "A bolus dated after the send time counts also when dated after now; a carb entry does not"
++    ) func testSendTimeRuleUpperBound() {
++        let ctx = context(sentAt: minutes(-5))
++        let aheadBolus = Candidate(date: minutes(3), amount: 1, nightscoutId: nil)
++        let aheadCarbs = Candidate(date: minutes(3), amount: 20, nightscoutId: nil)
++
++        #expect(Guard.unknownReason(aheadBolus, context: ctx, boundedByNow: false) == .afterSendTime)
++        #expect(Guard.unknownReason(aheadCarbs, context: ctx) == nil)
++        #expect(
++            Guard.evaluateBolus(requested: 2, boluses: [aheadBolus], context: ctx) ==
++                .unknownInsulin(units: 1, notUploadedOnly: false)
++        )
++        #expect(Guard.evaluateCarbs(carbEntries: [aheadCarbs], context: ctx) == .allowed)
++    }
++
++    @Test("Uncertain delivery and enacted boluses stay pending; refused ones are cleared") func testPendingPerResult() {
++        typealias Control = TrioRemoteControl
++        let uncertain = BolusEnactmentResult.failure(message: "m", error: PumpManagerError.uncertainDelivery)
++        let wrappedUncertain = BolusEnactmentResult.failure(
++            message: "m",
++            error: APSError.pumpError(PumpManagerError.uncertainDelivery)
++        )
++        let refused = BolusEnactmentResult.failure(message: "m", error: PumpManagerError.communication(nil))
++
++        guard case .uncertainDelivery = uncertain, case .uncertainDelivery = wrappedUncertain, case .failed = refused else {
++            Issue.record("Unexpected classification")
++            return
++        }
++        #expect(Control.keepsPendingRemoteBolus(after: .enacted(message: "ok")))
++        #expect(Control.keepsPendingRemoteBolus(after: uncertain))
++        #expect(!Control.keepsPendingRemoteBolus(after: refused))
++        #expect(!Control.keepsPendingRemoteBolus(after: .failed(message: "no pump", error: nil)))
++    }
++
++    @Test("Failure replies for uncertain delivery and for a meal whose bolus failed") func testFailureReplies() {
++        typealias Control = TrioRemoteControl
++        let uncertain = BolusEnactmentResult.uncertainDelivery(message: "m", error: PumpManagerError.uncertainDelivery)
++        let pumpError = PumpManagerError.deviceState(nil)
++        let refused = BolusEnactmentResult.failed(message: "Error! Bolus failed with error: x", error: pumpError)
++
++        #expect(
++            Control.remoteBolusFailureMessage(for: uncertain, carbsStored: false) ==
++                "Bolus may have been delivered. Check the history before sending another bolus."
++        )
++        #expect(
++            Control.remoteBolusFailureMessage(for: uncertain, carbsStored: true) ==
++                "Carbs were stored. Bolus may have been delivered. Check the history before sending another bolus."
++        )
++        #expect(Control.remoteBolusFailureMessage(for: refused, carbsStored: false) == "Error! Bolus failed with error: x")
++        #expect(
++            Control.remoteBolusFailureMessage(for: refused, carbsStored: true) ==
++                "Carbs were stored, but the bolus failed: \(pumpError.localizedDescription)"
++        )
++        #expect(
++            Control.remoteBolusFailureMessage(for: .failed(message: "No pump", error: nil), carbsStored: true) ==
++                "Carbs were stored, but the bolus failed: No pump"
++        )
++    }
++
++    @Test("Commands may be sent up to 12 minutes ago and 2 minutes ahead") func testTimeWindow() {
++        typealias Control = TrioRemoteControl
++        #expect(Control.timestampRejection(timeDifference: 720) == nil)
++        #expect(
++            Control
++                .timestampRejection(timeDifference: 721) == "Command rejected: the message is too old (sent 721 seconds ago)."
++        )
++        #expect(Control.timestampRejection(timeDifference: -120) == nil)
++        #expect(
++            Control
++                .timestampRejection(timeDifference: -121) == "Command rejected: the message has an invalid future timestamp."
++        )
++    }
++
++    private func payload(_ json: String) throws -> CommandPayload {
++        try JSONDecoder().decode(CommandPayload.self, from: Data(json.utf8))
++    }
++
++    @Test("Bolus and meal commands are deduplicated by command_id") func testCommandIdDedupe() throws {
++        let bolus = try payload("""
++        {"user":"c","command_type":"bolus","timestamp":1800000000,"bolus_amount":1,"command_id":"cmd-b"}
++        """)
++        let meal = try payload("""
++        {"user":"c","command_type":"meal","timestamp":1800000000,"carbs":20,"bolus_amount":1,"command_id":"cmd-m"}
++        """)
++        var handled = HandledRemoteCommands()
++
++        #expect(bolus.commandId == "cmd-b")
++        let isFirst1 = handled.markHandled(bolus, at: now)
++        #expect(isFirst1)
++        let isFirst2 = handled.markHandled(bolus, at: now.addingTimeInterval(60 * 60))
++        #expect(!isFirst2)
++        let isFirst3 = handled.markHandled(meal, at: now)
++        #expect(isFirst3)
++        let isFirst4 = handled.markHandled(meal, at: now.addingTimeInterval(1))
++        #expect(!isFirst4)
++        let isFirst5 = handled.markHandled(bolus, at: now.addingTimeInterval(HandledRemoteCommands.retention + 1))
++        #expect(isFirst5)
++    }
++
++    @Test("A handled command_id is recognised without recording it, also after the time window") func testHandledCommandIdLookup() throws {
++        let bolus = try payload("""
++        {"user":"c","command_type":"bolus","timestamp":1800000000,"bolus_amount":1,"command_id":"cmd-b"}
++        """)
++        let withoutId = try payload("""
++        {"user":"c","command_type":"bolus","timestamp":1800000000,"bolus_amount":1}
++        """)
++        var handled = HandledRemoteCommands()
++
++        #expect(!handled.handledCommandId(of: bolus, at: now))
++        #expect(!handled.handledCommandId(of: bolus, at: now))
++        _ = handled.markHandled(bolus, at: now)
++        #expect(handled.handledCommandId(of: bolus, at: now.addingTimeInterval(20 * 60)))
++        #expect(!handled.handledCommandId(of: bolus, at: now.addingTimeInterval(HandledRemoteCommands.retention + 1)))
++        _ = handled.markHandled(withoutId, at: now)
++        #expect(!handled.handledCommandId(of: withoutId, at: now))
++    }
++
++    @Test("Commands without command_id are deduplicated by send time, type and values within the window") func testContentDedupe() throws {
++        let bolus = try payload("""
++        {"user":"c","command_type":"bolus","timestamp":1800000000.25,"bolus_amount":1.5}
++        """)
++        let otherAmount = try payload("""
++        {"user":"c","command_type":"bolus","timestamp":1800000000.25,"bolus_amount":1.55}
++        """)
++        let otherTime = try payload("""
++        {"user":"c","command_type":"bolus","timestamp":1800000000.5,"bolus_amount":1.5}
++        """)
++        let meal = try payload("""
++        {"user":"c","command_type":"meal","timestamp":1800000000.25,"carbs":20}
++        """)
++        var handled = HandledRemoteCommands()
++
++        let isFirst6 = handled.markHandled(bolus, at: now)
++        #expect(isFirst6)
++        let isFirst7 = handled.markHandled(bolus, at: now.addingTimeInterval(HandledRemoteCommands.contentRetention - 1))
++        #expect(!isFirst7)
++        let isFirst8 = handled.markHandled(otherAmount, at: now)
++        #expect(isFirst8)
++        let isFirst9 = handled.markHandled(otherTime, at: now)
++        #expect(isFirst9)
++        let isFirst10 = handled.markHandled(meal, at: now)
++        #expect(isFirst10)
++        let isFirst11 = handled.markHandled(meal, at: now)
++        #expect(!isFirst11)
++        let isFirst12 = handled.markHandled(bolus, at: now.addingTimeInterval(HandledRemoteCommands.contentRetention + 1))
++        #expect(isFirst12)
++        #expect(HandledRemoteCommands.contentRetention == 840)
++    }
++
++    @Test("Remote commands run one at a time, in order") func testCommandQueueIsSerial() async throws {
++        let queue = RemoteCommandQueue()
++        let log = EventLog()
++
++        try await withThrowingTaskGroup(of: Void.self) { group in
++            for index in 0 ..< 5 {
++                group.addTask {
++                    try await queue.run {
++                        await log.append("start \(index)")
++                        try await Task.sleep(nanoseconds: 20_000_000)
++                        await log.append("end \(index)")
++                    }
++                }
++                try await Task.sleep(nanoseconds: 2_000_000)
++            }
++            try await group.waitForAll()
++        }
++
++        let events = await log.events
++        #expect(events.count == 10)
++        for pair in stride(from: 0, to: events.count, by: 2) {
++            let start = events[pair].dropFirst("start ".count)
++            #expect(events[pair].hasPrefix("start "))
++            #expect(events[pair + 1] == "end \(start)")
++        }
++    }
++
++    @Test("A failing command does not stop the next one") func testCommandQueueContinuesAfterError() async throws {
++        let queue = RemoteCommandQueue()
++        struct Failure: Error {}
++
++        await #expect(throws: Failure.self) {
++            try await queue.run { throw Failure() }
++        }
++        var ran = false
++        try await queue.run { ran = true }
++        #expect(ran)
++    }
++
++    @Test(
++        "Missing _ids are looked up by local id, at most 10 per upload, for the current site only"
++    ) func testResolveMissingObjectIds() async throws {
++        let suite = "RemoteTreatmentGuardTests-\(UUID().uuidString)"
++        let storage = try #require(UserDefaults(suiteName: suite))
++        defer { storage.removePersistentDomain(forName: suite) }
++        var configuredSite = "https://a.example"
++        let store = NightscoutObjectIdStore(storage: storage) { configuredSite }
++        let known = objectId(at: Date().addingTimeInterval(-60))
++        store.record([("known", known)], fromSite: configuredSite)
++
++        let localIds = ["known"] + (0 ..< 12).map { "missing-\($0)" } + ["missing-0"]
++        let lookups = EventLog()
++        await store.resolveMissing(localIds: localIds, fromSite: "https://a.example/") { localId in
++            await lookups.append(localId)
++            return localId == "missing-1" ? nil : String(format: "%08x", UInt32(Date().timeIntervalSince1970)) +
++                "00000000000000aa"
++        }
++
++        let looked = await lookups.events
++        #expect(looked == (0 ..< 10).map { "missing-\($0)" })
++        let snapshot = store.snapshot()
++        #expect(snapshot.objectId(forLocalId: "known") == known)
++        #expect(snapshot.objectId(forLocalId: "missing-0") != nil)
++        #expect(snapshot.objectId(forLocalId: "missing-1") == nil)
++        #expect(snapshot.objectId(forLocalId: "missing-10") == nil)
++
++        let staleLookups = EventLog()
++        await store.resolveMissing(localIds: ["late"], fromSite: "https://b.example") { localId in
++            await staleLookups.append(localId)
++            return nil
++        }
++        #expect(await staleLookups.events.isEmpty)
++
++        configuredSite = "https://b.example"
++        await store.resolveMissing(localIds: ["switched"], fromSite: "https://a.example") { _ in
++            Issue.record("Lookup against a previous site")
++            return nil
++        }
++        #expect(store.snapshot().entries.isEmpty)
++    }
++
++    @Test("The _id lookup asks for up to 100 treatments with the local id within the last 24 hours") func testObjectIdLookupQuery() {
++        let since = Date(timeIntervalSince1970: 1_800_000_000)
++        let items = NightscoutAPI.objectIdLookupQueryItems(localId: "abc", createdSince: since)
++
++        #expect(items.first { $0.name == "find[id]" }?.value == "abc")
++        #expect(
++            items.first { $0.name == "find[created_at][$gte]" }?.value ==
++                Formatter.iso8601withFractionalSeconds.string(from: since)
++        )
++        #expect(items.first { $0.name == "count" }?.value == "100")
++    }
++
++    @Test("The _id lookup returns the greatest _id with the local id") func testObjectIdLookupFetch() async throws {
++        let api = NightscoutAPI(url: URL(string: "https://objectid-lookup.test")!)
++        let older = objectId(at: minutes(-10))
++        let newer = objectId(at: minutes(-5))
++        LookupStubProtocol.responseBody = Data("""
++        [{"_id":"\(older)","id":"abc"},{"_id":"\(newer)","id":"abc"},{"_id":"NA","id":"abc"},{"id":"abc"},
++         {"_id":"\(objectId(at: minutes(-1)))","id":"other"}]
++        """.utf8)
++        URLProtocol.registerClass(LookupStubProtocol.self)
++        defer { URLProtocol.unregisterClass(LookupStubProtocol.self) }
++
++        let found = try await api.fetchObjectId(forLocalId: "abc", createdSince: minutes(-60))
++
++        #expect(found == newer)
++        let query = URLComponents(url: try #require(LookupStubProtocol.lastRequest?.url), resolvingAgainstBaseURL: false)
++        #expect(query?.path == "/api/v1/treatments.json")
++        #expect(query?.queryItems?.first { $0.name == "find[id]" }?.value == "abc")
++    }
++
++    // MARK: - Payload
++
++    @Test("known_through_id decodes and is optional") func testPayloadDecoding() throws {
++        let withMarker = try JSONDecoder().decode(CommandPayload.self, from: Data("""
++        {"user":"caregiver","command_type":"bolus","timestamp":1700000000,"bolus_amount":1.5,
++         "known_through_id":"65a1b2c3d4e5f60718293a4b"}
++        """.utf8))
++        let withoutMarker = try JSONDecoder().decode(CommandPayload.self, from: Data("""
++        {"user":"caregiver","command_type":"bolus","timestamp":1700000000,"bolus_amount":1.5}
++        """.utf8))
++
++        #expect(withMarker.knownThroughId == "65a1b2c3d4e5f60718293a4b")
++        #expect(withoutMarker.knownThroughId == nil)
++    }
++}
++
++private actor EventLog {
++    private(set) var events: [String] = []
++
++    func append(_ event: String) {
++        events.append(event)
++    }
++}
++
++/// Answers requests to objectid-lookup.test with `responseBody`.
++private final class LookupStubProtocol: URLProtocol {
++    nonisolated(unsafe) static var responseBody = Data()
++    nonisolated(unsafe) static var lastRequest: URLRequest?
++
++    override class func canInit(with request: URLRequest) -> Bool {
++        request.url?.host == "objectid-lookup.test"
++    }
++
++    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
++        request
++    }
++
++    override func startLoading() {
++        Self.lastRequest = request
++        let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
++        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
++        client?.urlProtocol(self, didLoad: Self.responseBody)
++        client?.urlProtocolDidFinishLoading(self)
++    }
++
++    override func stopLoading() {}
++}
++
++private struct AllowingBolusSafetyValidator: BolusSafetyValidator {
++    func validate(bolusAmount _: Decimal) async throws -> BolusSafetyResult { .allowed }
++    func validateLimits(bolusAmount _: Decimal) -> BolusSafetyResult { .allowed }
++    func fetchTotalRecentBolusAmount(since _: Date) async throws -> Decimal { 0 }
++}
++
++private final class RemoteControlTestAssembly: Assembly {
++    func assemble(container: Container) {
++        container.register(BolusSafetyValidator.self) { _ in AllowingBolusSafetyValidator() }
++    }
++}
++
++@Suite("Remote Treatment Guard Orchestration Tests", .serialized) struct RemoteTreatmentGuardOrchestrationTests {
++    private let stack: CoreDataStack
++    private let remoteControl: TrioRemoteControl
++
++    init() async throws {
++        stack = try await CoreDataStack.createForTests()
++        let resolver = Assembler([
++            StorageAssembly(),
++            ServiceAssembly(),
++            APSAssembly(),
++            NetworkAssembly(),
++            UIAssembly(),
++            SecurityAssembly(),
++            TestAssembly(testContext: stack.newTaskContext()),
++            RemoteControlTestAssembly()
++        ]).resolver
++        remoteControl = TrioRemoteControl(resolver: resolver)
++        let stack = self.stack
++        remoteControl.treatmentGuardStoreContext = { stack.newTaskContext() }
++    }
++
++    private func mealPayload(sentAt date: Date) throws -> CommandPayload {
++        try JSONDecoder().decode(CommandPayload.self, from: Data("""
++        {"user":"c","command_type":"meal","timestamp":\(date.timeIntervalSince1970),"carbs":20,"bolus_amount":1}
++        """.utf8))
++    }
++
++    private func carbEntryCount() async throws -> Int {
++        let context = stack.newTaskContext()
++        return try await context.perform {
++            try context.count(for: CarbEntryStored.fetchRequest())
++        }
++    }
++
++    @Test("A meal whose bolus the guard rejects stores no carbs") func testMealGuardRunsBeforeStoring() async throws {
++        let now = Date()
++        let pending = RemoteTreatmentGuard.InFlightBolus(date: now.addingTimeInterval(-30), units: 2, syncIdentifier: nil)
++        remoteControl.pendingRemoteBolus = pending
++
++        try await remoteControl.handleMealCommand(mealPayload(sentAt: now.addingTimeInterval(-60)))
++
++        #expect(try await carbEntryCount() == 0)
++        #expect(remoteControl.pendingRemoteBolus == pending)
++    }
++
++    @Test("A meal stores carbs, then a bolus the pump refuses is no longer pending") func testMealStoresCarbsThenBolus() async throws {
++        let now = Date()
++
++        try await remoteControl.handleMealCommand(mealPayload(sentAt: now.addingTimeInterval(-60)))
++
++        #expect(try await carbEntryCount() == 1)
++        #expect(remoteControl.pendingRemoteBolus == nil)
++    }
++
++    @Test("An expired pending bolus is cleared when the guard reads it") func testExpiredPendingCleared() async throws {
++        let expired = RemoteTreatmentGuard.InFlightBolus(
++            date: Date().addingTimeInterval(-RemoteTreatmentGuard.pendingBolusRetention - 60),
++            units: 2,
++            syncIdentifier: nil
++        )
++        remoteControl.pendingRemoteBolus = expired
++        let payload = try JSONDecoder().decode(CommandPayload.self, from: Data("""
++        {"user":"c","command_type":"bolus","timestamp":\(Date().addingTimeInterval(-60).timeIntervalSince1970),"bolus_amount":1}
++        """.utf8))
++
++        let rejection = try await remoteControl.treatmentGuardRejection(for: payload, bolusAmount: 1, checkCarbs: true)
++
++        #expect(rejection == nil)
++        #expect(remoteControl.pendingRemoteBolus == nil)
++    }
++
++    @Test("A repeated command is reported to the app log only") func testRepeatedCommandNotReplied() throws {
++        let payload = try JSONDecoder().decode(CommandPayload.self, from: Data("""
++        {"user":"c","command_type":"bolus","timestamp":\(Date().timeIntervalSince1970),"bolus_amount":1,
++         "command_id":"\(UUID().uuidString)"}
++        """.utf8))
++
++        #expect(remoteControl.markFirstHandling(of: payload, at: Date()))
++        #expect(!remoteControl.markFirstHandling(of: payload, at: Date()))
++    }
++
++    private func storeBolus(at date: Date, programmed: Double, isSMB: Bool) async throws {
++        let context = stack.newTaskContext()
++        try await context.perform {
++            let event = PumpEventStored(context: context)
++            event.id = UUID().uuidString
++            event.timestamp = date
++            event.type = PumpEventStored.EventType.bolus.rawValue
++            event.isMutable = false
++            let bolus = BolusStored(context: context)
++            bolus.amount = NSDecimalNumber(value: programmed)
++            bolus.programmedAmount = NSDecimalNumber(value: programmed)
++            bolus.isSMB = isSMB
++            bolus.pumpEvent = event
++            try context.save()
++        }
++    }
++
++    private func bolusPayload(sentAt date: Date) throws -> CommandPayload {
++        try JSONDecoder().decode(CommandPayload.self, from: Data("""
++        {"user":"c","command_type":"bolus","timestamp":\(date.timeIntervalSince1970),"bolus_amount":1}
++        """.utf8))
++    }
++
++    @Test("An SMB with the pending amount keeps the pending remote bolus") func testPendingKeptBySMB() async throws {
++        let now = Date()
++        let pending = RemoteTreatmentGuard.InFlightBolus(date: now.addingTimeInterval(-30), units: 2, syncIdentifier: nil)
++        remoteControl.pendingRemoteBolus = pending
++        try await storeBolus(at: now.addingTimeInterval(-20), programmed: 2, isSMB: true)
++
++        _ = try await remoteControl.treatmentGuardRejection(
++            for: bolusPayload(sentAt: now.addingTimeInterval(-60)),
++            bolusAmount: 1,
++            checkCarbs: false
++        )
++
++        #expect(remoteControl.pendingRemoteBolus == pending)
++    }
++
++    @Test("A manual bolus with the pending amount clears the pending remote bolus") func testPendingClearedByManual() async throws {
++        let now = Date()
++        let pending = RemoteTreatmentGuard.InFlightBolus(date: now.addingTimeInterval(-30), units: 2, syncIdentifier: nil)
++        remoteControl.pendingRemoteBolus = pending
++        try await storeBolus(at: now.addingTimeInterval(-35), programmed: 2, isSMB: false)
++
++        let rejection = try await remoteControl.treatmentGuardRejection(
++            for: bolusPayload(sentAt: now.addingTimeInterval(-60)),
++            bolusAmount: 1,
++            checkCarbs: false
++        )
++
++        #expect(remoteControl.pendingRemoteBolus == nil)
++        #expect(rejection?.hasPrefix("Command rejected: 2 U of insulin") == true)
++    }
++
++    @Test("Fetched boluses and carb entries carry their _id and creation time") func testFetchHelpers() async throws {
++        let now = Date()
++        let context = stack.newTaskContext()
++        let mealDate = now.addingTimeInterval(-90 * 60)
++        let fpuId = UUID()
++        let mealId = UUID()
++        let equivalentId = UUID()
++        try await context.perform {
++            let event = PumpEventStored(context: context)
++            event.id = "bolus-1"
++            event.timestamp = now.addingTimeInterval(-60)
++            event.type = PumpEventStored.EventType.bolus.rawValue
++            event.isMutable = true
++            let bolus = BolusStored(context: context)
++            bolus.amount = NSDecimalNumber(value: 0.5)
++            bolus.programmedAmount = NSDecimalNumber(value: 2)
++            bolus.isSMB = true
++            bolus.pumpEvent = event
++
++            let meal = CarbEntryStored(context: context)
++            meal.id = mealId
++            meal.date = mealDate
++            meal.carbs = 30
++            meal.isFPU = false
++            meal.fpuID = fpuId
++
++            let equivalent = CarbEntryStored(context: context)
++            equivalent.id = equivalentId
++            equivalent.date = now.addingTimeInterval(60 * 60)
++            equivalent.carbs = 10
++            equivalent.isFPU = true
++            equivalent.fpuID = fpuId
++
++            let orphan = CarbEntryStored(context: context)
++            orphan.id = UUID()
++            orphan.date = now.addingTimeInterval(2 * 60 * 60)
++            orphan.carbs = 5
++            orphan.isFPU = true
++            orphan.fpuID = UUID()
++
++            try context.save()
++        }
++
++        var cache = NightscoutObjectIdCache(siteURL: "https://a.example")
++        let bolusObjectId = String(format: "%08x", UInt32(now.timeIntervalSince1970)) + "0000000000000001"
++        let fpuObjectId = String(format: "%08x", UInt32(now.timeIntervalSince1970)) + "0000000000000002"
++        cache.record(localId: "bolus-1", objectId: bolusObjectId, at: now)
++        cache.record(localId: fpuId.uuidString, objectId: fpuObjectId, at: now)
++        let since = now.addingTimeInterval(-RemoteTreatmentGuard.lookback)
++
++        let boluses = try await TrioRemoteControl.fetchTreatmentGuardBoluses(
++            since: since,
++            objectIds: cache,
++            context: stack.newTaskContext()
++        )
++        #expect(boluses.count == 1)
++        #expect(boluses.first?.candidate.amount == 2)
++        #expect(boluses.first?.candidate.nightscoutId == bolusObjectId)
++        #expect(boluses.first?.isAutomatic == true)
++        #expect(boluses.first?.programmedUnits == 2)
++
++        let carbs = try await TrioRemoteControl.fetchTreatmentGuardCarbEntries(
++            since: since,
++            objectIds: cache,
++            context: stack.newTaskContext()
++        )
++        #expect(carbs.count == 3)
++        let equivalent = try #require(carbs.first { $0.amount == 10 })
++        #expect(equivalent.nightscoutId == fpuObjectId)
++        #expect(equivalent.createdAt == mealDate)
++        let meal = try #require(carbs.first { $0.amount == 30 })
++        #expect(meal.nightscoutId == nil)
++        #expect(meal.createdAt == mealDate)
++        let orphan = try #require(carbs.first { $0.amount == 5 })
++        #expect(orphan.createdAt == orphan.date)
++    }
++}
+diff --git a/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift b/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift
+index 28fdb62e7..ff256e41e 100644
+--- a/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift
++++ b/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift
+@@ -68,7 +68,7 @@ final class ProfileTestNightscoutManager: NightscoutManager {
+     func fetchIfNeeded() -> AnyPublisher<[BloodGlucose], Never> { Just([]).eraseToAnyPublisher() }
+     func sourceInfo() -> [String: Any]? { nil }
+     func fetchGlucose(since _: Date) async -> [BloodGlucose] { [] }
+-    func fetchCarbs() async -> [CarbsEntry] { [] }
++    func fetchCarbs() async -> (entries: [CarbsEntry], siteURL: String?) { ([], nil) }
+     func fetchTempTargets() async -> [TempTarget] { [] }
+     func deleteCarbs(withID _: String) async -> Bool { true }
+     func deleteInsulin(withID _: String) async {}
+@@ -376,7 +376,7 @@ private final class ProfileTestAssembly: Assembly {
+         let old = try await send(command(
+             "switch_profile",
+             ["profile_name": "Sport", "base_fingerprint": sport.fingerprint(units: .mgdL)],
+-            timestamp: Date().timeIntervalSince1970 - 601
++            timestamp: Date().timeIntervalSince1970 - 721
+         ))
+         #expect(old["command_status"] as? String == "failed")
+         #expect(manager.activeProfileName == "Default")

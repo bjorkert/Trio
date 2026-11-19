@@ -1,10 +1,10 @@
 diff --git a/Trio/Sources/Localizations/Main/Localizable.xcstrings b/Trio/Sources/Localizations/Main/Localizable.xcstrings
-index 4292db903..8d1734a8c 100644
+index 4e92f2cbc..6927faafb 100644
 --- a/Trio/Sources/Localizations/Main/Localizable.xcstrings
 +++ b/Trio/Sources/Localizations/Main/Localizable.xcstrings
-@@ -282652,6 +282652,36 @@
+@@ -283170,6 +283170,36 @@
      },
-     "Home Statistics Range" : {
+     "Stay Anonymous" : {
  
 +    },
 +    "Keep this on if you log injections given with a pen or syringe." : {
@@ -39,7 +39,7 @@ index 4292db903..8d1734a8c 100644
      },
      "Stay in open loop (no automated dosing) for a bit to help Trio catch up to keep you safe" : {
        "localizations" : {
-@@ -345293,6 +345323,12 @@
+@@ -346085,6 +346115,12 @@
            }
          }
        }
@@ -110,10 +110,10 @@ index afa135ba0..400f45f30 100644
              subscribeSetting(\.sweetMeals, on: $sweetMeals) { sweetMeals = $0 }
              subscribeSetting(\.sweetMealFactor, on: $sweetMealFactor) { sweetMealFactor = $0 }
 diff --git a/Trio/Sources/Modules/BolusCalculatorConfig/View/BolusCalculatorConfigRootView.swift b/Trio/Sources/Modules/BolusCalculatorConfig/View/BolusCalculatorConfigRootView.swift
-index 8364eb69d..5523cd034 100644
+index d635bd9d5..866fa2426 100644
 --- a/Trio/Sources/Modules/BolusCalculatorConfig/View/BolusCalculatorConfigRootView.swift
 +++ b/Trio/Sources/Modules/BolusCalculatorConfig/View/BolusCalculatorConfigRootView.swift
-@@ -54,6 +54,78 @@ extension BolusCalculatorConfig {
+@@ -40,6 +40,78 @@ extension BolusCalculatorConfig {
                      }
                  )
  
@@ -193,10 +193,10 @@ index 8364eb69d..5523cd034 100644
                      decimalValue: $state.overrideFactor,
                      booleanValue: $booleanPlaceholder,
 diff --git a/Trio/Sources/Modules/Settings/SettingItems.swift b/Trio/Sources/Modules/Settings/SettingItems.swift
-index 67b787314..1ed84984c 100644
+index 019f25ada..910e8aab8 100644
 --- a/Trio/Sources/Modules/Settings/SettingItems.swift
 +++ b/Trio/Sources/Modules/Settings/SettingItems.swift
-@@ -210,6 +210,9 @@ enum SettingItems {
+@@ -222,6 +222,9 @@ enum SettingItems {
              view: .bolusCalculatorConfig,
              searchContents: [
                  "Display Meal Presets",
@@ -207,10 +207,10 @@ index 67b787314..1ed84984c 100644
                  "Enable Reduced Bolus Factor",
                  "Reduced Bolus Factor",
 diff --git a/Trio/Sources/Modules/SettingsExport/SettingsExportStateModel.swift b/Trio/Sources/Modules/SettingsExport/SettingsExportStateModel.swift
-index 3562eb045..378e3b50f 100644
+index c799a1aaa..be144a445 100644
 --- a/Trio/Sources/Modules/SettingsExport/SettingsExportStateModel.swift
 +++ b/Trio/Sources/Modules/SettingsExport/SettingsExportStateModel.swift
-@@ -635,6 +635,24 @@ extension SettingsExport {
+@@ -701,6 +701,24 @@ extension SettingsExport {
                      name: String(localized: "Display Meal Presets"),
                      value: trioSettings.displayPresets ? String(localized: "Enabled") : String(localized: "Disabled")
                  )
@@ -260,10 +260,10 @@ index 8091db590..c94774339 100644
              forecastDisplayType = settings.settings.forecastDisplayType
              lowGlucose = settingsManager.settings.low
 diff --git a/Trio/Sources/Modules/Treatments/View/TreatmentsRootView.swift b/Trio/Sources/Modules/Treatments/View/TreatmentsRootView.swift
-index 1c9730174..2a4970544 100644
+index ca81c510e..af00fe6e1 100644
 --- a/Trio/Sources/Modules/Treatments/View/TreatmentsRootView.swift
 +++ b/Trio/Sources/Modules/Treatments/View/TreatmentsRootView.swift
-@@ -336,10 +336,12 @@ extension Treatments {
+@@ -317,10 +317,12 @@ extension Treatments {
              }
              .id(FocusedField.bolus)
  
@@ -280,7 +280,7 @@ index 1c9730174..2a4970544 100644
              }
          }
  
-@@ -380,55 +382,57 @@ extension Treatments {
+@@ -361,55 +363,57 @@ extension Treatments {
                                      }
                                  }
  
