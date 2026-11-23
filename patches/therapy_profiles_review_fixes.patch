@@ -1,0 +1,910 @@
+diff --git a/Trio/Sources/APS/APSManager.swift b/Trio/Sources/APS/APSManager.swift
+index 76a1a0ced..24620e00d 100644
+--- a/Trio/Sources/APS/APSManager.swift
++++ b/Trio/Sources/APS/APSManager.swift
+@@ -151,9 +151,15 @@ final class BaseAPSManager: APSManager, Injectable {
+     /// `processQueue`) all serialize through one queue
+     private var bolusReporter: DoseProgressReporter?
+ 
++    /// Set when the user adds a pump; the app's launch sets the pump on the device data manager.
+     var pumpManager: PumpManagerUI? {
+         get { deviceDataManager.pumpManager }
+-        set { deviceDataManager.pumpManager = newValue }
++        set {
++            deviceDataManager.pumpManager = newValue
++            if newValue != nil {
++                therapyProfileManager?.alertProfilesNotActivatableWithPump()
++            }
++        }
+     }
+ 
+     var bluetoothManager: BluetoothStateManager? { deviceDataManager.bluetoothManager }
+diff --git a/Trio/Sources/Localizations/Main/Localizable.xcstrings b/Trio/Sources/Localizations/Main/Localizable.xcstrings
+index 4e92f2cbc..b90672d8c 100644
+--- a/Trio/Sources/Localizations/Main/Localizable.xcstrings
++++ b/Trio/Sources/Localizations/Main/Localizable.xcstrings
+@@ -1088,6 +1088,30 @@
+           }
+         }
+       }
++    },
++    "%@ cannot be activated again until it is edited: %@" : {
++
++    },
++    "%@ cannot be activated. This start will not switch until it is edited." : {
++
++    },
++    "Cannot be activated: %@" : {
++
++    },
++    "Cannot be switched back to after another profile is activated: %@" : {
++
++    },
++    "Profiles Need Attention" : {
++
++    },
++    "Some basal rates of this schedule are above the max basal rate or are not rates your pump supports. Each is shown as the nearest rate that can be saved. Check them before you save." : {
++
++    },
++    "These profiles cannot be activated until they are edited: %@. Open Therapy Profiles to see why." : {
++
++    },
++    "These profiles have basal rates above %@ U/hr and cannot be activated until they are edited: %@." : {
++
+     },
+     " " : {
+       "localizations" : {
+@@ -279036,9 +279060,6 @@
+           }
+         }
+       }
+-    },
+-    "Some basal rates of this schedule are not rates your pump supports. Each is shown as the nearest supported rate. Check them before you save." : {
+-
+     },
+     "Some files didn't reach the Trio team's server. Please try again." : {
+ 
+diff --git a/Trio/Sources/Models/TherapyProfile.swift b/Trio/Sources/Models/TherapyProfile.swift
+index cf22e43cd..058fc4f78 100644
+--- a/Trio/Sources/Models/TherapyProfile.swift
++++ b/Trio/Sources/Models/TherapyProfile.swift
+@@ -176,7 +176,8 @@ extension TrioTherapyProfile {
+         return String(digest.map { String(format: "%02x", $0) }.joined().prefix(16))
+     }
+ 
+-    /// The first 16 hex characters of the SHA-256 of the canonical string, as Loop and LoopFollow compute it.
++    /// The first 16 hex characters of the SHA-256 of the canonical string, as Loop and LoopFollow compute it. It detects
++    /// that a remote command was made from an outdated copy of the profile; the encryption with the shared secret authorizes it.
+     func fingerprint(units: GlucoseUnits) -> String {
+         Self.fingerprint(of: fingerprintCanonicalString(units: units))
+     }
+diff --git a/Trio/Sources/Modules/BasalProfileEditor/BasalProfileEditorStateModel.swift b/Trio/Sources/Modules/BasalProfileEditor/BasalProfileEditorStateModel.swift
+index 94ce69513..06cbf4619 100644
+--- a/Trio/Sources/Modules/BasalProfileEditor/BasalProfileEditorStateModel.swift
++++ b/Trio/Sources/Modules/BasalProfileEditor/BasalProfileEditorStateModel.swift
+@@ -23,7 +23,7 @@ extension BasalProfileEditor {
+         @ObservationIgnored private var liveBase: TrioTherapyProfile?
+         var bannerInfo: TherapyProfileBannerInfo?
+         var profileSaveError: String?
+-        /// A rate of the schedule is not one the pump supports; its row shows the nearest supported rate.
++        /// A rate of the schedule is above max basal or not one the pump supports; its row shows the nearest offered rate.
+         var hasUnsupportedRates = false
+ 
+         var syncInProgress: Bool = false
+@@ -68,8 +68,10 @@ extension BasalProfileEditor {
+         }
+ 
+         override func subscribe() {
+-            rateValues = provider.supportedBasalRates ?? stride(from: 5.0, to: 1001.0, by: 5.0)
+-                .map { ($0.decimal ?? .zero) / 100 }
++            rateValues = Self.rateValues(
++                supportedRates: provider.supportedBasalRates,
++                maxBasal: settingsManager.pumpSettings.maxBasal
++            )
+             editedProfile = profileName.flatMap { therapyProfileManager.profile(named: $0) }
+             liveBase = profileName == nil ? therapyProfileManager.activeProfile() : nil
+             bannerInfo = TherapyProfileBannerInfo.make(manager: therapyProfileManager, profileName: profileName)
+@@ -84,6 +86,17 @@ extension BasalProfileEditor {
+             calcTotal()
+         }
+ 
++        /// The rates a therapy profile accepts: the pump's rates, or the editor's without a pump, up to max basal. All of them
++        /// when max basal is below the lowest.
++        static func rateValues(supportedRates: [Decimal]?, maxBasal: Decimal) -> [Decimal] {
++            let limits = TherapyBasalLimits(
++                supportedRates: supportedRates ?? TherapyBasalLimits.fallbackRates,
++                maxBasal: maxBasal
++            )
++            let allowed = limits.allowedRates
++            return allowed.isEmpty ? limits.supportedRates.sorted() : allowed
++        }
++
+         /// The picker rows of a schedule. A rate the pump does not support takes the nearest supported rate, and
+         /// `hasUnsupportedRates` is true.
+         static func items(
+diff --git a/Trio/Sources/Modules/BasalProfileEditor/View/BasalProfileEditorRootView.swift b/Trio/Sources/Modules/BasalProfileEditor/View/BasalProfileEditorRootView.swift
+index 0a4c3ebd3..def5d3571 100644
+--- a/Trio/Sources/Modules/BasalProfileEditor/View/BasalProfileEditorRootView.swift
++++ b/Trio/Sources/Modules/BasalProfileEditor/View/BasalProfileEditorRootView.swift
+@@ -91,7 +91,7 @@ extension BasalProfileEditor {
+ 
+         var unsupportedRatesWarning: some View {
+             Text(
+-                "Some basal rates of this schedule are not rates your pump supports. Each is shown as the nearest supported rate. Check them before you save."
++                "Some basal rates of this schedule are above the max basal rate or are not rates your pump supports. Each is shown as the nearest rate that can be saved. Check them before you save."
+             )
+             .bold()
+             .frame(maxWidth: .infinity, alignment: .leading)
+diff --git a/Trio/Sources/Modules/CarbRatioEditor/CarbRatioEditorStateModel.swift b/Trio/Sources/Modules/CarbRatioEditor/CarbRatioEditorStateModel.swift
+index 0e5877cb1..72fe9518a 100644
+--- a/Trio/Sources/Modules/CarbRatioEditor/CarbRatioEditorStateModel.swift
++++ b/Trio/Sources/Modules/CarbRatioEditor/CarbRatioEditorStateModel.swift
+@@ -16,7 +16,7 @@ extension CarbRatioEditor {
+ 
+         let timeValues = stride(from: 0.0, to: 1.days.timeInterval, by: 30.minutes.timeInterval).map { $0 }
+ 
+-        let rateValues = stride(from: 10.0, to: 501.0, by: 1.0).map { ($0.decimal ?? .zero) / 10 }
++        let rateValues = TherapyProfileLimits.carbRatio.values
+ 
+         var canAdd: Bool {
+             guard let lastItem = items.last else { return true }
+diff --git a/Trio/Sources/Modules/GeneralSettings/UnitsLimitsSettingsStateModel.swift b/Trio/Sources/Modules/GeneralSettings/UnitsLimitsSettingsStateModel.swift
+index 0f1b3435b..2f2337523 100644
+--- a/Trio/Sources/Modules/GeneralSettings/UnitsLimitsSettingsStateModel.swift
++++ b/Trio/Sources/Modules/GeneralSettings/UnitsLimitsSettingsStateModel.swift
+@@ -6,6 +6,7 @@ extension UnitsLimitsSettings {
+         @Injected() var settings: SettingsManager!
+         @Injected() var storage: FileStorage!
+         @Injected() private var tidepoolManager: TidepoolManager!
++        @Injected() private var therapyProfileManager: TherapyProfileManager!
+ 
+         @Published var units: GlucoseUnits = .mgdL
+         @Published var unitsIndex = 0 // index 0 is mg/dl
+@@ -16,6 +17,8 @@ extension UnitsLimitsSettings {
+         @Published var maxCOB: Decimal = 120
+         @Published var hasChanged: Bool = false
+         @Published var threshold_setting: Decimal = 60
++        /// Names the profiles a lower max basal rate keeps from being activated.
++        @Published var maxBasalProfileWarning: String?
+ 
+         var preferences: Preferences {
+             settingsManager.preferences
+@@ -37,6 +40,24 @@ extension UnitsLimitsSettings {
+ 
+             maxBasal = pumpSettings.maxBasal
+             maxBolus = pumpSettings.maxBolus
++
++            let currentProblems = therapyProfileManager.activationProblems()
++            $maxBasal
++                .removeDuplicates()
++                .map { [weak self] in self?.profileWarning(maxBasal: $0, currentProblems: currentProblems) }
++                .assign(to: &$maxBasalProfileWarning)
++        }
++
++        /// Names the profiles that the edited max basal rate keeps from being activated, when the stored one does not.
++        private func profileWarning(maxBasal: Decimal, currentProblems: [String: String]) -> String? {
++            guard maxBasal != pumpSettings.maxBasal else { return nil }
++            let names = therapyProfileManager.activationProblems(maxBasal: maxBasal).keys
++                .filter { currentProblems[$0] == nil }
++                .sorted { $0.localizedStandardCompare($1) == .orderedAscending }
++            guard !names.isEmpty else { return nil }
++            return String(
++                localized: "These profiles have basal rates above \(maxBasal.formatted()) U/hr and cannot be activated until they are edited: \(names.joined(separator: ", "))."
++            )
+         }
+ 
+         var isPumpSettingUnchanged: Bool {
+diff --git a/Trio/Sources/Modules/GeneralSettings/View/UnitsLimitsSettingsRootView.swift b/Trio/Sources/Modules/GeneralSettings/View/UnitsLimitsSettingsRootView.swift
+index bacb6ce65..ef0ae4436 100644
+--- a/Trio/Sources/Modules/GeneralSettings/View/UnitsLimitsSettingsRootView.swift
++++ b/Trio/Sources/Modules/GeneralSettings/View/UnitsLimitsSettingsRootView.swift
+@@ -132,6 +132,15 @@ extension UnitsLimitsSettings {
+                     }
+                 )
+ 
++                if let warning = state.maxBasalProfileWarning {
++                    Section {
++                        Label(warning, systemImage: "exclamationmark.triangle.fill")
++                            .font(.footnote)
++                            .foregroundStyle(Color.orange)
++                    }
++                    .listRowBackground(Color.chart)
++                }
++
+                 SettingInputSection(
+                     decimalValue: $state.maxCOB,
+                     booleanValue: $booleanPlaceholder,
+diff --git a/Trio/Sources/Modules/ISFEditor/ISFEditorStateModel.swift b/Trio/Sources/Modules/ISFEditor/ISFEditorStateModel.swift
+index f7eca6e07..eeebb2127 100644
+--- a/Trio/Sources/Modules/ISFEditor/ISFEditorStateModel.swift
++++ b/Trio/Sources/Modules/ISFEditor/ISFEditorStateModel.swift
+@@ -32,7 +32,7 @@ extension ISFEditor {
+ 
+         var rateValues: [Decimal] {
+             let settingsProvider = PickerSettingsProvider.shared
+-            let sensitivityPickerSetting = PickerSetting(value: 100, step: 1, min: 9, max: 540, type: .glucose)
++            let sensitivityPickerSetting = TherapyProfileLimits.sensitivity.glucosePickerSetting(value: 100)
+             return settingsProvider.generatePickerValues(from: sensitivityPickerSetting, units: units)
+         }
+ 
+diff --git a/Trio/Sources/Modules/Onboarding/OnboardingStateModel.swift b/Trio/Sources/Modules/Onboarding/OnboardingStateModel.swift
+index eaad7c911..52227491c 100644
+--- a/Trio/Sources/Modules/Onboarding/OnboardingStateModel.swift
++++ b/Trio/Sources/Modules/Onboarding/OnboardingStateModel.swift
+@@ -124,11 +124,10 @@ extension Onboarding {
+ 
+         // MARK: - Carb Ratio
+ 
+-        let carbRatioPickerSetting = PickerSetting(value: 30, step: 0.1, min: 1, max: 50, type: .gram)
+         var carbRatioItems: [CarbRatioEditor.Item] = []
+         var initialCarbRatioItems: [CarbRatioEditor.Item] = []
+         var carbRatioTimeValues: [TimeInterval] { sharedTimeValues }
+-        var carbRatioRateValues: [Decimal] { settingsProvider.generatePickerValues(from: carbRatioPickerSetting, units: units) }
++        var carbRatioRateValues: [Decimal] { TherapyProfileLimits.carbRatio.values }
+ 
+         // MARK: - Basal Profile
+ 
+@@ -153,7 +152,7 @@ extension Onboarding {
+ 
+         // MARK: - Insulin Sensitivity Factor (ISF)
+ 
+-        var sensitivityPickerSetting = PickerSetting(value: 200, step: 1, min: 9, max: 540, type: .glucose)
++        var sensitivityPickerSetting = TherapyProfileLimits.sensitivity.glucosePickerSetting(value: 200)
+         var isfItems: [ISFEditor.Item] = []
+         var initialISFItems: [ISFEditor.Item] = []
+         var isfTimeValues: [TimeInterval] { sharedTimeValues }
+@@ -161,7 +160,7 @@ extension Onboarding {
+ 
+         // MARK: - Glucose Targets
+ 
+-        let letTargetPickerSetting = PickerSetting(value: 110, step: 1, min: 72, max: 180, type: .glucose)
++        let letTargetPickerSetting = TherapyProfileLimits.target.glucosePickerSetting(value: 110)
+         var targetItems: [TargetsEditor.Item] = []
+         var initialTargetItems: [TargetsEditor.Item] = []
+         var targetTimeValues: [TimeInterval] { sharedTimeValues }
+diff --git a/Trio/Sources/Modules/TargetsEditor/TargetsEditorStateModel.swift b/Trio/Sources/Modules/TargetsEditor/TargetsEditorStateModel.swift
+index 89f78e2f8..5b3c9abae 100644
+--- a/Trio/Sources/Modules/TargetsEditor/TargetsEditorStateModel.swift
++++ b/Trio/Sources/Modules/TargetsEditor/TargetsEditorStateModel.swift
+@@ -19,7 +19,7 @@ extension TargetsEditor {
+ 
+         var rateValues: [Decimal] {
+             let settingsProvider = PickerSettingsProvider.shared
+-            let glucoseSetting = PickerSetting(value: 110, step: 1, min: 72, max: 180, type: .glucose)
++            let glucoseSetting = TherapyProfileLimits.target.glucosePickerSetting(value: 110)
+             return settingsProvider.generatePickerValues(from: glucoseSetting, units: units)
+         }
+ 
+diff --git a/Trio/Sources/Modules/TherapyProfiles/TherapyProfilesStateModel.swift b/Trio/Sources/Modules/TherapyProfiles/TherapyProfilesStateModel.swift
+index 8ed5462c4..dce1d5328 100644
+--- a/Trio/Sources/Modules/TherapyProfiles/TherapyProfilesStateModel.swift
++++ b/Trio/Sources/Modules/TherapyProfiles/TherapyProfilesStateModel.swift
+@@ -9,6 +9,8 @@ extension TherapyProfiles {
+         var profiles: [TrioTherapyProfile] = []
+         var activeProfileName = TrioTherapyProfile.defaultName
+         var scheduledSwitches: [ScheduledProfileSwitch] = []
++        /// Why a profile cannot be activated, by name.
++        var activationProblems: [String: String] = [:]
+         var units: GlucoseUnits = .mgdL
+         var isBusy = false
+         var errorMessage: String?
+@@ -23,6 +25,7 @@ extension TherapyProfiles {
+             profiles = therapyProfileManager.profiles()
+             activeProfileName = therapyProfileManager.activeProfileName
+             scheduledSwitches = therapyProfileManager.scheduledSwitches()
++            activationProblems = therapyProfileManager.activationProblems()
+         }
+ 
+         func profile(named name: String) -> TrioTherapyProfile? {
+@@ -33,6 +36,19 @@ extension TherapyProfiles {
+             profile.name == activeProfileName
+         }
+ 
++        /// Why `profile` cannot be activated, or, for the active profile, switched back to once another one is active.
++        func activationProblemText(_ profile: TrioTherapyProfile) -> String? {
++            guard let reason = activationProblems[profile.name] else { return nil }
++            return isActive(profile) ?
++                String(localized: "Cannot be switched back to after another profile is activated: \(reason)") :
++                String(localized: "Cannot be activated: \(reason)")
++        }
++
++        /// Set when the active profile cannot be activated again once another one is.
++        var activeProfileProblem: String? {
++            activationProblems[activeProfileName]
++        }
++
+         /// The reason `name` cannot be used, or nil. `renaming` is the name of the profile being renamed.
+         func nameProblem(_ name: String, renaming: String? = nil) -> String? {
+             TherapyProfileValidator.validateName(
+diff --git a/Trio/Sources/Modules/TherapyProfiles/View/TherapyProfileDetailView.swift b/Trio/Sources/Modules/TherapyProfiles/View/TherapyProfileDetailView.swift
+index c1b878503..03729f038 100644
+--- a/Trio/Sources/Modules/TherapyProfiles/View/TherapyProfileDetailView.swift
++++ b/Trio/Sources/Modules/TherapyProfiles/View/TherapyProfileDetailView.swift
+@@ -45,6 +45,11 @@ struct TherapyProfileDetailView: View {
+                         Label("Not active", systemImage: "circle")
+                             .foregroundStyle(.secondary)
+                     }
++                    if let problem = state.activationProblemText(profile) {
++                        Label(problem, systemImage: "exclamationmark.triangle.fill")
++                            .font(.footnote)
++                            .foregroundStyle(Color.orange)
++                    }
+                 }
+                 .listRowBackground(Color.chart)
+ 
+@@ -95,18 +100,7 @@ struct TherapyProfileDetailView: View {
+             }
+             Button("Cancel", role: .cancel) {}
+         } message: {
+-            if let next = state.nextStart() {
+-                Text(
+-                    "Trio sends this profile's basal rates to the pump and starts using its carb ratios, insulin sensitivities and glucose targets right away."
+-                ) + Text(verbatim: " ") +
+-                    Text(
+-                        "\(profileName) stays active until \(next.profileName) starts \(TherapyProfiles.StateModel.startText(next))."
+-                    )
+-            } else {
+-                Text(
+-                    "Trio sends this profile's basal rates to the pump and starts using its carb ratios, insulin sensitivities and glucose targets right away."
+-                )
+-            }
++            activationMessage
+         }
+         .confirmationDialog("Delete \(profileName)?", isPresented: $isConfirmingDeletion, titleVisibility: .visible) {
+             Button("Delete", role: .destructive) {
+@@ -152,6 +146,23 @@ struct TherapyProfileDetailView: View {
+         }
+     }
+ 
++    private var activationMessage: Text {
++        var message = Text(
++            "Trio sends this profile's basal rates to the pump and starts using its carb ratios, insulin sensitivities and glucose targets right away."
++        )
++        if let next = state.nextStart() {
++            message = message + Text(verbatim: " ") +
++                Text(
++                    "\(profileName) stays active until \(next.profileName) starts \(TherapyProfiles.StateModel.startText(next))."
++                )
++        }
++        if let problem = state.activeProfileProblem {
++            message = Text("\(state.activeProfileName) cannot be activated again until it is edited: \(problem)") +
++                Text(verbatim: " ") + message
++        }
++        return message
++    }
++
+     private func scheduleSection(
+         title: String,
+         editor: TherapyProfiles.Editor,
+@@ -181,7 +192,7 @@ struct TherapyProfileDetailView: View {
+                 Button("Activate Profile") {
+                     isConfirmingActivation = true
+                 }
+-                .disabled(state.isBusy)
++                .disabled(state.isBusy || state.activationProblems[profile.name] != nil)
+             }
+             if !profile.isDefault {
+                 Button("Rename Profile") {
+diff --git a/Trio/Sources/Modules/TherapyProfiles/View/TherapyProfilesRootView.swift b/Trio/Sources/Modules/TherapyProfiles/View/TherapyProfilesRootView.swift
+index 6c625027c..3dc20f39d 100644
+--- a/Trio/Sources/Modules/TherapyProfiles/View/TherapyProfilesRootView.swift
++++ b/Trio/Sources/Modules/TherapyProfiles/View/TherapyProfilesRootView.swift
+@@ -26,11 +26,18 @@ extension TherapyProfiles {
+                 Section(header: Text("Profiles")) {
+                     ForEach(state.profiles) { profile in
+                         NavigationLink(value: Screen.therapyProfileDetail(profile.name)) {
+-                            HStack {
+-                                Text(profile.name)
+-                                Spacer()
+-                                if state.isActive(profile) {
+-                                    Text("Active").foregroundStyle(.secondary)
++                            VStack(alignment: .leading, spacing: 2) {
++                                HStack {
++                                    Text(profile.name)
++                                    Spacer()
++                                    if state.isActive(profile) {
++                                        Text("Active").foregroundStyle(.secondary)
++                                    }
++                                }
++                                if let problem = state.activationProblemText(profile) {
++                                    Label(problem, systemImage: "exclamationmark.triangle.fill")
++                                        .font(.footnote)
++                                        .foregroundStyle(Color.orange)
+                                 }
+                             }
+                         }
+@@ -135,6 +142,16 @@ extension TherapyProfiles {
+                         VStack(alignment: .leading, spacing: 2) {
+                             Text("\(TherapyProfiles.StateModel.shortStartText(entry)) · \(entry.profileName) starts")
+                                 .foregroundStyle(entry.paused ? Color.secondary : Color.primary)
++                            if !entry.paused, entry.profileName != state.activeProfileName,
++                               state.activationProblems[entry.profileName] != nil
++                            {
++                                Label(
++                                    "\(entry.profileName) cannot be activated. This start will not switch until it is edited.",
++                                    systemImage: "exclamationmark.triangle.fill"
++                                )
++                                .font(.footnote)
++                                .foregroundStyle(Color.orange)
++                            }
+                             if entry.paused {
+                                 Text("Paused").font(.footnote).foregroundStyle(.secondary)
+                             } else if let next = state.nextStart(after: entry) {
+diff --git a/Trio/Sources/Services/Alerts/AlertCatalogRegistry.swift b/Trio/Sources/Services/Alerts/AlertCatalogRegistry.swift
+index e3179de06..fa540c5cc 100644
+--- a/Trio/Sources/Services/Alerts/AlertCatalogRegistry.swift
++++ b/Trio/Sources/Services/Alerts/AlertCatalogRegistry.swift
+@@ -368,7 +368,7 @@ private extension AlertCatalogRegistry {
+ // MARK: - Trio internal — Profiles
+ 
+ private extension AlertCatalogRegistry {
+-    /// Scheduled profile switch alerts emitted by `TherapyProfileManager`
++    /// Scheduled profile switch and profile validation alerts emitted by `TherapyProfileManager`
+     /// under `manager = "trio.therapyProfiles"`. Levels match what the
+     /// manager sets at construction.
+     static let trioProfileEntries: [Alert.CatalogEntry] = [
+@@ -388,7 +388,15 @@ private extension AlertCatalogRegistry {
+             "Profiles",
+             .scheduledProfileSwitchNotDone
+         ),
+-        addEntry("trio.therapyProfiles", "scheduledSwitch.done", .active, "Profile Switched", "Profiles", .profileSwitched)
++        addEntry("trio.therapyProfiles", "scheduledSwitch.done", .active, "Profile Switched", "Profiles", .profileSwitched),
++        addEntry(
++            "trio.therapyProfiles",
++            "profilesNotActivatable",
++            .active,
++            "Profiles Need Attention",
++            "Profiles",
++            .profilesNotActivatable
++        )
+     ]
+ }
+ 
+diff --git a/Trio/Sources/Services/Alerts/AlertCatalogVendor.swift b/Trio/Sources/Services/Alerts/AlertCatalogVendor.swift
+index e8beca845..caf364716 100644
+--- a/Trio/Sources/Services/Alerts/AlertCatalogVendor.swift
++++ b/Trio/Sources/Services/Alerts/AlertCatalogVendor.swift
+@@ -50,6 +50,7 @@ extension Alert {
+         // under the `trio.therapyProfiles` manager identifier.
+         case profileSwitched
+         case scheduledProfileSwitchNotDone
++        case profilesNotActivatable
+         /// Plugin-unique alarm that doesn't merge with anything else.
+         case unspecified
+ 
+@@ -90,6 +91,7 @@ extension Alert {
+             case .tidepoolLoginRequired: return String(localized: "Tidepool Login Required")
+             case .profileSwitched: return String(localized: "Profile Switched")
+             case .scheduledProfileSwitchNotDone: return String(localized: "Scheduled Switch Not Done")
++            case .profilesNotActivatable: return String(localized: "Profiles Need Attention")
+             case .unspecified: return ""
+             }
+         }
+diff --git a/Trio/Sources/Services/TherapyProfiles/TherapyProfileManager.swift b/Trio/Sources/Services/TherapyProfiles/TherapyProfileManager.swift
+index 84aec2fc6..f4e9d11a2 100644
+--- a/Trio/Sources/Services/TherapyProfiles/TherapyProfileManager.swift
++++ b/Trio/Sources/Services/TherapyProfiles/TherapyProfileManager.swift
+@@ -139,9 +139,19 @@ protocol TherapyProfileManager: AnyObject {
+     /// Switches to the profile of the newest scheduled start that is due, and arms the alert for a start that does not
+     /// happen in time.
+     func runDueScheduledSwitch() async
++
++    /// The reason each profile that cannot be activated fails validation, by profile name, the active one included. Uses
++    /// `maxBasal` in place of the stored max basal rate when given.
++    func activationProblems(maxBasal: Decimal?) -> [String: String]
++    /// Tells the user which profiles cannot be activated, for any reason, with the connected pump.
++    func alertProfilesNotActivatableWithPump()
+ }
+ 
+ extension TherapyProfileManager {
++    func activationProblems() -> [String: String] {
++        activationProblems(maxBasal: nil)
++    }
++
+     @discardableResult func activate(_ name: String, expectedFingerprint: String?) async throws -> TrioTherapyProfile {
+         try await activate(name, expectedFingerprint: expectedFingerprint, trigger: .local)
+     }
+@@ -539,8 +549,10 @@ final class BaseTherapyProfileManager: TherapyProfileManager, Injectable, @unche
+             }
+ 
+             let updated = profile.renamed(newName)
+-            let keepsValues = original.map { updated.hasSameValues(as: $0) } ?? false
+-            if !keepsValues, let reason = TherapyProfileValidator.validate(updated, basalLimits: self.basalLimits) {
++            let reason = original.map {
++                TherapyProfileValidator.validateChanges(updated, from: $0, basalLimits: self.basalLimits)
++            } ?? TherapyProfileValidator.validate(updated, basalLimits: self.basalLimits)
++            if let reason {
+                 throw TherapyProfileError.invalidValues(reason)
+             }
+             if updated == original {
+@@ -759,6 +771,10 @@ final class BaseTherapyProfileManager: TherapyProfileManager, Injectable, @unche
+     private static let pendingAlertID = scheduledSwitchAlertID("pending")
+     private static let doneAlertID = scheduledSwitchAlertID("done")
+     private static let failedAlertID = scheduledSwitchAlertID("failed")
++    private static let notActivatableAlertID = Alert.Identifier(
++        managerIdentifier: "trio.therapyProfiles",
++        alertIdentifier: "profilesNotActivatable"
++    )
+ 
+     private func timeText(_ date: Date) -> String {
+         date.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: calendar.timeZone))
+@@ -847,6 +863,33 @@ final class BaseTherapyProfileManager: TherapyProfileManager, Injectable, @unche
+         )
+     }
+ 
++    // MARK: Validation
++
++    func activationProblems(maxBasal: Decimal?) -> [String: String] {
++        let limits = maxBasal.map { TherapyBasalLimits(supportedRates: basalLimits.supportedRates, maxBasal: $0) } ?? basalLimits
++        var problems: [String: String] = [:]
++        for profile in profiles() {
++            if let reason = TherapyProfileValidator.validate(profile, basalLimits: limits) {
++                problems[profile.name] = reason
++            }
++        }
++        return problems
++    }
++
++    func alertProfilesNotActivatableWithPump() {
++        let names = activationProblems().keys.sorted { $0.localizedStandardCompare($1) == .orderedAscending }
++        guard !names.isEmpty else { return }
++        warning(.settings, "\(names.count) therapy profiles cannot be activated with the connected pump")
++        issue(
++            Self.notActivatableAlertID,
++            title: String(localized: "Profiles Need Attention"),
++            body: String(
++                localized: "These profiles cannot be activated until they are edited: \(names.joined(separator: ", ")). Open Therapy Profiles to see why."
++            ),
++            level: .active
++        )
++    }
++
+     // MARK: Pump
+ 
+     /// A suspended pump would resume delivery when it takes a basal schedule.
+diff --git a/Trio/Sources/Services/TherapyProfiles/TherapyProfileValidator.swift b/Trio/Sources/Services/TherapyProfiles/TherapyProfileValidator.swift
+index cf1b2ce1f..0973a2304 100644
+--- a/Trio/Sources/Services/TherapyProfiles/TherapyProfileValidator.swift
++++ b/Trio/Sources/Services/TherapyProfiles/TherapyProfileValidator.swift
+@@ -1,12 +1,28 @@
+ import Foundation
+ import LoopKit
+ 
+-/// The therapy editors' value ranges, glucose in mg/dL.
++/// The therapy editors' value ranges, glucose in mg/dL. The editors take their values from these.
+ enum TherapyProfileLimits {
+     struct Range {
+         let min: Decimal
+         let max: Decimal
+         let step: Decimal
++
++        /// Every value from `min` to `max` in steps of `step`.
++        var values: [Decimal] {
++            var values: [Decimal] = []
++            var value = min
++            while value <= max {
++                values.append(value)
++                value += step
++            }
++            return values
++        }
++
++        /// The editor picker for a glucose range.
++        func glucosePickerSetting(value: Decimal) -> PickerSetting {
++            PickerSetting(value: value, step: step, min: min, max: max, type: .glucose)
++        }
+     }
+ 
+     static let carbRatio = Range(min: 1, max: 50, step: 0.1)
+@@ -75,18 +91,29 @@ enum TherapyProfileValidator {
+ 
+     /// The reason the profile is not acceptable, or nil.
+     static func validate(_ profile: TrioTherapyProfile, basalLimits: TherapyBasalLimits) -> String? {
+-        let schedules = [
+-            (profile.basal.map(\.seconds), String(localized: "Basal Rates")),
+-            (profile.carbRatio.map(\.seconds), String(localized: "Carb Ratios")),
+-            (profile.sensitivity.map(\.seconds), String(localized: "Insulin Sensitivities")),
+-            (profile.target.map(\.seconds), String(localized: "Glucose Targets"))
+-        ]
+-        for (starts, label) in schedules {
+-            if let reason = validateSchedule(starts, label: label) {
+-                return reason
+-            }
+-        }
++        validateBasal(profile, basalLimits: basalLimits)
++            ?? validateCarbRatios(profile)
++            ?? validateSensitivities(profile)
++            ?? validateTargets(profile)
++    }
++
++    /// The reason the schedules of `profile` that differ from `original` are not acceptable, or nil. An unchanged schedule
++    /// is not checked, so a stored profile can be corrected one schedule at a time; activating it checks every schedule.
++    static func validateChanges(
++        _ profile: TrioTherapyProfile,
++        from original: TrioTherapyProfile,
++        basalLimits: TherapyBasalLimits
++    ) -> String? {
++        (profile.basal != original.basal ? validateBasal(profile, basalLimits: basalLimits) : nil)
++            ?? (profile.carbRatio != original.carbRatio ? validateCarbRatios(profile) : nil)
++            ?? (profile.sensitivity != original.sensitivity ? validateSensitivities(profile) : nil)
++            ?? (profile.target != original.target ? validateTargets(profile) : nil)
++    }
+ 
++    static func validateBasal(_ profile: TrioTherapyProfile, basalLimits: TherapyBasalLimits) -> String? {
++        if let reason = validateSchedule(profile.basal.map(\.seconds), label: String(localized: "Basal Rates")) {
++            return reason
++        }
+         let allowedRates = basalLimits.allowedRates
+         for entry in profile.basal {
+             let time = timeString(entry.seconds)
+@@ -103,21 +130,26 @@ enum TherapyProfileValidator {
+                 return String(localized: "Basal rate \(rate) U/hr at \(time) is not supported by the pump.")
+             }
+         }
++        return nil
++    }
++
++    static func validateCarbRatios(_ profile: TrioTherapyProfile) -> String? {
++        validateSchedule(profile.carbRatio.map(\.seconds), label: String(localized: "Carb Ratios"))
++            ?? validateValues(profile.carbRatio, range: TherapyProfileLimits.carbRatio, label: String(localized: "Carb Ratio"))
++    }
+ 
+-        if let reason = validateValues(
+-            profile.carbRatio,
+-            range: TherapyProfileLimits.carbRatio,
+-            label: String(localized: "Carb Ratio")
+-        )
++    static func validateSensitivities(_ profile: TrioTherapyProfile) -> String? {
++        validateSchedule(profile.sensitivity.map(\.seconds), label: String(localized: "Insulin Sensitivities"))
+             ?? validateValues(profile.sensitivity, range: TherapyProfileLimits.sensitivity, label: String(localized: "ISF"))
+-        {
+-            return reason
+-        }
+-        return validateValues(
+-            profile.target.map { TherapyScheduleEntry(seconds: $0.seconds, value: $0.low) },
+-            range: TherapyProfileLimits.target,
+-            label: String(localized: "Target")
+-        )
++    }
++
++    static func validateTargets(_ profile: TrioTherapyProfile) -> String? {
++        validateSchedule(profile.target.map(\.seconds), label: String(localized: "Glucose Targets"))
++            ?? validateValues(
++                profile.target.map { TherapyScheduleEntry(seconds: $0.seconds, value: $0.low) },
++                range: TherapyProfileLimits.target,
++                label: String(localized: "Target")
++            )
+     }
+ 
+     static func validateSchedule(_ starts: [Int], label: String) -> String? {
+diff --git a/TrioTests/AlertCatalogRegistryEntriesTests.swift b/TrioTests/AlertCatalogRegistryEntriesTests.swift
+index b53b92275..3e49e3607 100644
+--- a/TrioTests/AlertCatalogRegistryEntriesTests.swift
++++ b/TrioTests/AlertCatalogRegistryEntriesTests.swift
+@@ -256,11 +256,12 @@ import Testing
+     // MARK: - K: Trio-internal Profiles entries
+ 
+     @Test(
+-        "Scheduled profile switch entries map to Profiles concepts",
++        "Profile alert entries map to Profiles concepts",
+         arguments: [
+             ("scheduledSwitch.pending", Alert.CatalogConcept.scheduledProfileSwitchNotDone),
+             ("scheduledSwitch.failed", Alert.CatalogConcept.scheduledProfileSwitchNotDone),
+-            ("scheduledSwitch.done", Alert.CatalogConcept.profileSwitched)
++            ("scheduledSwitch.done", Alert.CatalogConcept.profileSwitched),
++            ("profilesNotActivatable", Alert.CatalogConcept.profilesNotActivatable)
+         ]
+     ) func trioProfileConcepts(alertID: String, expected: Alert.CatalogConcept) {
+         #expect(AlertCatalogRegistry.lookup(id("trio.therapyProfiles", alertID))?.concept == expected)
+diff --git a/TrioTests/TherapyProfileTests/TherapyProfileManagerTests.swift b/TrioTests/TherapyProfileTests/TherapyProfileManagerTests.swift
+index 4fc306936..96f4fd9ab 100644
+--- a/TrioTests/TherapyProfileTests/TherapyProfileManagerTests.swift
++++ b/TrioTests/TherapyProfileTests/TherapyProfileManagerTests.swift
+@@ -66,6 +66,47 @@ import Testing
+         #expect(stored.inactiveProfiles.first?.hasSameValues(as: TherapyProfileFixtures.profile("Default")) == true)
+     }
+ 
++    @Test(
++        "A profile above a lowered max basal is flagged, refused for a switch and fixed one schedule at a time"
++    ) func profileAboveLoweredMaxBasal() async throws {
++        let context = try await TherapyProfileTestContext.make()
++        let high = TherapyProfileFixtures.profile("High", basal: [(0, 2.5)])
++        try await context.manager.save(high, originalName: nil, baseFingerprint: nil)
++        #expect(context.manager.activationProblems().isEmpty)
++        #expect(context.manager.activationProblems(maxBasal: 2).keys.sorted() == ["High"])
++
++        context.recorder.basalLimits = TherapyBasalLimits(
++            supportedRates: context.recorder.basalLimits.supportedRates,
++            maxBasal: 2
++        )
++        #expect(context.manager.activationProblems().keys.sorted() == ["High"])
++        await #expect(throws: TherapyProfileError.self) {
++            try await context.manager.activate("High", expectedFingerprint: nil)
++        }
++
++        let newRatio = TherapyProfileFixtures.profile("High", basal: [(0, 2.5)], carbratio: [(0, 12)])
++        try await context.manager.save(newRatio, originalName: "High", baseFingerprint: high.fingerprint(units: .mgdL))
++        let fixed = TherapyProfileFixtures.profile("High", basal: [(0, 1.5)], carbratio: [(0, 12)])
++        try await context.manager.save(fixed, originalName: "High", baseFingerprint: newRatio.fingerprint(units: .mgdL))
++        #expect(context.manager.activationProblems().isEmpty)
++        try await context.manager.activate("High", expectedFingerprint: nil)
++        #expect(context.manager.activeProfileName == "High")
++    }
++
++    @Test("Profiles the pump's rates rule out are named in one alert") func pumpProblemAlert() async throws {
++        let context = try await TherapyProfileTestContext.make()
++        try await context.manager.save(sport, originalName: nil, baseFingerprint: nil)
++        context.manager.alertProfilesNotActivatableWithPump()
++        #expect(context.recorder.alerts.issuedAlerts.isEmpty)
++
++        context.recorder.basalLimits = TherapyBasalLimits(supportedRates: [1, 2], maxBasal: 3)
++        context.manager.alertProfilesNotActivatableWithPump()
++        let alert = try #require(
++            context.recorder.alerts.issuedAlerts.last { $0.identifier.alertIdentifier == "profilesNotActivatable" }
++        )
++        #expect(alert.backgroundContent.body.contains("Default, Sport"))
++    }
++
+     @Test("A switch is kept until it is uploaded, a rename adds none") func switchKeptForUpload() async throws {
+         let context = try await TherapyProfileTestContext.make()
+         try await context.manager.save(sport, originalName: nil, baseFingerprint: nil)
+@@ -419,7 +460,9 @@ import Testing
+         }
+     }
+ 
+-    @Test("A rename keeps working after the pump's limits changed, a value change does not") func renameAfterLimitsChanged() async throws {
++    @Test(
++        "After the pump's limits changed, a rename and a change of a valid schedule are saved, an invalid basal change and a switch are not"
++    ) func renameAfterLimitsChanged() async throws {
+         let context = try await TherapyProfileTestContext.make()
+         let fine = TherapyProfileFixtures.profile("Fine", basal: [(0, 0.07)])
+         context.recorder.basalLimits = TherapyBasalLimits(supportedRates: [TherapyProfileFixtures.decimal(0.07), 1], maxBasal: 3)
+@@ -431,8 +474,10 @@ import Testing
+         #expect(context.manager.profile(named: "Finer")?.hasSameValues(as: fine) == true)
+ 
+         let changed = fine.renamed("Finer").withSensitivity(55)
++        try await context.manager.save(changed, originalName: "Finer", baseFingerprint: fingerprint)
++        let otherRate = TherapyProfileFixtures.profile("Finer", basal: [(0, 0.08)], sens: [(0, 55)])
+         await #expect(throws: TherapyProfileError.self) {
+-            try await context.manager.save(changed, originalName: "Finer", baseFingerprint: fingerprint)
++            try await context.manager.save(otherRate, originalName: "Finer", baseFingerprint: changed.fingerprint(units: .mgdL))
+         }
+         await #expect(throws: TherapyProfileError.self) {
+             try await context.manager.activate("Finer", expectedFingerprint: nil)
+diff --git a/TrioTests/TherapyProfileTests/TherapyProfileValidatorTests.swift b/TrioTests/TherapyProfileTests/TherapyProfileValidatorTests.swift
+index 79727d1f6..eee9d0fc6 100644
+--- a/TrioTests/TherapyProfileTests/TherapyProfileValidatorTests.swift
++++ b/TrioTests/TherapyProfileTests/TherapyProfileValidatorTests.swift
+@@ -61,6 +61,98 @@ import Testing
+         #expect(TherapyProfileValidator.validate(edges, basalLimits: limits) == nil)
+     }
+ 
++    @Test("A change is checked in the changed schedules only") func validateChanges() {
++        let stored = TherapyProfileFixtures.profile("Stored", basal: [(0, 3.5)])
++        #expect(TherapyProfileValidator.validate(stored, basalLimits: limits) != nil)
++        let newRatio = TherapyProfileFixtures.profile("Stored", basal: [(0, 3.5)], carbratio: [(0, 12)])
++        #expect(TherapyProfileValidator.validateChanges(newRatio, from: stored, basalLimits: limits) == nil)
++        let badRatio = TherapyProfileFixtures.profile("Stored", basal: [(0, 3.5)], carbratio: [(0, 0.5)])
++        #expect(TherapyProfileValidator.validateChanges(badRatio, from: stored, basalLimits: limits) != nil)
++        let goodRatioBadSensitivity = TherapyProfileFixtures.profile(
++            "Stored",
++            basal: [(0, 3.5)],
++            carbratio: [(0, 12)],
++            sens: [(0, 600)]
++        )
++        #expect(TherapyProfileValidator.validateChanges(goodRatioBadSensitivity, from: stored, basalLimits: limits) != nil)
++        let fixedBasal = TherapyProfileFixtures.profile("Stored", basal: [(0, 2)])
++        #expect(TherapyProfileValidator.validateChanges(fixedBasal, from: stored, basalLimits: limits) == nil)
++    }
++
++    @Test("Every value the carb ratio, ISF and target editors offer passes, and one step outside fails", arguments: [
++        GlucoseUnits.mgdL,
++        .mmolL
++    ]) func editorValues(units: GlucoseUnits) {
++        let pickers = PickerSettingsProvider.shared
++        let ratios = CarbRatioEditor.StateModel().rateValues
++        let sensitivities = pickers.generatePickerValues(
++            from: TherapyProfileLimits.sensitivity.glucosePickerSetting(value: 100),
++            units: units
++        )
++        let targets = pickers.generatePickerValues(
++            from: TherapyProfileLimits.target.glucosePickerSetting(value: 110),
++            units: units
++        )
++        if units == .mgdL {
++            #expect(ISFEditor.StateModel().rateValues == sensitivities)
++            #expect(TargetsEditor.StateModel().rateValues == targets)
++        }
++        for ratio in ratios {
++            #expect(TherapyProfileValidator.validateCarbRatios(Self.profile(carbRatio: ratio)) == nil, "\(ratio)")
++        }
++        for sensitivity in sensitivities {
++            #expect(
++                TherapyProfileValidator.validateSensitivities(Self.profile(sensitivity: sensitivity)) == nil,
++                "\(sensitivity)"
++            )
++        }
++        for target in targets {
++            #expect(TherapyProfileValidator.validateTargets(Self.profile(target: target)) == nil, "\(target)")
++        }
++        let ratio = TherapyProfileLimits.carbRatio
++        #expect(ratios.first == ratio.min && ratios.last == ratio.max)
++        #expect(TherapyProfileValidator.validateCarbRatios(Self.profile(carbRatio: ratio.min - ratio.step)) != nil)
++        #expect(TherapyProfileValidator.validateCarbRatios(Self.profile(carbRatio: ratio.max + ratio.step)) != nil)
++        let sensitivity = TherapyProfileLimits.sensitivity
++        #expect(
++            TherapyProfileValidator
++                .validateSensitivities(Self.profile(sensitivity: sensitivity.min - sensitivity.step)) != nil
++        )
++        #expect(
++            TherapyProfileValidator
++                .validateSensitivities(Self.profile(sensitivity: sensitivity.max + sensitivity.step)) != nil
++        )
++        let target = TherapyProfileLimits.target
++        #expect(TherapyProfileValidator.validateTargets(Self.profile(target: target.min - target.step)) != nil)
++        #expect(TherapyProfileValidator.validateTargets(Self.profile(target: target.max + target.step)) != nil)
++    }
++
++    @Test("The basal editor offers the rates the validator accepts") func basalEditorRates() {
++        let omnipod = BasalProfileEditor.Provider.editorRates((0 ... 600).map { Double($0) / 20 })
++        let rates = BasalProfileEditor.StateModel.rateValues(supportedRates: omnipod, maxBasal: 3)
++        let limits = TherapyBasalLimits(supportedRates: omnipod, maxBasal: 3)
++        #expect(rates.first == TherapyProfileFixtures.decimal(0.05))
++        #expect(rates.last == 3)
++        for rate in rates {
++            let profile = TherapyProfileFixtures.profile("Rate", basal: [(0, Double(truncating: rate as NSNumber))])
++            #expect(TherapyProfileValidator.validateBasal(profile, basalLimits: limits) == nil, "\(rate)")
++        }
++        let noPump = BasalProfileEditor.StateModel.rateValues(supportedRates: nil, maxBasal: 2)
++        #expect(noPump.first == TherapyProfileFixtures.decimal(0.05))
++        #expect(noPump.last == 2)
++        #expect(BasalProfileEditor.StateModel.rateValues(supportedRates: omnipod, maxBasal: 0.01) == omnipod)
++    }
++
++    private static func profile(carbRatio: Decimal = 10, sensitivity: Decimal = 50, target: Decimal = 100) -> TrioTherapyProfile {
++        TrioTherapyProfile(
++            name: "Picker",
++            basal: [TherapyScheduleEntry(seconds: 0, value: 1)],
++            carbRatio: [TherapyScheduleEntry(seconds: 0, value: carbRatio)],
++            sensitivity: [TherapyScheduleEntry(seconds: 0, value: sensitivity)],
++            target: [TherapyTargetEntry(seconds: 0, low: target, high: target)]
++        )
++    }
++
+     @Test("Name rules") func names() {
+         #expect(TherapyProfileValidator.validateName("Sport", existingNames: ["Default"]) == nil)
+         #expect(TherapyProfileValidator.validateName(String(repeating: "x", count: 32), existingNames: []) == nil)
+diff --git a/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift b/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift
+index 28fdb62e7..1dafc3b65 100644
+--- a/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift
++++ b/TrioTests/TherapyProfileTests/TrioRemoteControlProfileTests.swift
+@@ -232,6 +232,29 @@ private final class ProfileTestAssembly: Assembly {
+         #expect(manager.profile(named: "High") == nil)
+     }
+ 
++    @Test("A remote save to a profile whose basal fails is checked in the changed schedules") func remoteSaveFailingProfile() async throws {
++        try await manager.save(sport, originalName: nil, baseFingerprint: nil)
++        recorder.basalLimits = TherapyBasalLimits(supportedRates: recorder.basalLimits.supportedRates, maxBasal: 0.4)
++
++        var values = sportCompact
++        values["basal"] = [[0, 0.45]]
++        values["sens"] = [[0, 80]]
++        let rejected = try await send(command("save_profile", [
++            "profile_name": "Sport", "original_profile_name": "Sport",
++            "base_fingerprint": sport.fingerprint(units: .mgdL), "profile": values
++        ]))
++        #expect(rejected["command_status"] as? String == "failed")
++        #expect(manager.profile(named: "Sport")?.hasSameValues(as: sport) == true)
++
++        values["basal"] = [[0, 0.5]]
++        let accepted = try await send(command("save_profile", [
++            "profile_name": "Sport", "original_profile_name": "Sport",
++            "base_fingerprint": sport.fingerprint(units: .mgdL), "profile": values
++        ]))
++        #expect(accepted["command_status"] as? String == "success")
++        #expect(manager.profile(named: "Sport")?.sensitivity.map(\.value) == [80])
++    }
++
+     @Test("Remote rename and update need a matching fingerprint") func remoteRenameAndConflict() async throws {
+         try await manager.save(sport, originalName: nil, baseFingerprint: nil)
+         let conflict = try await send(command("save_profile", [
