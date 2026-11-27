@@ -14,7 +14,7 @@ index ad24d43..306b9ec 100644
  
  
 diff --git a/G7SensorKit/G7SensorKit/G7CGMManager/G7Sensor.swift b/G7SensorKit/G7SensorKit/G7CGMManager/G7Sensor.swift
-index 25b5a0e..182900c 100644
+index 08253f2..4825be8 100644
 --- a/G7SensorKit/G7SensorKit/G7CGMManager/G7Sensor.swift
 +++ b/G7SensorKit/G7SensorKit/G7CGMManager/G7Sensor.swift
 @@ -177,6 +177,9 @@ public final class G7Sensor: G7BluetoothManagerDelegate {
@@ -27,7 +27,7 @@ index 25b5a0e..182900c 100644
      /// The last fresh pairing ended without the sensor confirming its Bluetooth bond.
      private var lastPairingBondUnconfirmed = false
  
-@@ -731,11 +734,15 @@ public final class G7Sensor: G7BluetoothManagerDelegate {
+@@ -733,10 +736,14 @@ public final class G7Sensor: G7BluetoothManagerDelegate {
                  // memory-only and are not written to the log archive, which makes the
                  // auth handshake invisible in field diagnostics.
                  self.log.default("Listening for authentication responses for %{public}@", String(describing: peripheralManager.peripheral.name))
@@ -35,7 +35,6 @@ index 25b5a0e..182900c 100644
                  do {
                      try peripheral.listenToCharacteristic(.authentication)
                      self.pendingAuth = true
-                     self.listenToControlBeforeAuthentication(peripheral)
                  } catch let error {
 +                    if self.isOurSensor(peripheralManager), !peripheral.hasCharacteristic(.authentication) {
 +                        self.authenticationMissing = true
@@ -43,7 +42,7 @@ index 25b5a0e..182900c 100644
                      self.delegateQueue.async {
                          self.delegate?.sensor(self, didError: error)
                      }
-@@ -768,10 +775,13 @@ public final class G7Sensor: G7BluetoothManagerDelegate {
+@@ -769,10 +776,13 @@ public final class G7Sensor: G7BluetoothManagerDelegate {
              // constantly; session end is read from the algorithm state instead.
              if mode == .eavesdropping, pendingAuth, wasRemoteDisconnect, !controlResponseOnCurrentLink {
                  suspectedEndOfSession = true // Normal disconnect without auth is likely that G7 app stopped this session
