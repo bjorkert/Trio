@@ -7,11 +7,13 @@ import WatchKit
     @WKApplicationDelegateAdaptor private var delegate: TrioWatchAppDelegate
 
     init() {
+        algorithmLogSink = WatchLogger.shared.algorithm
         _ = WatchState.shared
         // restores the watch's own link to the sensor
         _ = WatchCGMHost.shared
         WatchNotificationHandler.shared.configure()
         WatchLogger.shared.info(.lifecycle, "App launched")
+        WatchLoanRuntime.start()
     }
 
     var body: some Scene {
@@ -19,6 +21,7 @@ import WatchKit
             TrioMainWatchView()
         }
         .onChange(of: scenePhase) { _, newScenePhase in
+            WatchAppState.set(newScenePhase == .active ? "foreground" : newScenePhase == .background ? "background" : "inactive")
             WatchState.shared.setAppActive(newScenePhase == .active)
             if newScenePhase == .background {
                 WatchLogger.shared.info(.lifecycle, "App moved to background")

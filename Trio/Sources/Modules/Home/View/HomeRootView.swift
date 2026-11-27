@@ -35,6 +35,11 @@ extension Home {
         @State var showSnoozeSheet: Bool = false
         @State var showManualGlucose: Bool = false
         @State var showReleaseNotes: Bool = false
+        @State var trioOnWatch = TrioOnWatchPhoneModel()
+        @State var showTrioOnWatch = false
+        @State var watchStartDrag = TrioOnWatchStartDrag()
+        /// True while a touch holds the glucose; resets on its own when the system cancels the touch.
+        @GestureState var glucoseTouched = false
         @ObservedObject var releaseNotesService = ReleaseNotesService.shared
         // Pull-down-to-force-loop (see HomeRootView+Refresh.swift)
         @State var pullOffset: CGFloat = 0
@@ -123,7 +128,7 @@ extension Home {
             .overlay(alignment: .topTrailing) {
                 // borderless capsule (not a control); centered in the basal
                 // pane band so it clears the y-axis labels on every device size
-                if let basal = currentBasalReadout {
+                if !trioOnWatch.status.replacesLoopRing, let basal = currentBasalReadout {
                     HStack(spacing: 3) {
                         if basal.isManual {
                             Image(systemName: "hand.raised.fill")
@@ -292,6 +297,32 @@ extension Home {
             .task {
                 await releaseNotesService.load()
             }
+            .task {
+                trioOnWatch.attach(resolver)
+                #if DEBUG
+                    if TrioOnWatchPhoneFixture.current?.opensSheet == true { showTrioOnWatch = true }
+                    switch TrioOnWatchPhoneFixture.current?.opens {
+                    case "treatments": state.showModal(for: .treatmentView)
+                    case "adjustments": selectedTab = 2
+                    case "settings": selectedTab = 3
+                    default: break
+                    }
+                #endif
+                while !Task.isCancelled {
+                    await trioOnWatch.refresh()
+                    try? await Task.sleep(nanoseconds: 5_000_000_000)
+                }
+            }
+            .onChange(of: trioOnWatch.status.replacesLoopRing, initial: true) { _, watchHasPump in
+                state.watchHoldsPump = watchHasPump
+            }
+            .sheet(isPresented: $showTrioOnWatch) {
+                #if DEBUG
+                    TrioOnWatchSheet(model: trioOnWatch, presents: TrioOnWatchPhoneFixture.current?.dialog)
+                #else
+                    TrioOnWatchSheet(model: trioOnWatch)
+                #endif
+            }
             .navigationTitle("Home")
             .navigationBarHidden(true)
             .blur(radius: state.isLoopStatusPresented ? 3 : 0)
@@ -329,6 +360,7 @@ extension Home {
                     PumpConfig.PumpSettingsView(
                         pumpManager: pumpManager,
                         bluetoothManager: state.provider.apsManager.bluetoothManager!,
+                        watchLoanGate: resolver.resolve(WatchLoanGate.self)!,
                         completionDelegate: state,
                         setupDelegate: state
                     )
@@ -337,6 +369,7 @@ extension Home {
                         pumpEntry: pumpEntry,
                         pumpInitialSettings: state.pumpInitialSettings,
                         bluetoothManager: state.provider.apsManager.bluetoothManager!,
+                        watchLoanGate: resolver.resolve(WatchLoanGate.self)!,
                         completionDelegate: state,
                         setupDelegate: state
                     )
@@ -499,6 +532,8 @@ extension Home {
                     state.showModal(for: .treatmentView)
                 }
                 .onLongPressGesture(minimumDuration: 0.5) {
+                    // carbs stored here wouldn't reach the watch; Treatments says why
+                    guard !trioOnWatch.status.replacesLoopRing else { return state.showModal(for: .treatmentView) }
                     guard state.enableQuickPickTreatments else { return }
                     let impactHeavy = UIImpactFeedbackGenerator(style: .heavy)
                     impactHeavy.impactOccurred()
@@ -518,6 +553,7 @@ extension Home {
                     state.showModal(for: .treatmentView)
                 }
                 .accessibilityAction(named: Text("Quick Pick Treatments")) {
+                    guard !trioOnWatch.status.replacesLoopRing else { return state.showModal(for: .treatmentView) }
                     guard state.enableQuickPickTreatments else { return }
                     Task {
                         await state.loadQuickPickTreatmentSuggestions()
@@ -604,6 +640,16 @@ extension Home {
                 if state.waitForSuggestion {
                     CustomProgressView(text: String(localized: "Updating IOB...", comment: "Progress text when updating IOB"))
                 }
+
+                if watchStartDrag.isActive {
+                    TrioOnWatchStartOverlay(
+                        drag: watchStartDrag,
+                        model: trioOnWatch,
+                        reading: watchCardReading,
+                        ring: { glucoseRing },
+                        onEnd: { showTrioOnWatch = true }
+                    )
+                }
             }
             .sheet(isPresented: $showQuickPickTreatmentsPicker) {
                 QuickPickTreatmentsView(
@@ -614,6 +660,19 @@ extension Home {
                     },
                     isPresented: $showQuickPickTreatmentsPicker
                 )
+            }
+            .alert(
+                String(localized: "Start Trio on Watch?", comment: "Drag-to-watch Start confirmation title"),
+                isPresented: $watchStartDrag.isConfirming
+            ) {
+                Button(String(localized: "Start", comment: "Drag-to-watch Start confirmation button")) {
+                    Task { await watchStartDrag.handOff(model: trioOnWatch) }
+                }
+                Button(String(localized: "Cancel"), role: .cancel) {
+                    withAnimation(.spring(duration: 0.3)) { watchStartDrag.reset() }
+                }
+            } message: {
+                Text(TrioOnWatchStartDrag.confirmationText(patch: trioOnWatch.status.pumpIsPatch))
             }
             .alert(
                 String(

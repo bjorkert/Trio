@@ -102,6 +102,8 @@ extension Home {
         var roundedTotalBolus: String = ""
         var selectedTab: Int = 0
         var waitForSuggestion: Bool = false
+        /// Apple Watch has the pump: the phone's last forecast and IOB/COB projection stopped at the hand-off.
+        var watchHoldsPump = false
         var glucoseFromPersistence: [GlucoseStored] = []
         var latestTwoGlucoseValues: [GlucoseStored] = []
         var carbsFromPersistence: [CarbEntryStored] = []
@@ -176,7 +178,8 @@ extension Home {
                     event.timestamp.map { ($0, event.type == EventType.pumpSuspend.rawValue) }
                 },
                 profile: basalProfile,
-                now: now
+                now: now,
+                timeZone: TimeZone.current
             )
         }
 

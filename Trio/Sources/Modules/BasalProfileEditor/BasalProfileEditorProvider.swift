@@ -5,6 +5,7 @@ import LoopKit
 extension BasalProfileEditor {
     final class Provider: BaseProvider, BasalProfileEditorProvider {
         private let processQueue = DispatchQueue(label: "BasalProfileEditorProvider.processQueue")
+        @Injected() private var watchLoanGate: WatchLoanGate!
 
         var profile: [BasalProfileEntry] {
             storage.retrieve(OpenAPS.Settings.basalProfile, as: [BasalProfileEntry].self)
@@ -27,6 +28,9 @@ extension BasalProfileEditor {
             guard let pump = deviceManager?.pumpManager else {
                 warning(.settings, "Basal profile not saved, no pump connected")
                 return Fail(error: NSError()).eraseToAnyPublisher()
+            }
+            if let refusal = watchLoanGate.refusal("Basal schedule sync", userInitiated: true) {
+                return Fail(error: APSError.invalidPumpState(message: refusal)).eraseToAnyPublisher()
             }
 
             let syncValues = profile.map {

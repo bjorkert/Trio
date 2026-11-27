@@ -27,10 +27,12 @@ let algorithmModels = [
     "CarbRatios",
     "CarbsEntry",
     "Determination",
+    "DosingMode",
     "IOBEntry",
     "InsulinSensitivities",
     "Override",
     "Preferences",
+    "Preferences+DosingMode",
     "PumpHistoryEvent",
     "PumpSettings",
     "TDD",
@@ -46,6 +48,7 @@ let algorithmHelpers = [
     "JSON",
     "Rounding",
     "String+Extensions",
+    "TempTargetCalculations",
     "TherapySettingsUtil",
     "TimeInterval+Convenience"
 ].map { "Helpers/\($0).swift" }
@@ -67,6 +70,7 @@ let package = Package(
             sources: [
                 "APS/OpenAPSSwift",
                 "APS/Extensions/DecimalExtensions.swift",
+                "APS/Storage/ScheduledBasalInference.swift",
                 // The algorithm files use the app's `debug`/`warning` helpers, which the
                 // package gets from this shim instead of the (AppKit-dependent) Logger target
                 "APS/OpenAPSSwift/AlgorithmLoggingShim.swift"

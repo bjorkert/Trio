@@ -9,6 +9,8 @@ import WatchKit
     static let shared = WatchCGMHost()
 
     private static let storageKey = "WatchCGMManager"
+    private static let lentKey = "WatchCGMHostLent"
+    private static let localStateKey = "WatchCGMHostLocalState"
 
     @ObservationIgnored private(set) var cgmManager: (any WatchReadableCGM)?
     @ObservationIgnored private var statusObserver: NSObjectProtocol?
@@ -37,8 +39,13 @@ import WatchKit
     /// it lodged the next connect. Past the G7's 35 s tail clearance, so a connect never lands in its advertising tail.
     static let acquisitionBackstopDelay: TimeInterval = 60
 
+    /// Trio on Watch reads the sensor while it holds the pump; this host builds nothing until the sensor is back.
+    private var isLent: Bool { UserDefaults.standard.bool(forKey: Self.lentKey) }
+
     private init() {
-        if let raw = UserDefaults.standard.dictionary(forKey: Self.storageKey), let manager = watchCGMManager(rawValue: raw) {
+        if !UserDefaults.standard.bool(forKey: Self.lentKey),
+           let raw = UserDefaults.standard.dictionary(forKey: Self.storageKey), let manager = watchCGMManager(rawValue: raw)
+        {
             builtFrom = raw["builtFrom"] as? [String: Any]
             install(manager)
         }
@@ -48,7 +55,7 @@ import WatchKit
     /// the sensor when the phone stopped sharing, and otherwise treats it as a wake.
     func update(from state: WatchState) {
         // a state arriving mid-swap is dropped; the phone sends the next within minutes
-        guard swap == nil else { return }
+        guard swap == nil, !isLent else { return }
         guard state.watchReadsSensor, let data = state.sensorConfiguration,
               let raw = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any],
               let configuration = SharedDeviceConfiguration(rawValue: raw)
@@ -80,8 +87,53 @@ import WatchKit
         }
     }
 
+    /// Lets go of the sensor for Trio on Watch, which reads it while the watch holds the pump. A manager for the
+    /// grant's sensor is lent itself, with its connection: a second manager's central beside it never powers on.
+    /// Otherwise this watch's key for the sensor, so the loan needs no new pairing.
+    func lendSensor(for configuration: SharedDeviceConfiguration) async
+        -> (manager: (any WatchReadableCGM)?, localState: [String: Any]?)
+    {
+        while let swap { await swap.value }
+        UserDefaults.standard.set(true, forKey: Self.lentKey)
+        if let local = cgmManager?.localState { keepLocalState(local) }
+        var lent: (any WatchReadableCGM)?
+        if let cgmManager, let builtFrom, cgmManager.pluginIdentifier == configuration.managerIdentifier,
+           type(of: cgmManager).sameSensor(builtFrom, configuration.state)
+        {
+            lent = detach()
+        } else {
+            await remove()
+        }
+        WatchLogger.shared.info(.data, "The sensor is lent to Trio on Watch\(lent != nil ? ", with its connection" : "")")
+        return (lent, UserDefaults.standard.dictionary(forKey: Self.localStateKey))
+    }
+
+    /// Trio on Watch hands its manager back with the connection. False when this host can't keep it; the caller
+    /// then deletes it.
+    func takeBack(_ manager: any WatchReadableCGM, builtFrom: [String: Any]) -> Bool {
+        guard isLent, cgmManager == nil else { return false }
+        self.builtFrom = builtFrom
+        install(manager)
+        save(manager)
+        return true
+    }
+
+    /// Trio on Watch let go of the sensor: the phone's next state builds the manager again, with the loan's key.
+    func sensorReturned(localState: [String: Any]?) {
+        if let localState { keepLocalState(localState) }
+        guard isLent else { return }
+        UserDefaults.standard.removeObject(forKey: Self.lentKey)
+        WatchLogger.shared.info(.data, "The sensor is back from Trio on Watch")
+    }
+
+    /// The kit matches it to the sensor: a key for another sensor is ignored.
+    private func keepLocalState(_ localState: [String: Any]) {
+        UserDefaults.standard.set(localState, forKey: Self.localStateKey)
+    }
+
     private func build(from configuration: SharedDeviceConfiguration) {
-        guard let manager = watchCGMManager(adopting: configuration, localState: nil) else {
+        let localState = UserDefaults.standard.dictionary(forKey: Self.localStateKey)
+        guard let manager = watchCGMManager(adopting: configuration, localState: localState) else {
             WatchLogger.shared.warning(.data, "The phone's CGM (\(configuration.managerIdentifier)) can't be read from the watch")
             return
         }
@@ -112,7 +164,12 @@ import WatchKit
 
     /// Returns once the manager has let go of the sensor.
     private func remove() async {
-        guard let previous = cgmManager else { return }
+        await detach()?.delete()
+    }
+
+    /// Drops the manager, which keeps its connection.
+    private func detach() -> (any WatchReadableCGM)? {
+        guard let previous = cgmManager else { return nil }
         previous.cgmManagerDelegate = nil
         statusObserver.map(NotificationCenter.default.removeObserver)
         statusObserver = nil
@@ -122,7 +179,7 @@ import WatchKit
         isTalkingToSensor = false
         UserDefaults.standard.removeObject(forKey: Self.storageKey)
         updateStatus()
-        await previous.delete()
+        return previous
     }
 
     private func save(_ manager: any WatchReadableCGM) {

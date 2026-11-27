@@ -10,6 +10,56 @@ struct GlucoseTrendView: View {
     let isPhoneStateDated: Bool
     /// Ticks the reading's and the loop's age.
     let now: Date
+    /// Trio on Watch; nil keeps the tethered remote as it is.
+    var loan: TrioOnWatchStatus?
+    var onControlLineTap: () -> Void = {}
+
+    /// While a loan runs, the watch's own values replace the phone's snapshot.
+    private var loanValues: TrioOnWatchStatus.MainValues? {
+        guard let loan, loan.isLoanActive else { return nil }
+        return loan.mainValues(now: now)
+    }
+
+    private var loanTrend: String? {
+        guard loanValues != nil else { return nil }
+        return loan?.trend(now: now)
+    }
+
+    private var arrowDegrees: Double {
+        loanValues != nil ? Self.degrees(for: loanTrend) : rotationDegrees
+    }
+
+    /// The arrow's angle for a trend: up is -90, flat 0, down 90.
+    static func degrees(for trend: String?) -> Double {
+        switch trend {
+        case "DoubleUp",
+             "SingleUp":
+            return -90
+        case "FortyFiveUp":
+            return -45
+        case "FortyFiveDown":
+            return 45
+        case "DoubleDown",
+             "SingleDown":
+            return 90
+        default:
+            return 0
+        }
+    }
+
+    /// Trio on Watch's line under the bubble: while the watch holds the pump, and otherwise unless the watch reads the
+    /// sensor itself, whose line says more about the sensor.
+    private var controlLine: TrioOnWatchStatus.ControlLine? {
+        guard let loan else { return nil }
+        if loan.isLoanActive { return loan.controlLine(now: now, phoneLoopText: state.lastLoopTime) }
+        guard !isReadingDirectly, !isWatchStateDated else { return nil }
+        return loan.controlLine(now: now, phoneLoopText: state.lastLoopTime)
+    }
+
+    private var ringColor: Color {
+        if let loan, loan.isLoanActive { return loan.controlLine(now: now, phoneLoopText: nil).tier.color }
+        return loopColor
+    }
 
     private var isReadingDirectly: Bool { WatchCGMHost.shared.isReadingDirectly }
 
@@ -119,37 +169,58 @@ struct GlucoseTrendView: View {
         VStack {
             ZStack {
                 Circle()
-                    .stroke(loopColor, lineWidth: lineWidth)
+                    .stroke(ringColor, lineWidth: lineWidth)
                     .frame(width: circleSize, height: circleSize)
                     .background(Circle().fill(Color.bgDarkBlue))
-                    .shadow(color: loopColor, radius: shadowRadius)
+                    .shadow(color: ringColor, radius: shadowRadius)
 
                 TrendShape(
-                    isWatchStateDated: isWatchStateDated,
-                    rotationDegrees: rotationDegrees,
+                    // in watch mode, the trend of the watch's own reading, not the phone's
+                    isWatchStateDated: loanValues != nil ? loanTrend == nil : isWatchStateDated,
+                    rotationDegrees: arrowDegrees,
                     deviceType: state.deviceType
                 )
-                .animation(.spring(response: 0.5, dampingFraction: 0.6), value: rotationDegrees)
+                .animation(.spring(response: 0.5, dampingFraction: 0.6), value: arrowDegrees)
                 .shadow(color: Color.black.opacity(0.5), radius: 5)
 
-                VStack(alignment: .center) {
-                    Text(isWatchStateDated ? "--" : state.currentGlucose)
-                        .fontWeight(.semibold)
-                        .font(currentGlucoseFontSize)
-                        .foregroundStyle(isWatchStateDated ? Color.secondary : state.currentGlucoseColorString.toColor())
-
-                    if let delta = state.delta {
-                        Text(isWatchStateDated ? "--" : delta)
+                if let loanValues {
+                    VStack(alignment: .center) {
+                        Text(loanValues.glucose)
+                            .fontWeight(.semibold)
+                            .font(currentGlucoseFontSize)
+                            .foregroundStyle(loanValues.isStale ? Color.secondary : Color.primary)
+                        Text(loanValues.detail)
                             .fontWeight(.semibold)
                             .font(.system(.caption))
                             .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                            .frame(maxWidth: circleSize * 0.75)
+                    }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text(loanValues.accessibilityLabel))
+                } else {
+                    VStack(alignment: .center) {
+                        Text(isWatchStateDated ? "--" : state.currentGlucose)
+                            .fontWeight(.semibold)
+                            .font(currentGlucoseFontSize)
+                            .foregroundStyle(isWatchStateDated ? Color.secondary : state.currentGlucoseColorString.toColor())
+
+                        if let delta = state.delta {
+                            Text(isWatchStateDated ? "--" : delta)
+                                .fontWeight(.semibold)
+                                .font(.system(.caption))
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }
 
             Spacer()
 
-            if isReadingDirectly {
+            if let controlLine {
+                ControlLineView(line: controlLine, action: onControlLineTap)
+            } else if isReadingDirectly {
                 directReadingStatus
             } else {
                 Text(

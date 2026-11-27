@@ -14,6 +14,7 @@ final class WatchLogger: Sendable {
     private static let flushCount = 50
     private static let bufferLimit = 2000
     private static let shipInterval: Duration = .seconds(5 * 60)
+    private static let loanEndShipDelay: Duration = .seconds(3)
 
     private let pending = OSAllocatedUnfairLock(initialState: PendingDrafts())
     private let shipper = WatchLogShipper()
@@ -51,6 +52,18 @@ final class WatchLogger: Sendable {
         log(.error, category, Self.message(message, error: error))
     }
 
+    // Receives the shared algorithm code's log lines through AlgorithmLoggingShim
+    func algorithm(_ level: AlgorithmLogLevel, _: Logger.Category, _ message: String, error: Error?) {
+        let watchLevel: WatchLogEntry.Level = switch level {
+        case .debug: .debug
+        case .info: .info
+        case .warning: .warning
+        case .error: .error
+        case .fault: .fault
+        }
+        log(watchLevel, .algorithm, Self.message(message, error: error))
+    }
+
     // At most one line per key and interval while the state stays the same
     func shouldLog(_ key: String, state: String = "", every interval: TimeInterval = 30) -> Bool {
         let now = Date()
@@ -60,6 +73,19 @@ final class WatchLogger: Sendable {
             }
             last[key] = (state, now)
             return true
+        }
+    }
+
+    /// After a loan: at once, in case the app is suspended, and again a moment later for the hand-back's last lines.
+    /// Everything not yet acknowledged goes again; the phone drops what it already has.
+    func shipAfterLoan() {
+        Task { [shipper, pending] in
+            await shipper.drain(pending)
+            await shipper.ship(onRequest: true)
+            try? await Task.sleep(for: Self.loanEndShipDelay)
+            await shipper.drain(pending)
+            // the first transfer may still be under way, which would hold back a plain send
+            await shipper.ship(onRequest: true)
         }
     }
 
